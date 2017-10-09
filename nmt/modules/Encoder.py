@@ -6,9 +6,9 @@ from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence#, maske
 from cuda_functional import SRU, SRUCell
 
 
-class EncoderRNN(nn.Module):
+class EncoderGRU(nn.Module):
     def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1):
-        super(EncoderRNN, self).__init__()
+        super(EncoderGRU, self).__init__()
         
 
         self.hidden_size = hidden_size
