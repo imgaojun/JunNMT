@@ -8,8 +8,9 @@ from modules.Decoder import AttnDecoderGRU
 
 
 class NMTModel(nn.Module):
-    def __init__(self, hparams):
+    def __init__(self, encoder, decoder):
         super(NMTModel, self).__init__()
 
     def forward(self):
+        pass
         
