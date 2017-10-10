@@ -1,6 +1,7 @@
+import torch.utils.data as data
+import codecs
 
-
-class TrainDataSet(data.Dataset):
+class TextDataSet(data.Dataset):
     def __init__(self, src_file, tgt_file):
         self.src_dataset = []
         self.tgt_dataset = []
@@ -20,8 +21,17 @@ class TrainDataSet(data.Dataset):
     def __len__(self):
         return len(self.src_dataset)
 
-class NMTDataLoader(object):
-    def __init__(self):
-        self.dataset
-        self.dataloader
-        pass
+class NMTDataSet(object):
+    def __init__(self, src_file, tgt_file, batch_size):
+        self.train_dataset = TextDataSet(src_file, tgt_file)
+        self.train_dataloader = data.DataLoader(dataset=self.train_dataset,
+                               batch_size=batch_size,
+                               shuffle=True,
+                               num_workers=4)
+
+        self.train_iter = iter(self.train_dataloader)
+
+    
+    @property
+    def iterator(self):
+        return self.train_iter.next()
