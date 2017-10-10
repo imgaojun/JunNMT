@@ -8,3 +8,4 @@ while True:
         print(dataset.iterator)
     except StopIteration:
         print('end of epoch')
+        break

@@ -35,3 +35,8 @@ class NMTDataSet(object):
     @property
     def iterator(self):
         return self.train_iter.next()
+
+    @property
+    def iteror_init(self):
+        self.train_iter = iter(self.train_dataloader)
+
