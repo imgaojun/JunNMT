@@ -9,4 +9,4 @@ while True:
         print('dataset.iterator')
     except StopIteration:
         print('end of epoch')
-        dataset.iterator_init
+        dataset.init_iterator()
