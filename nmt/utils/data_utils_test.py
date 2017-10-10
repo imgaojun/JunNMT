@@ -5,7 +5,6 @@ dataset = NMTDataSet('/home/xiapeng/python/process_data/res/deve_src_file','/hom
 
 while True:
     try:
-        print(dataset.iterator)
+        print('1')
     except StopIteration:
         print('end of epoch')
-        break
