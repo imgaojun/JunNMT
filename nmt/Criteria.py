@@ -53,6 +53,8 @@ class Criteria(object):
         losses = losses_flat.view(*target.size())
         # mask: (batch, max_len)
         mask = self._sequence_mask(sequence_length=length, max_len=target.size(1))
+        print(losses)
+        print(mask)
         losses = losses * mask.float()
         loss = losses.sum() / length.float().sum()
         return loss        
