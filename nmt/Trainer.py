@@ -43,4 +43,41 @@ class Trainer(object):
         step_time, checkpoint_loss = 0.0, 0.0              
         start_train_time = time.time()
       
-        pass
+        print('start training...')
+        while step_epoch < num_train_epochs:
+            step_epoch += 1
+
+            while True:
+                try:
+                    src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_iter
+                except StopIteration:     
+                    print('end of epoch')  
+                    break         
+
+                global_step += 1
+                start_time = time.time()                
+                batch_size = src_input_var.size(1)
+                # Run the update function
+                step_loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
+                    
+                # update statistics
+                step_time += (time.time() - start_time)
+
+                # Keep track of loss
+                checkpoint_loss += (step_loss * batch_size)
+
+                # Once in a while, we print statistics.
+                if global_step - last_stats_step >= steps_per_stats:
+                    last_stats_step = global_step
+                    # Print statistics for the previous epoch.
+                    avg_step_time = step_time / steps_per_stats
+                    avg_step_loss = checkpoint_loss / steps_per_stats
+                    checkpoint_loss = 0.0
+                    step_time = 0.0
+
+                    print("  global step %d epoch %d step-time %.5fs step-loss %.3f"%
+                            (global_step,
+                            step_epoch,
+                            avg_step_time,
+                            avg_step_loss)
+                        )                   

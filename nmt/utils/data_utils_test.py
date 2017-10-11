@@ -11,4 +11,5 @@ while True:
         print(src_input_var)
     except StopIteration:
         print('end of epoch')
+        break
         # dataset.init_iterator()
