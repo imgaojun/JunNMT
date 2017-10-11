@@ -1,9 +1,9 @@
 from data_utils import NMTDataSet
+import vocab_utils
+src_vocab_table = vocab_utils.VocabTable('/home/xiapeng/python/process_data/res/vocab.txt')
+tgt_vocab_table = vocab_utils.VocabTable('/home/xiapeng/python/process_data/res/vocab.txt')
 
-src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'],hparams['src_vocab_size'])
-tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'],hparams['tgt_vocab_size'])
-
-dataset = NMTDataSet('/home/xiapeng/python/process_data/res/deve_src_file','/home/xiapeng/python/process_data/res/deve_tgt_file',10)
+dataset = NMTDataSet('/home/xiapeng/python/process_data/res/deve_src_file','/home/xiapeng/python/process_data/res/deve_tgt_file',10,src_vocab_table,tgt_vocab_table)
 
 while True:
     try:
