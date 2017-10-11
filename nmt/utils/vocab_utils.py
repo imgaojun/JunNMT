@@ -86,7 +86,7 @@ def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, US
     # Turn padded arrays into (batch_size x max_len) tensors, transpose into (max_len x batch_size)
     src_input_var = Variable(torch.LongTensor(paded_src_inputs)).transpose(0, 1)
     tgt_input_var = Variable(torch.LongTensor(paded_tgt_inputs)).transpose(0, 1)
-    tgt_output_var = Variable(torch.LongTensor(paded_tgt_outputs)).transpose(0, 1)
+    tgt_output_var = Variable(torch.LongTensor(paded_tgt_outputs))
 
     if USE_CUDA:
         src_input_var = src_input_var.cuda()
