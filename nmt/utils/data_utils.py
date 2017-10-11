@@ -1,6 +1,6 @@
 import torch.utils.data as data
 import codecs
-import vocab_utils
+import nmt.utils.vocab_utils as vocab_utils
 class TextDataSet(data.Dataset):
     def __init__(self, src_file, tgt_file):
         self.src_dataset = []
