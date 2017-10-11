@@ -27,6 +27,7 @@ class Criteria(nn.Module):
 
 
     def _compute_loss(self, logits, target, length):
+        length = Variable(torch.LongTensor(length)).cuda()
         """
         Args:
             logits: A Variable containing a FloatTensor of size
