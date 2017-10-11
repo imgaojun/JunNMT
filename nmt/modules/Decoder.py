@@ -18,7 +18,7 @@ class AttnDecoderGRU(nn.Module):
         self.gru =  nn.GRU(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=True)
         self.attention = GlobalAttention(hidden_size*2)
 
-        self.linear_out = nn.Linear(hidden_size, output_size)
+        self.linear_out = nn.Linear(hidden_size*2, output_size)
     def forward(self, rnn_input, last_hidden, encoder_outputs):
         embeded = self.embeddings(rnn_input)        
         rnn_output , hidden = self.gru(embeded,last_hidden)
@@ -44,7 +44,7 @@ class AttnDecoderSRU(nn.Module):
                         bidirectional = True    # bidirectional RNN ?
                     )
         self.attention = GlobalAttention(hidden_size*2)
-        self.linear_out = nn.Linear(hidden_size, output_size)
+        self.linear_out = nn.Linear(hidden_size*2, output_size)
 
     def forward(self, rnn_input, last_hidden, encoder_outputs):
         embeded = self.embeddings(rnn_input)
