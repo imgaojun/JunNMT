@@ -21,7 +21,7 @@ class Trainer(object):
                tgt_inputs,
                tgt_lengths,
                tgt_outputs):
-        self.model.zero_grad()
+        self.optim.zero_grad()
         all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
         loss = self.train_criteria(all_decoder_outputs, tgt_outputs, tgt_lengths)
