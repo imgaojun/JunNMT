@@ -21,7 +21,7 @@ class TextDataSet(data.Dataset):
     def __len__(self):
         return len(self.src_dataset)
 
-class NMTDataSet(object):
+class TrainDataSet(object):
     def __init__(self, src_file, tgt_file, batch_size):
         self.train_dataset = TextDataSet(src_file, tgt_file)
         self.train_dataloader = data.DataLoader(dataset=self.train_dataset,
@@ -34,7 +34,8 @@ class NMTDataSet(object):
     
     @property
     def iterator(self):
-        return self.train_iter.next()
+        src_seqs,tgt_seqs = self.train_iter.next()
+        return src_seqs,tgt_seqs
 
     def init_iterator(self):
         self.train_iter = iter(self.train_dataloader)
