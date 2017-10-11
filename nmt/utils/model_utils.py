@@ -1,7 +1,7 @@
 from nmt.modules.Encoder import EncoderGRU
 from nmt.modules.Decoder import AttnDecoderGRU
 from nmt.modules.Embedding import Embedding
-from nmt.Model import NMTModel
+from nmt.model import NMTModel
 def create_emb_for_encoder_and_decoder(share_embedding,
                                        src_vocab_size,
                                        tgt_vocab_size,
