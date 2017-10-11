@@ -25,7 +25,7 @@ class EncoderGRU(nn.Module):
         packed = torch.nn.utils.rnn.pack_padded_sequence(embeded, input_lengths)
         outputs, hidden = self.gru(packed, hidden)
         outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
-        outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
+        # outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
         return outputs, hidden
 
 class EncoderSRU(nn.Module):
