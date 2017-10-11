@@ -1,4 +1,5 @@
 # Network
+rnn_type: SRU
 embedding_size: 100
 hidden_size: 200
 num_layers: 2

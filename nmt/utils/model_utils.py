@@ -1,5 +1,5 @@
-from nmt.modules.Encoder import EncoderGRU
-from nmt.modules.Decoder import AttnDecoderGRU
+from nmt.modules.Encoder import EncoderGRU,EncoderSRU
+from nmt.modules.Decoder import AttnDecoderGRU,AttnDecoderSRU
 from nmt.modules.Embedding import Embedding
 from nmt.NMTModel import NMTModel
 def create_emb_for_encoder_and_decoder(share_embedding,
@@ -19,20 +19,40 @@ def create_emb_for_encoder_and_decoder(share_embedding,
 
 
 def create_encoder(hparams, embedding):
-    return EncoderGRU(embedding,
+    if hparams['rnn_type'] == 'SRU':
+        encoder = EncoderSRU(embedding,
                             hparams['embedding_size'],
                             hparams['hidden_size'],
                             hparams['num_layers'],
                             hparams['dropout'])
 
+    elif hparams['rnn_type'] == 'GRU':
+        encoder = EncoderGRU(embedding,
+                            hparams['embedding_size'],
+                            hparams['hidden_size'],
+                            hparams['num_layers'],
+                            hparams['dropout'])
+    return encoder
+
 def create_decoder(hparams, embedding, tgt_vocab_size):
-    return AttnDecoderGRU(hparams['atten_model'],
+    if hparams['rnn_type'] == 'SRU':
+        decoder = AttnDecoderSRU(hparams['atten_model'],
                                 embedding,
                                 hparams['embedding_size'],
                                 hparams['hidden_size'],
                                 tgt_vocab_size,
                                 hparams['num_layers'],
                                 hparams['dropout'])
+    elif hparams['rnn_type'] == 'GRU':
+        decoder = AttnDecoderGRU(hparams['atten_model'],
+                                embedding,
+                                hparams['embedding_size'],
+                                hparams['hidden_size'],
+                                tgt_vocab_size,
+                                hparams['num_layers'],
+                                hparams['dropout'])
+
+    return decoder
 
 def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
     embedding_encoder, embedding_decoder = create_emb_for_encoder_and_decoder(hparams['share_embedding'],
