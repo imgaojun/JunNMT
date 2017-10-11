@@ -6,7 +6,7 @@ dropout: 0.1
 atten_model: dot
 decode_max_length: 100
 # Vocab
-share_embeddings: false
+share_embedding: false
 src_vocab_size: 30000
 tgt_vocab_size: 30000
 
