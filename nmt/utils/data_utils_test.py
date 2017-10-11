@@ -7,8 +7,8 @@ dataset = TrainDataSet('/home/xiapeng/python/process_data/res/deve_src_file','/h
 
 while True:
     try:
-        dataset.iterator
-        # print('dataset.iterator')
+        src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = dataset.iterator
+        print(src_input_var)
     except StopIteration:
         print('end of epoch')
-        dataset.init_iterator()
+        # dataset.init_iterator()
