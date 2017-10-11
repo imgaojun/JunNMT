@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from Attention import GlobalAttention
-from cuda_functional import SRU, SRUCell
+from nmt.modules.Attention import GlobalAttention
+from nmt.modules.cuda_functional import SRU, SRUCell
 
 
 class AttnDecoderGRU(nn.Module):
