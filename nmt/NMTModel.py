@@ -13,8 +13,8 @@ class NMTModel(nn.Module):
         # Run wrods through encoder
         encoder_outputs, encoder_hidden = self.encoder(src_inputs, src_lengths, None)
 
-        decoder_init_hidden = encoder_hidden[:self.encoder.num_layers] # Use last (forward) hidden state from encoder
-                
+        # decoder_init_hidden = encoder_hidden[:self.encoder.num_layers] # Use last (forward) hidden state from encoder
+        decoder_init_hidden = encoder_hidden
         all_decoder_outputs , decoder_hiddens = self.decoder(
                 tgt_inputs, decoder_init_hidden, encoder_outputs
             )        
