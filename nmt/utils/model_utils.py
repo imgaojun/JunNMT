@@ -13,7 +13,7 @@ def create_emb_for_encoder_and_decoder(share_embedding,
         embedding_encoder = embedding
         embedding_decoder = embedding  
     else:
-        embedding_encoder = Embedding(src_vocab_size,tgt_vocab_size)
+        embedding_encoder = Embedding(src_vocab_size,src_embed_size)
         embedding_decoder = Embedding(tgt_vocab_size,tgt_embed_size)
     return embedding_encoder, embedding_decoder
 
