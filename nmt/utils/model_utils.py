@@ -36,8 +36,8 @@ def create_decoder(hparams, embedding):
 def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
     embedding_encoder, embedding_decoder = create_emb_for_encoder_and_decoder(hparams['share_embedding'],
                                                                               src_vocab_size,
-                                                                              hparams['embedding_size'],
                                                                               tgt_vocab_size,
+                                                                              hparams['embedding_size'],
                                                                               hparams['embedding_size'])
     encoder = create_encoder(hparams, embedding_encoder)
     decoder = create_decoder(hparams, embedding_decoder)
