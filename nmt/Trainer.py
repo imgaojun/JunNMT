@@ -1,11 +1,11 @@
 import time
 
 class Trainer(object):
-    def __init__(self, model, train_iter, valid_iter,
+    def __init__(self, model, train_dataset, valid_iter,
                  train_criteria, valid_criteria, optim):
 
         self.model = model
-        self.train_iter = train_iter
+        self.train_dataset = train_dataset
         self.valid_iter = valid_iter
         self.train_criteria = train_criteria
         self.valid_criteria = valid_criteria
@@ -50,9 +50,10 @@ class Trainer(object):
 
             while True:
                 try:
-                    src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_iter
+                    src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_dataset.iterator
                 except StopIteration:     
                     print('end of epoch')  
+                    self.train_dataset.init_iterator()
                     break         
 
                 global_step += 1

@@ -24,5 +24,5 @@ if __name__ == '__main__':
         train_model = train_model.cuda()
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
-    trainer = Trainer(train_model,dataset.iterator,None,train_criteria,None,optim)
+    trainer = Trainer(train_model,dataset,None,train_criteria,None,optim)
     trainer.train(hparams['num_train_epochs'],hparams['steps_per_stats'])
