@@ -20,6 +20,10 @@ dataset = data_utils.TrainDataSet(hparams['dev_src_file'],hparams['dev_tgt_file'
 if __name__ == '__main__':
     train_model = model_utils.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
     train_criteria = Criteria()
+    if hparams['USE_CUDA']:
+        train_model = train_model.cuda()
+        train_criteria = train_criteria.cuda()
+
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
     trainer = Trainer(train_model,dataset.iterator,None,train_criteria,None,optim)
     trainer.train(hparams['num_train_epochs'],hparams['steps_per_stats'])
