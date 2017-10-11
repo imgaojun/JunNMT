@@ -1,6 +1,6 @@
 # Network
 embedding_size: 100
-hidden_size: 200
+hidden_size: 100
 num_layers: 2
 dropout: 0.1
 atten_model: dot
