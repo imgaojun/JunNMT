@@ -8,8 +8,6 @@ class NMTModel(nn.Module):
         self.decoder = decoder
 
     def forward(self, src_inputs, tgt_inputs, src_lengths):
-        # Get batch size
-        batch_size = src_inputs.size(1)
 
         # Run wrods through encoder
         encoder_outputs, encoder_hidden = self.encoder(src_inputs, src_lengths, None)

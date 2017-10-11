@@ -39,6 +39,7 @@ class VocabTable(object):
                         if idx >= vocab_size:
                             break                
                     idx += 1
+            print(idx)
 
 
         self.vocab_size = len(self.word2index)
