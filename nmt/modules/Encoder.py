@@ -8,7 +8,7 @@ from nmt.modules.SRU import SRU
 
 
 class EncoderGRU(nn.Module):
-    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1):
+    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
         super(EncoderGRU, self).__init__()
         
 
@@ -17,7 +17,7 @@ class EncoderGRU(nn.Module):
         self.dropout = dropout
 
         self.embeddings = embeddings 
-        self.gru = nn.GRU(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=True)
+        self.gru = nn.GRU(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
         
     def forward(self, rnn_input, input_lengths, hidden=None):
         # Note: we run this all at once (over multiple batches of multiple sequences)
@@ -29,7 +29,7 @@ class EncoderGRU(nn.Module):
         return outputs, hidden
 
 class EncoderSRU(nn.Module):
-    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1):
+    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
         super(EncoderSRU, self).__init__()
         
         self.hidden_size = hidden_size
@@ -42,7 +42,7 @@ class EncoderSRU(nn.Module):
                         rnn_dropout = dropout,       # variational dropout applied on linear transformation
                         use_tanh = 1,            # use tanh?
                         use_relu = 0,            # use ReLU?
-                        bidirectional = True    # bidirectional RNN ?
+                        bidirectional = bidirectional    # bidirectional RNN ?
                     )
 
         self.embeddings = embeddings
