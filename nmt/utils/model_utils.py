@@ -25,11 +25,12 @@ def create_encoder(hparams, embedding):
                             hparams['num_layers'],
                             hparams['dropout'])
 
-def create_decoder(hparams, embedding):
+def create_decoder(hparams, embedding, tgt_vocab_size):
     return AttnDecoderGRU(hparams['atten_model'],
                                 embedding,
                                 hparams['embedding_size'],
                                 hparams['hidden_size'],
+                                tgt_vocab_size,
                                 hparams['num_layers'],
                                 hparams['dropout'])
 
@@ -40,7 +41,7 @@ def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
                                                                               hparams['embedding_size'],
                                                                               hparams['embedding_size'])
     encoder = create_encoder(hparams, embedding_encoder)
-    decoder = create_decoder(hparams, embedding_decoder)
+    decoder = create_decoder(hparams, embedding_decoder, tgt_vocab_size)
     
     model = NMTModel(encoder, decoder)
 

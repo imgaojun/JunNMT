@@ -6,6 +6,7 @@ class NMTModel(nn.Module):
         super(NMTModel, self).__init__()
         self.encoder = encoder
         self.decoder = decoder
+        
 
     def forward(self, src_inputs, tgt_inputs, src_lengths):
 
@@ -17,5 +18,6 @@ class NMTModel(nn.Module):
         all_decoder_outputs , decoder_hiddens = self.decoder(
                 tgt_inputs, decoder_init_hidden, encoder_outputs
             )        
+
 
         return all_decoder_outputs
