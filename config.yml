@@ -2,7 +2,7 @@
 rnn_type: SRU
 embedding_size: 100
 hidden_size: 200
-num_layers: 2
+num_layers: 6
 dropout: 0.1
 atten_model: dot
 decode_max_length: 100

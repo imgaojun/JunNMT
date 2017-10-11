@@ -41,7 +41,7 @@ class AttnDecoderSRU(nn.Module):
                         rnn_dropout = dropout,       # variational dropout applied on linear transformation
                         use_tanh = 1,            # use tanh?
                         use_relu = 0,            # use ReLU?
-                        bidirectional = False    # bidirectional RNN ?
+                        bidirectional = True    # bidirectional RNN ?
                     )
         self.attention = GlobalAttention(hidden_size)
         self.linear_out = nn.Linear(hidden_size, output_size)

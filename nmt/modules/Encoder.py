@@ -29,7 +29,7 @@ class EncoderGRU(nn.Module):
         return outputs, hidden
 
 class EncoderSRU(nn.Module):
-    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
+    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1):
         super(EncoderSRU, self).__init__()
         
         self.hidden_size = hidden_size
@@ -42,7 +42,7 @@ class EncoderSRU(nn.Module):
                         rnn_dropout = dropout,       # variational dropout applied on linear transformation
                         use_tanh = 1,            # use tanh?
                         use_relu = 0,            # use ReLU?
-                        bidirectional = bidirectional    # bidirectional RNN ?
+                        bidirectional = True    # bidirectional RNN ?
                     )
 
         self.embeddings = embeddings
