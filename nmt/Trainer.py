@@ -1,5 +1,7 @@
 import time
 
+
+
 class Trainer(object):
     def __init__(self, model, train_dataset, valid_iter,
                  train_criteria, valid_criteria, optim):
@@ -8,7 +10,6 @@ class Trainer(object):
         self.train_dataset = train_dataset
         self.valid_iter = valid_iter
         self.train_criteria = train_criteria
-        self.valid_criteria = valid_criteria
         self.optim = optim
 
         # Set model in training mode.
