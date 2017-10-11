@@ -22,7 +22,6 @@ if __name__ == '__main__':
     train_criteria = Criteria()
     if hparams['USE_CUDA']:
         train_model = train_model.cuda()
-        train_criteria = train_criteria.cuda()
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
     trainer = Trainer(train_model,dataset.iterator,None,train_criteria,None,optim)

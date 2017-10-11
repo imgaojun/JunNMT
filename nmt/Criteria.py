@@ -3,11 +3,10 @@ import torch.nn as nn
 from torch.nn import functional
 from torch.autograd import Variable
 
-class Criteria(nn.Module):
+class Criteria(object):
     def __init__(self):
-        super(Criteria, self).__init__()
-
-    def forward(self, logits, target, length):
+        pass
+    def __call__(self, logits, target, length):
 
         return self._compute_loss(logits,target,length)
 
