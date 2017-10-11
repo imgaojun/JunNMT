@@ -49,9 +49,7 @@ class EncoderSRU(nn.Module):
         
     def forward(self, rnn_input, input_lengths, hidden=None):
         # Note: we run this all at once (over multiple batches of multiple sequences)
-        # packed = torch.nn.utils.rnn.pack_padded_sequence(rnn_input, input_lengths)
         embeded = self.embeddings(rnn_input)
         outputs, hidden = self.rnn(embeded)
-        # outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
         # outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
         return outputs, hidden

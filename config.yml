@@ -1,5 +1,6 @@
 # Network
-rnn_type: SRU
+rnn_type: SRU #LSTM, GRU, SRU
+bidirectional: true
 embedding_size: 100
 hidden_size: 200
 num_layers: 6
@@ -8,8 +9,9 @@ atten_model: dot
 decode_max_length: 100
 # Vocab
 share_embedding: false
-src_vocab_size: 30000
-tgt_vocab_size: 30000
+# Set vocab limit size(not support yet)
+# src_vocab_size: 30000
+# tgt_vocab_size: 30000
 
 
 # File
