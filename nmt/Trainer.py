@@ -66,6 +66,8 @@ class Trainer(object):
             while True:
                 try:
                     src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_dataset.iterator
+                    print(src_input_var)
+                    break
                 except StopIteration:     
                     print('end of epoch')  
                     self.train_dataset.init_iterator()
@@ -118,7 +120,6 @@ class Trainer(object):
         # Create starting vectors for decoder
         decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID])) # SOS
         decoder_hidden = encoder_hidden
-        print(decoder_hidden)
         
         if self.USE_CUDA:
             decoder_input = decoder_input.cuda()
