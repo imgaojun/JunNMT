@@ -116,8 +116,9 @@ class Trainer(object):
 
 
         # Create starting vectors for decoder
-        decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID]), volatile=True) # SOS
+        decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID])) # SOS
         decoder_hidden = encoder_hidden
+        print(decoder_hidden)
         
         if self.USE_CUDA:
             decoder_input = decoder_input.cuda()
