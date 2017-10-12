@@ -27,7 +27,7 @@ tgt_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
 USE_CUDA: true
 
 # Train
-learning_rate: 0.001
+learning_rate: 0.0001
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
