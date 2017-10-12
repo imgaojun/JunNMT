@@ -163,6 +163,7 @@ class Trainer(object):
             src_input_var = src_input_var.cuda()
         print(src_input_var)
 
+        
         output_words = self.infer(src_input_var,src_input_lengths,hparams['decode_max_length'])
         output_sentence = ' '.join(output_words)
         print('> src: ', input_sentence)
