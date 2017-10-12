@@ -1,6 +1,6 @@
 # Network
 rnn_type: GRU #LSTM, GRU, SRU
-bidirectional: true
+bidirectional: false
 embedding_size: 100
 hidden_size: 100
 num_layers: 2
