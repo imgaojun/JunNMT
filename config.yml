@@ -1,9 +1,9 @@
 # Network
-rnn_type: SRU #LSTM, GRU, SRU
+rnn_type: GRU #LSTM, GRU, SRU
 bidirectional: false
 embedding_size: 100
 hidden_size: 100
-num_layers: 10
+num_layers: 2
 dropout: 0.1
 atten_model: dot
 decode_max_length: 100
