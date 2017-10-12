@@ -34,13 +34,11 @@ if __name__ == '__main__':
     if hparams['USE_CUDA']:
         train_model = train_model.cuda()
 
-    en_optim = optim.Adam(train_model.encoder.parameters(), lr=hparams['learning_rate'])
-    de_optim = optim.Adam(train_model.decoder.parameters(), lr=hparams['learning_rate'])
+    optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
     trainer = Trainer(train_model,
                       dataset,
                       train_criteria,
-                      en_optim,
-                      de_optim,
+                      optim,
                       src_vocab_table,
                       tgt_vocab_table)
     trainer.train(hparams,eval_pairs)

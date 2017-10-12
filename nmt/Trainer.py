@@ -8,8 +8,7 @@ class Trainer(object):
     def __init__(self, model, 
                  train_dataset, 
                  train_criteria, 
-                 en_optim, 
-                 de_optim,
+                 optim, 
                  src_vocab_table,
                  tgt_vocab_table,
                  USE_CUDA=True):
@@ -17,9 +16,8 @@ class Trainer(object):
         self.model = model
         self.train_dataset = train_dataset
         self.train_criteria = train_criteria
-        self.en_optim = en_optim
+        self.optim = optim
 
-        self.de_optim = de_optim
         self.src_vocab_table = src_vocab_table
         self.tgt_vocab_table = tgt_vocab_table
 
@@ -34,14 +32,12 @@ class Trainer(object):
                tgt_inputs,
                tgt_lengths,
                tgt_outputs):
-        self.en_optim.zero_grad()
-        self.de_optim.zero_grad()
+        self.optim.zero_grad()
         all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
-        loss = self.train_criteria(all_decoder_outputs, tgt_outputs, tgt_lengths)
+        loss = self.train_criteria(all_decoder_outputs.transpose(0, 1).contiguous(), tgt_outputs.transpose(0, 1).contiguous(), tgt_lengths)
         loss.backward()
-        self.en_optim.step()
-        self.de_optim.step()
+        self.optim.step()
         return loss.data[0]
 
     def train(self,
