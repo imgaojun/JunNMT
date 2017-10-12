@@ -1,17 +1,27 @@
 import time
-
+import nmt.utils.vocab_utils as vocab_utils
+import torch
+from torch.autograd import Variable
 
 
 class Trainer(object):
-    def __init__(self, model, train_dataset, valid_iter,
-                 train_criteria, valid_criteria, optim):
+    def __init__(self, model, 
+                 train_dataset, 
+                 train_criteria, 
+                 optim, 
+                 src_vocab_table,
+                 tgt_vocab_table,
+                 USE_CUDA=True):
 
         self.model = model
         self.train_dataset = train_dataset
-        self.valid_iter = valid_iter
         self.train_criteria = train_criteria
         self.optim = optim
 
+        self.src_vocab_table = src_vocab_table
+        self.tgt_vocab_table = tgt_vocab_table
+
+        self.USE_CUDA = USE_CUDA
         # Set model in training mode.
         self.model.train()       
 
@@ -31,8 +41,12 @@ class Trainer(object):
         return loss.data[0]
 
     def train(self,
-              num_train_epochs,
-              steps_per_stats):
+              hparams,
+              eval_dataset = None):
+
+        num_train_epochs = hparams['num_train_epochs']
+        steps_per_stats = hparams['steps_per_stats']
+        steps_per_eval = hparams['steps_per_eval']
 
         global_step = 0
         step_epoch = 0
@@ -83,4 +97,72 @@ class Trainer(object):
                             step_epoch,
                             avg_step_time,
                             avg_step_loss)
-                        )                   
+                        )           
+                if global_step - last_eval_step >= steps_per_eval:
+                    last_eval_step = global_step
+                    self.eval_randomly(hparams,eval_dataset)
+                    self.eval_randomly(hparams,eval_dataset)
+                    self.eval_randomly(hparams,eval_dataset)
+
+    def infer(self,
+               src_input,
+               src_length,
+               max_length):
+        self.model.encoder.eval()
+        self.model.decoder.eval()
+        # Run wrods through encoder
+        encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_length, None)    
+
+
+        # Create starting vectors for decoder
+        decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID]), volatile=True) # SOS
+        decoder_hidden = encoder_hidden
+        
+        if self.USE_CUDA:
+            decoder_input = decoder_input.cuda()
+
+        # Store output words and attention states
+        decoded_words = []
+
+        # Run through decoder
+        for di in range(max_length):
+            decoder_input = torch.unsqueeze(decoder_input,0)
+            decoder_output, decoder_hidden = self.model.decoder(
+                decoder_input, decoder_hidden, encoder_outputs
+            )
+
+            # Choose top word from output
+            topv, topi = decoder_output.data.topk(1)
+            ni = topi[0][0]
+            ni = ni.cpu().numpy().tolist()[0]
+            if  ni == vocab_utils.EOS_ID:
+                decoded_words.append('<EOS>')
+                break
+            else:
+                decoded_words.append(self.tgt_vocab_table.index2word[ni])
+                
+            # Next input is chosen word
+            decoder_input = Variable(torch.LongTensor([ni]))
+            if self.USE_CUDA: decoder_input = decoder_input.cuda()
+
+
+
+        self.model.encoder.train()
+        self.model.decoder.train()
+        return decoded_words
+
+    def eval_randomly(self,hparams,eval_dataset):
+        input_sentence, target_sentence = random.choice(eval_dataset)
+        src_inputs = [vocab_utils.seq2index(input_sentence,self.src_vocab_table)]
+        src_input_lengths = [len(src_inputs)]
+        
+        src_input_var = Variable(torch.LongTensor(src_inputs)).transpose(0, 1)
+        if self.USE_CUDA:
+            src_input_var = src_input_var.cuda()
+
+        output_words = self.infer(src_input_var,src_input_lengths,hparams['decode_max_length'])
+        output_sentence = ' '.join(output_words)
+        print('> src: ', input_sentence)
+        if target_sentence is not None:
+            print('= tgt: ', target_sentence)
+        print('< out: ', output_sentence)     
