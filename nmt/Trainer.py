@@ -108,8 +108,9 @@ class Trainer(object):
                src_input,
                src_length,
                max_length):
-        self.model.encoder.eval()
-        self.model.decoder.eval()
+        # self.model.encoder.eval()
+        # self.model.decoder.eval()
+        self.model.eval()
         # Run wrods through encoder
         encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_length, None)    
 
@@ -146,9 +147,9 @@ class Trainer(object):
             if self.USE_CUDA: decoder_input = decoder_input.cuda()
 
 
-
-        self.model.encoder.train()
-        self.model.decoder.train()
+        self.model.train()
+        # self.model.encoder.train()
+        # self.model.decoder.train()
         return decoded_words
 
     def eval_randomly(self,hparams,eval_dataset):
