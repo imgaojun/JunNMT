@@ -3,7 +3,7 @@ rnn_type: GRU #LSTM, GRU, SRU
 bidirectional: true
 embedding_size: 100
 hidden_size: 200
-num_layers: 4
+num_layers: 2
 dropout: 0.1
 atten_model: dot
 decode_max_length: 100
