@@ -66,8 +66,7 @@ class Trainer(object):
             while True:
                 try:
                     src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_dataset.iterator
-                    print(src_input_var)
-                    break
+
                 except StopIteration:     
                     print('end of epoch')  
                     self.train_dataset.init_iterator()
@@ -162,6 +161,7 @@ class Trainer(object):
         src_input_var = Variable(torch.LongTensor(src_inputs)).transpose(0, 1)
         if self.USE_CUDA:
             src_input_var = src_input_var.cuda()
+        print(src_input_var)
 
         output_words = self.infer(src_input_var,src_input_lengths,hparams['decode_max_length'])
         output_sentence = ' '.join(output_words)
