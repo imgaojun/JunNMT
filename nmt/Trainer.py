@@ -132,9 +132,8 @@ class Trainer(object):
             decoder_output, decoder_hidden = self.model.decoder(
                 decoder_input, decoder_hidden, encoder_outputs
             )
-
+            decoder_output[0][0][vocab_utils.PAD_ID] = 0.0
             # Choose top word from output
-            print(decoder_output)
             topv, topi = decoder_output.data.topk(1)
             ni = topi[0][0]
             ni = ni.cpu().numpy().tolist()[0]
