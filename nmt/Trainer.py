@@ -134,6 +134,7 @@ class Trainer(object):
             )
 
             # Choose top word from output
+            print(decoder_output)
             topv, topi = decoder_output.data.topk(1)
             ni = topi[0][0]
             ni = ni.cpu().numpy().tolist()[0]
@@ -161,9 +162,7 @@ class Trainer(object):
         src_input_var = Variable(torch.LongTensor(src_inputs)).transpose(0, 1)
         if self.USE_CUDA:
             src_input_var = src_input_var.cuda()
-        print(src_input_var)
 
-        
         output_words = self.infer(src_input_var,src_input_lengths,hparams['decode_max_length'])
         output_sentence = ' '.join(output_words)
         print('> src: ', input_sentence)
