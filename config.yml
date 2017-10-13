@@ -6,11 +6,14 @@ hidden_size: 100
 num_layers: 4
 dropout: 0.1
 atten_model: dot
+
+# Decode
 decode_max_length: 100
 beam_size: 1
+
 # Vocab
 share_embedding: false
-# Set vocab limit size(not support yet)
+# Set vocab limit size
 # src_vocab_size: 30000
 # tgt_vocab_size: 30000
 
@@ -24,6 +27,7 @@ dev_src_file: /home/xiapeng/python/process_data/res/deve_src_file
 dev_tgt_file: /home/xiapeng/python/process_data/res/deve_tgt_file
 src_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
 tgt_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
+
 # Misc
 USE_CUDA: true
 

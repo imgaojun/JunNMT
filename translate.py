@@ -3,6 +3,7 @@ import nmt.utils.vocab_utils as vocab_utils
 import nmt.model_helper as model_helper
 import nmt.utils.misc_utils as utils
 from nmt.utils.data_utils import InferDataSet
+import torch
 import argparse
 import codecs
 infer_parser = argparse.ArgumentParser()
@@ -28,11 +29,19 @@ model = model_helper.create_base_model(hparams,
                                        tgt_vocab_table.vocab_size)
 
 
+print('Loading parameters ...')
+
+model.load_state_dict(torch.load(args.model))
+
+
 translator = Translator(model, 
                         tgt_vocab_table, 
                         hparams['beam_size'], 
                         hparams['decode_max_length'])
 
+
+
+print('start translating ...')
 with codecs.open(args.src_in, 'r', encoding='utf8') as src_file:
     with codecs.open(args.tgt_out, 'r', encoding='utf8') as tgt_file:
         for line in src_file:
