@@ -11,6 +11,7 @@ class Trainer(object):
                  optim, 
                  src_vocab_table,
                  tgt_vocab_table,
+                 out_dir,
                  USE_CUDA=True):
 
         self.model = model
@@ -22,6 +23,8 @@ class Trainer(object):
         self.tgt_vocab_table = tgt_vocab_table
 
         self.USE_CUDA = USE_CUDA
+
+        self.out_dir = out_dir     
         # Set model in training mode.
         self.model.train()       
 
@@ -101,16 +104,20 @@ class Trainer(object):
                         )           
                 if global_step - last_eval_step >= steps_per_eval:
                     last_eval_step = global_step
-                    self.eval_randomly(hparams,eval_dataset)
-                    self.eval_randomly(hparams,eval_dataset)
-                    self.eval_randomly(hparams,eval_dataset)
+                    if eval_dataset is not None:
+                        self.eval_randomly(hparams,eval_dataset)
+                        self.eval_randomly(hparams,eval_dataset)
+                        self.eval_randomly(hparams,eval_dataset)
+
+
+            print('saving best model ...')
+            self.save_per_epoch(step_epoch)
 
     def infer(self,
                src_input,
                src_length,
                max_length):
-        # self.model.encoder.eval()
-        # self.model.decoder.eval()
+
         self.model.eval()
         # Run wrods through encoder
         encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_length, None)    
@@ -148,8 +155,7 @@ class Trainer(object):
 
 
         self.model.train()
-        # self.model.encoder.train()
-        # self.model.decoder.train()
+
         return decoded_words
 
     def eval_randomly(self,hparams,eval_dataset):
@@ -167,3 +173,10 @@ class Trainer(object):
         if target_sentence is not None:
             print('= tgt: ', target_sentence)
         print('< out: ', output_sentence)     
+
+
+    def save_per_epoch(self, epoch):
+        save_dir = os.path.join(self.out_dir,"epoch%d/"%(epoch))
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        torch.save(self.model.state_dict(), os.path.join(save_dir,'model.pkl'))

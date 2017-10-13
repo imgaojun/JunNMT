@@ -35,10 +35,12 @@ if __name__ == '__main__':
         train_model = train_model.cuda()
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
+    
     trainer = Trainer(train_model,
                       dataset,
                       train_criteria,
                       optim,
                       src_vocab_table,
-                      tgt_vocab_table)
+                      tgt_vocab_table,
+                      hparams['out_dir'])
     trainer.train(hparams,eval_pairs)

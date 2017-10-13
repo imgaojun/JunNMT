@@ -2,15 +2,13 @@ import nmt.utils.vocab_utils as vocab_utils
 import torch
 from torch.autograd import Variable
 class Translator(object):
-    def __init__(self, model, tgt_vocab_table, beam_size, USE_CUDA, max_length):
+    def __init__(self, model, tgt_vocab_table, beam_size, max_length, USE_CUDA=True):
         self.model = model
         self.tgt_vocab_table = tgt_vocab_table
         self.beam_size = beam_size
         self.USE_CUDA = USE_CUDA
         self.max_length = max_length
         
-        pass
-
     def decode(self, src_input, src_input_length):
         self.model.eval()
         encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_input_length, None)
@@ -25,6 +23,8 @@ class Translator(object):
             decoded_words = self._greedy_decode(decoder_init_hidden,decoder_input, encoder_outputs)
         else:
             pass
+
+        return decoded_words
 
 
     def _greedy_decode(self, decoder_init_hidden, decoder_input, encoder_outputs):

@@ -7,6 +7,7 @@ num_layers: 4
 dropout: 0.1
 atten_model: dot
 decode_max_length: 100
+beam_size: 1
 # Vocab
 share_embedding: false
 # Set vocab limit size(not support yet)
