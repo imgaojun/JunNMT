@@ -25,7 +25,11 @@ with codecs.open(hparams['dev_src_file'], 'r', encoding='utf8',errors='replace')
 src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'])
 tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'])
 
-dataset = data_utils.TrainDataSet(hparams['train_src_file'],hparams['train_tgt_file'],hparams['batch_size'],src_vocab_table,tgt_vocab_table)
+dataset = data_utils.TrainDataSet(hparams['train_src_file'],
+                                  hparams['train_tgt_file'],
+                                  hparams['batch_size'],
+                                  src_vocab_table,
+                                  tgt_vocab_table)
 
 
 if __name__ == '__main__':
@@ -35,7 +39,7 @@ if __name__ == '__main__':
         train_model = train_model.cuda()
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
-    
+
     trainer = Trainer(train_model,
                       dataset,
                       train_criteria,
