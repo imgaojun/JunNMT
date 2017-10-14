@@ -3,6 +3,7 @@ import nmt.utils.vocab_utils as vocab_utils
 import torch
 from torch.autograd import Variable
 import random
+import os
 
 class Trainer(object):
     def __init__(self, model, 
