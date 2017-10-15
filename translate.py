@@ -17,10 +17,6 @@ hparams = utils.load_hparams(args.config)
 src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'])
 tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'])
 
-infer_dataset = InferDataSet(hparams['train_src_file'],
-                            hparams['train_tgt_file'],
-                            hparams['batch_size'],
-                            src_vocab_table)
 
 
 model = model_helper.create_base_model(hparams, 
