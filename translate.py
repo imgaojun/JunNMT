@@ -39,7 +39,7 @@ translator = Translator(model,
 
 
 print('start translating ...')
-with codecs.open(args.src_in, 'r', encoding='utf8') as src_file:
+with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file:
     with codecs.open(args.tgt_out, 'wb', encoding='utf8') as tgt_file:
         for line in src_file:
             src_seq = line.strip()
