@@ -5,7 +5,7 @@ embedding_size: 100
 hidden_size: 100
 num_layers: 4
 dropout: 0.1
-atten_model: dot
+atten_model: dot #general, dot, false
 
 # Decode
 decode_max_length: 100

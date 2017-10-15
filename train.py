@@ -1,4 +1,4 @@
-import nmt.utils.model_utils as model_utils
+import nmt.model_helper as model_helper
 import nmt.utils.misc_utils as utils
 import nmt.utils.vocab_utils as vocab_utils
 import nmt.utils.data_utils as data_utils
@@ -33,7 +33,7 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
 
 
 if __name__ == '__main__':
-    train_model = model_utils.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
+    train_model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
     train_criteria = Criteria()
     if hparams['USE_CUDA']:
         train_model = train_model.cuda()

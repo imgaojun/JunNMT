@@ -3,6 +3,34 @@ import torch.nn as nn
 from nmt.modules.Attention import GlobalAttention
 from nmt.modules.SRU import SRU
 
+class AttnDecoderLSTM(nn.Module):
+    def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
+        super(AttnDecoderLSTM, self).__init__()
+
+        self.bidirectional = bidirectional
+
+        self.attn_model = attn_model
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.dropout = dropout
+        self.embeddings = embeddings
+
+        self.lstm =  nn.LSTM(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
+        
+        if self.bidirectional:
+            self.attention = GlobalAttention(hidden_size*2)
+            self.linear_out = nn.Linear(hidden_size*2, output_size)
+        else:
+            self.attention = GlobalAttention(hidden_size)
+            self.linear_out = nn.Linear(hidden_size, output_size)    
+    def forward(self, rnn_input, last_hidden, encoder_outputs):
+        embeded = self.embeddings(rnn_input)        
+        rnn_output , (hidden,c_n) = self.lstm(embeded,(last_hidden,None))
+        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1), encoder_outputs.transpose(0,1))
+        output = self.linear_out(attn_h)
+        return output, hidden
+
+
 class AttnDecoderGRU(nn.Module):
     def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
         super(AttnDecoderGRU, self).__init__()

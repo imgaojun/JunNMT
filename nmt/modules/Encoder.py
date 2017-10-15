@@ -7,6 +7,28 @@ from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
 from nmt.modules.SRU import SRU
 
 
+
+class EncoderLSTM(nn.Module):
+    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
+        super(EncoderLSTM, self).__init__()
+        
+
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.dropout = dropout
+
+        self.embeddings = embeddings 
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
+        
+    def forward(self, rnn_input, input_lengths, last_hidden=None):
+        # Note: we run this all at once (over multiple batches of multiple sequences)
+        embeded = self.embeddings(rnn_input)
+        packed = torch.nn.utils.rnn.pack_padded_sequence(embeded, input_lengths)
+        outputs, (hidden,c_n) = self.lstm(packed, (last_hidden,None))
+        outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
+        # outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
+        return outputs, hidden
+
 class EncoderGRU(nn.Module):
     def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
         super(EncoderGRU, self).__init__()

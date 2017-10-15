@@ -34,6 +34,13 @@ def create_encoder(hparams, embedding):
                             hparams['num_layers'],
                             hparams['dropout'],
                             hparams['bidirectional'])
+    elif hparams['rnn_type'] == 'LSTM':
+        encoder = EncoderLSTM(embedding,
+                            hparams['embedding_size'],
+                            hparams['hidden_size'],
+                            hparams['num_layers'],
+                            hparams['dropout'],
+                            hparams['bidirectional'])                            
     return encoder
 
 def create_decoder(hparams, embedding, tgt_vocab_size):
@@ -55,6 +62,15 @@ def create_decoder(hparams, embedding, tgt_vocab_size):
                                 hparams['num_layers'],
                                 hparams['dropout'],
                                 hparams['bidirectional'])
+    elif hparams['rnn_type'] == 'LSTM':
+        decoder = AttnDecoderLSTM(hparams['atten_model'],
+                                embedding,
+                                hparams['embedding_size'],
+                                hparams['hidden_size'],
+                                tgt_vocab_size,
+                                hparams['num_layers'],
+                                hparams['dropout'],
+                                hparams['bidirectional'])                                
 
     return decoder
 
