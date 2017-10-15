@@ -1,5 +1,5 @@
-from nmt.modules.Encoder import EncoderGRU,EncoderSRU
-from nmt.modules.Decoder import AttnDecoderGRU,AttnDecoderSRU
+from nmt.modules.Encoder import EncoderGRU,EncoderSRU,EncoderLSTM
+from nmt.modules.Decoder import AttnDecoderGRU,AttnDecoderSRU,AttnDecoderLSTM
 from nmt.modules.Embedding import Embedding
 from nmt.NMTModel import NMTModel
 def create_emb_for_encoder_and_decoder(share_embedding,
