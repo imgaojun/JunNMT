@@ -2,7 +2,6 @@ from nmt.Translator import Translator
 import nmt.utils.vocab_utils as vocab_utils
 import nmt.model_helper as model_helper
 import nmt.utils.misc_utils as utils
-from nmt.utils.data_utils import InferDataSet
 import torch
 import argparse
 import codecs
