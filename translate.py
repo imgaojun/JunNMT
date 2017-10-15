@@ -28,6 +28,8 @@ print('Loading parameters ...')
 
 model.load_state_dict(torch.load(args.model))
 
+if hparams['USE_CUDA']:
+    model = model.cuda()
 
 translator = Translator(model, 
                         tgt_vocab_table, 
