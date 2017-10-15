@@ -83,7 +83,7 @@ def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
     encoder = create_encoder(hparams, embedding_encoder)
     decoder = create_decoder(hparams, embedding_decoder, tgt_vocab_size)
     
-    model = NMTModel(encoder, decoder)
+    model = NMTModel(hparams['rnn_type'], encoder, decoder)
 
     return model
 
