@@ -24,7 +24,7 @@ class EncoderLSTM(nn.Module):
         # Note: we run this all at once (over multiple batches of multiple sequences)
         embeded = self.embeddings(rnn_input)
         packed = torch.nn.utils.rnn.pack_padded_sequence(embeded, input_lengths)
-        outputs, (hidden,c_n) = self.lstm(packed, (last_hidden,None))
+        outputs, (hidden,c_n) = self.lstm(packed, None)
         outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
         # outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
         return outputs, hidden
