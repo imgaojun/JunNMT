@@ -23,9 +23,9 @@ class AttnDecoderLSTM(nn.Module):
         else:
             self.attention = GlobalAttention(hidden_size)
             self.linear_out = nn.Linear(hidden_size, output_size)    
-    def forward(self, rnn_input, last_hidden, encoder_outputs):
+    def forward(self, rnn_input, h0, c0, encoder_outputs):
         embeded = self.embeddings(rnn_input)        
-        rnn_output , (hidden,c_n) = self.lstm(embeded,(last_hidden,None))
+        rnn_output , (hidden,c_n) = self.lstm(embeded,(h0,c0))
         attn_h, align_vectors = self.attention(rnn_output.transpose(0,1), encoder_outputs.transpose(0,1))
         output = self.linear_out(attn_h)
         return output, hidden
