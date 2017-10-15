@@ -7,7 +7,6 @@ import os
 
 class Trainer(object):
     def __init__(self, model, 
-                 rnn_type,
                  train_dataset, 
                  train_criteria, 
                  optim, 
