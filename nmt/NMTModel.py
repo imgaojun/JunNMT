@@ -21,7 +21,7 @@ class NMTModel(nn.Module):
         # decoder_init_hidden = encoder_hidden[:self.encoder.num_layers] # Use last (forward) hidden state from encoder
         decoder_init_hidden = encoder_hidden
         if self.rnn_type == 'LSTM':
-            all_decoder_outputs , decoder_hiddens = self.decoder(
+            all_decoder_outputs , decoder_hiddens, c_n = self.decoder(
                     tgt_inputs, decoder_init_hidden, c_n, encoder_outputs
                 )                    
         else:

@@ -7,6 +7,7 @@ import os
 
 class Trainer(object):
     def __init__(self, model, 
+                 rnn_type,
                  train_dataset, 
                  train_criteria, 
                  optim, 
@@ -121,7 +122,11 @@ class Trainer(object):
 
         self.model.eval()
         # Run wrods through encoder
-        encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_length, None)    
+        if self.model.rnn_type == 'LSTM':
+            encoder_outputs, (encoder_hidden, c_n) = self.model.encoder(src_input, src_length, None)    
+            
+        else:
+            encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_length, None)    
 
 
         # Create starting vectors for decoder
@@ -137,9 +142,14 @@ class Trainer(object):
         # Run through decoder
         for di in range(max_length):
             decoder_input = torch.unsqueeze(decoder_input,0)
-            decoder_output, decoder_hidden = self.model.decoder(
-                decoder_input, decoder_hidden, encoder_outputs
-            )
+            if self.model.rnn_type == 'LSTM':
+                decoder_output, decoder_hidden, c_n = self.model.decoder(
+                    decoder_input, decoder_hidden, c_n, encoder_outputs
+                )
+            else:
+                decoder_output, decoder_hidden = self.model.decoder(
+                    decoder_input, decoder_hidden, encoder_outputs
+                )                
             # Choose top word from output
             topv, topi = decoder_output.data.topk(2)
             ni = topi[0][0]
