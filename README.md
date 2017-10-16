@@ -4,11 +4,16 @@ Open-Source Neural Machine Translation in Pytorch
 ### About
 
 ### Requirements
-- Pytorch
+- Python >= 3.5
+- Pytorch >= 0.20
 
-### Train
+### Training
+Edit the `JunNMT/config.yml`, and excute `JunNMT/train.py` to train a model.
 
-### Translate
-
-### To-Do
-- Tensorboard Support
+### Tesing
+To perform testing, just run `python JunNMT/translate.py`
+| parameter     | description |
+|---            |--- |
+| --config PATH |  model configuration (e.g config.yml) |
+| --src_in PATH |  test file |
+| --model PATH  |  load existing model |
