@@ -5,7 +5,6 @@ import codecs
 parser = argparse.ArgumentParser()  
 parser.add_argument("--words_out")  
 parser.add_argument("--src_in")  
-parser.add_argument("--tgt_in")  
 
 args = parser.parse_args()  
 
@@ -22,16 +21,7 @@ with codecs.open(args.src_in, 'r',encoding="utf-8", errors='ignore') as f:
         for w in words_in:
             if w not in word_freqs:
                 word_freqs[w] = 0
-            word_freqs[w] += 1
-
-print('build vocabulary, processing %s'%(args.tgt_in))
-with codecs.open(args.tgt_in, 'r',encoding="utf-8", errors='ignore') as f:
-    for line in f:
-        words_in = line.strip().split(' ')
-        for w in words_in:
-            if w not in word_freqs:
-                word_freqs[w] = 0
-            word_freqs[w] += 1            
+            word_freqs[w] += 1    
 
 
 words = word_freqs.keys()
