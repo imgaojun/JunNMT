@@ -14,8 +14,8 @@ infer_parser.add_argument("--model", type=str)
 args = infer_parser.parse_args()
 hparams = utils.load_hparams(args.config)
 
-src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'])
-tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'])
+src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'], hparams['src_vocab_size'])
+tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'], hparams['tgt_vocab_size'])
 
 
 
