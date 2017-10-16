@@ -11,7 +11,7 @@ Open-Source Neural Machine Translation in Pytorch
 Edit the `JunNMT/config.yml`, and excute `JunNMT/train.py` to train a model.
 
 ### Tesing
-To perform testing, just run `python JunNMT/translate.py`
+To perform testing, just run `python JunNMT/translate.py`.
 
 | parameter     | description |
 |---            |--- |
