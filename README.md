@@ -1,5 +1,5 @@
 # JunNMT
-Open-Source Neural Machine Translation in Pytorch
+Neural Machine Translation in Pytorch
 
 ### About
 
