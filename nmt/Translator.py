@@ -43,7 +43,6 @@ class Translator(object):
             ni = topi[0][0]
             ni = ni.cpu().numpy().tolist()[0]
             if  ni == vocab_utils.EOS_ID:
-                decoded_words.append('<EOS>')
                 break
             else:
                 decoded_words.append(self.tgt_vocab_table.index2word[ni])
