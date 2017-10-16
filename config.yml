@@ -1,5 +1,5 @@
 # Network
-rnn_type: GRU #LSTM, GRU, SRU
+rnn_type: GRU #GRU, SRU
 bidirectional: false
 embedding_size: 100
 hidden_size: 100
