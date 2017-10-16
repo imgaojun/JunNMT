@@ -22,8 +22,8 @@ with codecs.open(hparams['dev_src_file'], 'r', encoding='utf8',errors='replace')
             tgt_seq = tgt_f.readline().strip()
             eval_pairs.append((src_seq,tgt_seq))
 
-src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'])
-tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'])
+src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'], hparams['src_vocab_size'])
+tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'], hparams['tgt_vocab_size'])
 
 dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['train_tgt_file'],
