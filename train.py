@@ -27,6 +27,7 @@ with codecs.open(hparams['dev_src_file'], 'r', encoding='utf8',errors='replace')
 src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'], hparams['src_vocab_size'])
 tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'], hparams['tgt_vocab_size'])
 
+print('Loading training data ...')
 dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['train_tgt_file'],
                                   hparams['batch_size'],

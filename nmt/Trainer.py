@@ -25,7 +25,7 @@ class Trainer(object):
         self.src_vocab_table = src_vocab_table
         self.tgt_vocab_table = tgt_vocab_table
 
-        self.USE_CUDA = USE_CUDA
+        self.USE_CUDA = hparams['USE_CUDA']
 
         self.out_dir = hparams['out_dir']
 
