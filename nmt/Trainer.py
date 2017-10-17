@@ -6,26 +6,29 @@ import random
 import os
 
 class Trainer(object):
-    def __init__(self, model, 
+    def __init__(self, 
+                 hparams,
+                 model, 
                  train_dataset, 
                  train_criteria, 
                  optim, 
                  src_vocab_table,
-                 tgt_vocab_table,
-                 out_dir,
-                 USE_CUDA=True):
+                 tgt_vocab_table):
 
         self.model = model
         self.train_dataset = train_dataset
         self.train_criteria = train_criteria
         self.optim = optim
 
+        self.grad_clip = hparams['grad_clip']
+
         self.src_vocab_table = src_vocab_table
         self.tgt_vocab_table = tgt_vocab_table
 
         self.USE_CUDA = USE_CUDA
 
-        self.out_dir = out_dir     
+        self.out_dir = hparams['out_dir']
+
         # Set model in training mode.
         self.model.train()       
 
@@ -41,6 +44,8 @@ class Trainer(object):
 
         loss = self.train_criteria(all_decoder_outputs.transpose(0, 1).contiguous(), tgt_outputs.transpose(0, 1).contiguous(), tgt_lengths)
         loss.backward()
+        torch.nn.utils.clip_grad_norm(self.model.encoder.parameters(), grad_clip)
+        torch.nn.utils.clip_grad_norm(self.model.decoder.parameters(), grad_clip)
         self.optim.step()
         return loss.data[0]
 

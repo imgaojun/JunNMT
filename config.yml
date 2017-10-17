@@ -5,8 +5,8 @@ embedding_size: 100
 hidden_size: 100
 num_layers: 4
 dropout: 0.1
-atten_model: dot #general, dot, false
-
+grad_clip: 5
+atten_model: dot #general, dot
 # Decode
 decode_max_length: 100
 beam_size: 1
@@ -21,10 +21,10 @@ tgt_vocab_size: 30000
 # File
 train_src_file: /home/xiapeng/python/process_data/res/train_src_file
 train_tgt_file: /home/xiapeng/python/process_data/res/train_tgt_file
-# train_src_file: /home/xiapeng/python/process_data/res/deve_src_file
-# train_tgt_file: /home/xiapeng/python/process_data/res/deve_tgt_file
+
 dev_src_file: /home/xiapeng/python/process_data/res/deve_src_file
 dev_tgt_file: /home/xiapeng/python/process_data/res/deve_tgt_file
+
 src_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
 tgt_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
 
@@ -32,7 +32,7 @@ tgt_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
 USE_CUDA: true
 
 # Train
-learning_rate: 0.0001
+learning_rate: 0.0004
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000

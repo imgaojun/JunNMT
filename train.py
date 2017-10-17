@@ -40,11 +40,11 @@ if __name__ == '__main__':
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
 
-    trainer = Trainer(train_model,
+    trainer = Trainer(hparams,
+                      train_model,
                       dataset,
                       train_criteria,
                       optim,
                       src_vocab_table,
-                      tgt_vocab_table,
-                      hparams['out_dir'])
+                      tgt_vocab_table)
     trainer.train(hparams,eval_pairs)
