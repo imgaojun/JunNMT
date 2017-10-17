@@ -7,6 +7,8 @@ from torch import optim
 from nmt.Trainer import Trainer
 from nmt.Criteria import Criteria
 import codecs
+import os
+import shutil
 train_parser = argparse.ArgumentParser()
 train_parser.add_argument("--config", type=str, default="./config.yml")
 args = train_parser.parse_args()
@@ -30,6 +32,13 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['batch_size'],
                                   src_vocab_table,
                                   tgt_vocab_table)
+
+if not os.path.exists(hparams['out_dir']):
+    os.makedirs(hparams['out_dir'])
+
+print('saveing config file to %s ...'%(hparams['out_dir']))
+# save config.yml
+shutil.copy(args.config, hparams['out_dir'])
 
 
 if __name__ == '__main__':
