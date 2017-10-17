@@ -44,8 +44,8 @@ class Trainer(object):
 
         loss = self.train_criteria(all_decoder_outputs.transpose(0, 1).contiguous(), tgt_outputs.transpose(0, 1).contiguous(), tgt_lengths)
         loss.backward()
-        torch.nn.utils.clip_grad_norm(self.model.encoder.parameters(), grad_clip)
-        torch.nn.utils.clip_grad_norm(self.model.decoder.parameters(), grad_clip)
+        torch.nn.utils.clip_grad_norm(self.model.encoder.parameters(), self.grad_clip)
+        torch.nn.utils.clip_grad_norm(self.model.decoder.parameters(), self.grad_clip)
         self.optim.step()
         return loss.data[0]
 
