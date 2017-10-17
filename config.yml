@@ -19,14 +19,14 @@ tgt_vocab_size: 30000
 
 
 # File
-train_src_file: /home/xiapeng/python/process_data/res/train_src_file
-train_tgt_file: /home/xiapeng/python/process_data/res/train_tgt_file
+train_src_file: /home/xiapeng/gaojun/data/trans/train.cn
+train_tgt_file: /home/xiapeng/gaojun/data/trans/train.en
 
-dev_src_file: /home/xiapeng/python/process_data/res/deve_src_file
-dev_tgt_file: /home/xiapeng/python/process_data/res/deve_tgt_file
+dev_src_file: /home/xiapeng/gaojun/trans/test/nist02.cn
+dev_tgt_file: /home/xiapeng/gaojun/trans/test/nist02.en0
 
-src_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
-tgt_vocab_file: /home/xiapeng/python/process_data/res/vocab.txt
+src_vocab_file: /home/xiapeng/gaojun/JunNMT_test/nmt_test/src_vocab.cn
+tgt_vocab_file: /home/xiapeng/gaojun/JunNMT_test/nmt_test/tgt_vocab.en
 
 # Misc
 USE_CUDA: true

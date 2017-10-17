@@ -37,7 +37,7 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
 if not os.path.exists(hparams['out_dir']):
     os.makedirs(hparams['out_dir'])
 
-print('saveing config file to %s ...'%(hparams['out_dir']))
+print('saving config file to %s ...'%(hparams['out_dir']))
 # save config.yml
 shutil.copy(args.config, hparams['out_dir'])
 
