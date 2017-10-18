@@ -48,11 +48,12 @@ class EncoderGRU(nn.Module):
         outputs, hidden = self.gru(packed, hidden)
         outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
         if self.bidirectional:
-            # outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
+            outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
    
         # The encoder hidden is  (layers*directions) x batch x dim.
         # We need to convert it to layers x batch x (directions*dim).
-            hidden = torch.cat([hidden[0:hidden.size(0):2], hidden[1:hidden.size(0):2]], 2)            
+            hidden = torch.cat([hidden[0:hidden.size(0):2], hidden[1:hidden.size(0):2]], 2)   
+            hidden = hidden[:, :, :self.hidden_size] + hidden[:, : ,self.hidden_size:]     
         return outputs, hidden
 
 class EncoderSRU(nn.Module):
@@ -78,6 +79,8 @@ class EncoderSRU(nn.Module):
         # Note: we run this all at once (over multiple batches of multiple sequences)
         embeded = self.embeddings(rnn_input)
         outputs, hidden = self.rnn(embeded)
-        # if self.bidirectional:
-        #     outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
+        if self.bidirectional:
+            outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
+            hidden = hidden[:, :, :self.hidden_size] + hidden[:, : ,self.hidden_size:]     
+            
         return outputs, hidden

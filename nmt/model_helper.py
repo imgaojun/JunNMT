@@ -47,10 +47,7 @@ def create_encoder(hparams, embedding):
 def create_decoder(hparams, embedding, tgt_vocab_size):
     atten_model = hparams['atten_model']
     embedding_size = hparams['embedding_size']
-    if hparams['bidirectional']:      
-        hidden_size = hparams['hidden_size']*2
-    else:
-        hidden_size = hparams['hidden_size']
+    hidden_size = hparams['hidden_size']
     num_layers = hparams['num_layers']
     dropout = hparams['dropout']    
     if hparams['rnn_type'] == 'SRU':
