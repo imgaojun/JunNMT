@@ -88,7 +88,7 @@ class AttnDecoderSRU(nn.Module):
         embeded = self.embeddings(rnn_input)
         rnn_output , hidden = self.sru(embeded,last_hidden)
 
-        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1), encoder_outputs.transpose(0,1))
+        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
         output = self.linear_out(attn_h)
 
         return output, hidden

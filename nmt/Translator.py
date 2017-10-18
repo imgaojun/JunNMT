@@ -8,9 +8,9 @@ class Translator(object):
         self.beam_size = beam_size
         self.USE_CUDA = USE_CUDA
         self.max_length = max_length
-        
-    def decode(self, src_input, src_input_length):
         self.model.eval()
+    def decode(self, src_input, src_input_length):
+        
         encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_input_length, None)
         decoder_init_hidden = encoder_hidden
 
