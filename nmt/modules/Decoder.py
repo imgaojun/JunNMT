@@ -4,6 +4,12 @@ from nmt.modules.Attention import GlobalAttention
 from nmt.modules.SRU import SRU
 import torch.nn.functional as F
 
+
+# class EncoderBase(nn.Module):
+
+
+
+
 class AttnDecoderLSTM(nn.Module):
     def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
         super(AttnDecoderLSTM, self).__init__()
@@ -44,20 +50,17 @@ class AttnDecoderGRU(nn.Module):
         self.dropout = dropout
         self.embeddings = embeddings
 
-        self.gru =  nn.GRU(input_size, hidden_size, num_layers, dropout=dropout, bidirectional=bidirectional)
+        self.rnn =  nn.RNN(input_size, hidden_size, num_layers, dropout=dropout, bidirectional=bidirectional)
         
-        if self.bidirectional:
-            self.attention = GlobalAttention(hidden_size*2)
-            self.linear_out = nn.Linear(hidden_size*2, output_size)
-        else:
-            self.attention = GlobalAttention(hidden_size)
-            self.linear_out = nn.Linear(hidden_size, output_size)    
+        if self.attn_model != 'none':
+            self.attention = GlobalAttention(hidden_size, attn_model)
+        self.linear_out = nn.Linear(hidden_size, output_size)      
     def forward(self, rnn_input, last_hidden, encoder_outputs):
         embeded = self.embeddings(rnn_input)        
-        rnn_output , hidden = self.gru(embeded,last_hidden)
-        rnn_output = F.tanh(rnn_output)
-        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
-        output = self.linear_out(attn_h)
+        rnn_output , hidden = self.rnn(embeded,last_hidden)
+        if self.attn_model != 'none':
+            rnn_output, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
+        output = self.linear_out(rnn_output)
         return output, hidden
     
 class AttnDecoderSRU(nn.Module):
@@ -79,18 +82,15 @@ class AttnDecoderSRU(nn.Module):
                         bidirectional = bidirectional    # bidirectional RNN ?
                     )
         
-        if self.bidirectional:
-            self.attention = GlobalAttention(hidden_size*2)
-            self.linear_out = nn.Linear(hidden_size*2, output_size)
-        else:
-            self.attention = GlobalAttention(hidden_size)
-            self.linear_out = nn.Linear(hidden_size, output_size)            
+        if self.attn_model != 'none':
+            self.attention = GlobalAttention(hidden_size, attn_model)
+        self.linear_out = nn.Linear(hidden_size, output_size)            
 
     def forward(self, rnn_input, last_hidden, encoder_outputs):
         embeded = self.embeddings(rnn_input)
         rnn_output , hidden = self.sru(embeded,last_hidden)
-
-        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
-        output = self.linear_out(attn_h)
+        if self.attn_model != 'none':
+            rnn_output, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
+        output = self.linear_out(rnn_output)
 
         return output, hidden
