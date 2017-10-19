@@ -39,13 +39,17 @@ class EncoderGRU(nn.Module):
         self.dropout = dropout
 
         self.embeddings = embeddings 
+<<<<<<< HEAD
         self.gru = nn.RNN(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
+=======
+        self.rnn = nn.GRU(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
+>>>>>>> a9896cb1a13567c621bc9ad6a705bceca0828d79
         
     def forward(self, rnn_input, input_lengths, hidden=None):
         # Note: we run this all at once (over multiple batches of multiple sequences)
         embeded = self.embeddings(rnn_input)
         packed = torch.nn.utils.rnn.pack_padded_sequence(embeded, input_lengths)
-        outputs, hidden = self.gru(packed, hidden)
+        outputs, hidden = self.rnn(packed, hidden)
         outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
         if self.bidirectional:
             outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
