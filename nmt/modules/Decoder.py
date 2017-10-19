@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from nmt.modules.Attention import GlobalAttention
 from nmt.modules.SRU import SRU
+import torch.nn.functional as F
 
 class AttnDecoderLSTM(nn.Module):
     def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
@@ -54,7 +55,8 @@ class AttnDecoderGRU(nn.Module):
     def forward(self, rnn_input, last_hidden, encoder_outputs):
         embeded = self.embeddings(rnn_input)        
         rnn_output , hidden = self.gru(embeded,last_hidden)
-        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1).contiguous())
+        rnn_output = F.tanh(rnn_output)
+        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
         output = self.linear_out(attn_h)
         return output, hidden
     
