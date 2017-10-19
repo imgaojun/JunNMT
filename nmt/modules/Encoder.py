@@ -39,11 +39,7 @@ class EncoderGRU(nn.Module):
         self.dropout = dropout
 
         self.embeddings = embeddings 
-<<<<<<< HEAD
         self.gru = nn.RNN(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
-=======
-        self.rnn = nn.GRU(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
->>>>>>> a9896cb1a13567c621bc9ad6a705bceca0828d79
         
     def forward(self, rnn_input, input_lengths, hidden=None):
         # Note: we run this all at once (over multiple batches of multiple sequences)

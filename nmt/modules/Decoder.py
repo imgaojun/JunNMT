@@ -50,11 +50,7 @@ class AttnDecoderGRU(nn.Module):
         self.dropout = dropout
         self.embeddings = embeddings
 
-<<<<<<< HEAD
         self.gru =  nn.RNN(input_size, hidden_size, num_layers, dropout=dropout, bidirectional=bidirectional)
-=======
-        self.rnn =  nn.GRU(input_size, hidden_size, num_layers, dropout=dropout, bidirectional=bidirectional)
->>>>>>> a9896cb1a13567c621bc9ad6a705bceca0828d79
         
         if self.attn_model != 'none':
             self.attention = GlobalAttention(hidden_size, attn_model)
