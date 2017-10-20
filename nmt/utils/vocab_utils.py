@@ -27,7 +27,7 @@ class VocabTable(object):
         self.index2word[UNK_ID] = UNK_token
         self.index2word[SOS_ID] = SOS_token
 
-        self.index2word[PAD_token] = PAD_ID        
+        self.word2index[PAD_token] = PAD_ID        
         self.word2index[EOS_token] = EOS_ID
         self.word2index[UNK_token] = UNK_ID
         self.word2index[SOS_token] = SOS_ID
