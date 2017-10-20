@@ -7,9 +7,9 @@ UNK_token = '<UNK>'
 SOS_token = '<S>'
 EOS_token = '</S>'
 PAD_ID = 0
-EOS_ID = 0
-UNK_ID = 1
-SOS_ID = 2
+EOS_ID = 1
+UNK_ID = 2
+SOS_ID = 3
 
 
 # Pad a with the PAD symbol
@@ -22,12 +22,12 @@ class VocabTable(object):
         self.index2word = {}
         self.word2index = {}
         
-        # self.index2word[PAD_ID] = PAD_token
+        self.index2word[PAD_ID] = PAD_token
         self.index2word[EOS_ID] = EOS_token
         self.index2word[UNK_ID] = UNK_token
         self.index2word[SOS_ID] = SOS_token
 
-        # self.index2word[PAD_token] = PAD_ID        
+        self.index2word[PAD_token] = PAD_ID        
         self.word2index[EOS_token] = EOS_ID
         self.word2index[UNK_token] = UNK_ID
         self.word2index[SOS_token] = SOS_ID
@@ -37,8 +37,8 @@ class VocabTable(object):
             for line in vocab_f:
                 word = line.strip()
                 if word not in self.word2index:
-                    self.word2index[word] = idx+3
-                    self.index2word[idx+3] = word
+                    self.word2index[word] = idx+4
+                    self.index2word[idx+4] = word
                     if vocab_size is not None:
                         if idx >= vocab_size:
                             break                
