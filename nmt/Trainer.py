@@ -42,7 +42,7 @@ class Trainer(object):
         self.optim.zero_grad()
         all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
-        loss = self.train_criterion(all_decoder_outputs.transpose(0, 1).contiguous(), tgt_outputs.transpose(0, 1).contiguous(), tgt_lengths)
+        loss = self.train_criterion.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), tgt_outputs.transpose(0, 1).contiguous(), tgt_lengths)
         loss.backward()
         torch.nn.utils.clip_grad_norm(self.model.encoder.parameters(), self.grad_clip)
         torch.nn.utils.clip_grad_norm(self.model.decoder.parameters(), self.grad_clip)

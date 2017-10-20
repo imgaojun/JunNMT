@@ -6,9 +6,6 @@ from torch.autograd import Variable
 class Criteria(object):
     def __init__(self):
         pass
-    def __call__(self, logits, target, length):
-
-        return self._compute_loss(logits,target,length)
 
 
     def _sequence_mask(self, sequence_length, max_len=None):
@@ -25,7 +22,7 @@ class Criteria(object):
         return seq_range_expand < seq_length_expand
 
 
-    def _compute_loss(self, logits, target, length):
+    def compute_loss(self, logits, target, length):
         length = Variable(torch.LongTensor(length)).cuda()
         """
         Args:

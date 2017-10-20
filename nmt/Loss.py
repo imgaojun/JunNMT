@@ -6,7 +6,7 @@ from torch.autograd import Variable
 
 
 
-class NMTLossCompute(nn.Module):
+class NMTLossCompute(object):
     """
     Standard NMT Loss Computation.
     """
@@ -18,9 +18,6 @@ class NMTLossCompute(nn.Module):
         weight[self.padding_idx] = 0
         self.criterion = nn.CrossEntropyLoss(weight, size_average=False)
 
-
-    def forward(self, logits, target, length):
-        return self.compute_loss(self, logits, target, length)
 
     def compute_loss(self, logits, target, length):
         length = Variable(torch.LongTensor(length)).cuda()

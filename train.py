@@ -48,7 +48,6 @@ if __name__ == '__main__':
     train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
     if hparams['USE_CUDA']:
         train_model = train_model.cuda()
-        train_criterion = train_criterion.cuda()
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
 
