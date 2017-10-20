@@ -11,7 +11,7 @@ class NMTLossCompute(nn.Module):
     Standard NMT Loss Computation.
     """
     def __init__(self, tgt_vocab_size, padding_idx):
-        super(NMTLossCompute, self).__init__(tgt_vocab_size, padding_idx)
+        super(NMTLossCompute, self).__init__()
         self.tgt_vocab_size = tgt_vocab_size
         self.padding_idx = padding_idx
         weight = torch.ones(tgt_vocab_size)
