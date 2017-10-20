@@ -6,7 +6,7 @@ from torch.autograd import Variable
 
 
 
-class NMTLossCompute(object):
+class NMTLossCompute(nn.Module):
     """
     Standard NMT Loss Computation.
     """
@@ -22,12 +22,10 @@ class NMTLossCompute(object):
     def compute_loss(self, logits, target, length):
         length = Variable(torch.LongTensor(length)).cuda()
         logits = self.bottle(logits)
-        target = self.bottle(target)
+        target = target.view(-1)
         loss = self.criterion(logits,target)
         loss = loss.sum() / length.float().sum()
         return  loss
-
-        return loss, stats        
 
     def bottle(self, v):
         return v.view(-1, v.size(2))
