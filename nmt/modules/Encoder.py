@@ -86,7 +86,8 @@ class EncoderRNN(EncoderBase):
                 hidden_t = torch.cat([hidden_t[0:hidden_t.size(0):2], hidden_t[1:hidden_t.size(0):2]], 2)   
             else:
                 h_n, c_n = hidden_t
-                h_n = torch.cat([h_n[0:h_n.size(0):2], h_n[1:h_n.size(0):2]], 2)   
+                h_n = torch.cat([h_n[0:h_n.size(0):2], h_n[1:h_n.size(0):2]], 2)
+                c_n = torch.cat([c_n[0:c_n.size(0):2], c_n[1:c_n.size(0):2]], 2)
                 hidden_t = (h_n, c_n)
 
         return outputs, hidden_t
