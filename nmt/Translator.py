@@ -35,7 +35,7 @@ class Translator(object):
         for di in range(self.max_length):
             decoder_input = torch.unsqueeze(decoder_input,0)
             decoder_output, decoder_hidden = self.model.decoder(
-                decoder_input, decoder_hidden, encoder_outputs
+                decoder_input, encoder_outputs, decoder_hidden 
             )
 
             # Choose top word from output

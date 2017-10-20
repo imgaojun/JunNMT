@@ -3,83 +3,85 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
-
+from torch.nn.utils.rnn import pack_padded_sequence as pack
+from torch.nn.utils.rnn import pad_packed_sequence as unpack
 from nmt.modules.SRU import SRU
 
 
-class EncoderLSTM(nn.Module):
-    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
-        super(EncoderLSTM, self).__init__()
-        
+class EncoderBase(nn.Module):
+    """
+    EncoderBase class for sharing code among various encoder.
+    """
 
+    def forward(self, input, lengths=None, hidden=None):
+        """
+        Args:
+            input (LongTensor): len x batch x nfeat.
+            lengths (LongTensor): batch
+            hidden: Initial hidden state.
+        Returns:
+            hidden_t (Variable): Pair of layers x batch x rnn_size - final
+                                    encoder state
+            outputs (FloatTensor):  len x batch x rnn_size -  Memory bank
+        """
+        raise NotImplementedError
+
+
+class EncoderRNN(EncoderBase):
+    """ The standard RNN encoder. """
+    def __init__(self, rnn_type, embeddings, 
+                hidden_size, num_layers=1, 
+                dropout=0.1, bidirectional=False):
+        super(EncoderRNN, self).__init__()
+
+        num_directions = 2 if bidirectional else 1
+        assert hidden_size % num_directions == 0
+        hidden_size = hidden_size // num_directions
+        self.rnn_type = rnn_type
         self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.dropout = dropout
-
-        self.embeddings = embeddings 
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
-        
-    def forward(self, rnn_input, input_lengths, last_hidden=None):
-        # Note: we run this all at once (over multiple batches of multiple sequences)
-        embeded = self.embeddings(rnn_input)
-        packed = torch.nn.utils.rnn.pack_padded_sequence(embeded, input_lengths)
-        outputs, (hidden,c_n) = self.lstm(packed, None)
-        outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
-        # outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
-        return outputs, (hidden,c_n)
-
-class EncoderGRU(nn.Module):
-    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
-        super(EncoderGRU, self).__init__()
-        
         self.bidirectional = bidirectional
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.dropout = dropout
+        self.embeddings = embeddings
 
-        self.embeddings = embeddings 
-        self.rnn = nn.RNN(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
+        self.no_pack_padded_seq = False
+
+        if rnn_type == "SRU":
+            # SRU doesn't support PackedSequence.
+            self.no_pack_padded_seq = True
+            self.rnn = SRU(
+                    input_size=embeddings.embedding_size,
+                    hidden_size=hidden_size,
+                    num_layers=num_layers,
+                    dropout=dropout,
+                    bidirectional=bidirectional)
+        else:
+            self.rnn = getattr(nn, rnn_type)(
+                    input_size=embeddings.embedding_size,
+                    hidden_size=hidden_size,
+                    num_layers=num_layers,
+                    dropout=dropout,
+                    bidirectional=bidirectional)
         
-    def forward(self, rnn_input, input_lengths, hidden=None):
-        # Note: we run this all at once (over multiple batches of multiple sequences)
-        embeded = self.embeddings(rnn_input)
-        packed = torch.nn.utils.rnn.pack_padded_sequence(embeded, input_lengths)
-        outputs, hidden = self.rnn(packed, hidden)
-        outputs, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(outputs) # unpack (back to padded)
-        if self.bidirectional:
-            outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
-   
+        
+    def forward(self, input, lengths=None, hidden=None):
+        """ See EncoderBase.forward() for description of args and returns."""
+
+        emb = self.embeddings(input)
+
+        packed_emb = emb
+        if lengths is not None and not self.no_pack_padded_seq:
+            # Lengths data is wrapped inside a Variable.
+            packed_emb = pack(emb, lengths)
+
+        outputs, hidden_t = self.rnn(packed_emb, hidden)
+
+        if lengths is not None and not self.no_pack_padded_seq:
+            outputs = unpack(outputs)[0]
+
+
+        if self.bidirectional and self.rnn_type != 'SRU':   
         # The encoder hidden is  (layers*directions) x batch x dim.
         # We need to convert it to layers x batch x (directions*dim).
-            hidden = torch.cat([hidden[0:hidden.size(0):2], hidden[1:hidden.size(0):2]], 2)   
-            hidden = hidden[:, :, :self.hidden_size] + hidden[:, : ,self.hidden_size:]     
-        return outputs, hidden
+            hidden_t = torch.cat([hidden_t[0:hidden_t.size(0):2], hidden_t[1:hidden_t.size(0):2]], 2)   
 
-class EncoderSRU(nn.Module):
-    def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
-        super(EncoderSRU, self).__init__()
-        self.bidirectional = bidirectional
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.dropout = dropout
-        # SRU doesn't support PackedSequence.
-        self.rnn = SRU(input_size, hidden_size,
-                        num_layers = num_layers,          # number of stacking RNN layers
-                        dropout = dropout,           # dropout applied between RNN layers
-                        rnn_dropout = dropout,       # variational dropout applied on linear transformation
-                        use_tanh = 1,            # use tanh?
-                        use_relu = 0,            # use ReLU?
-                        bidirectional = bidirectional    # bidirectional RNN ?
-                    )
-
-        self.embeddings = embeddings
-        
-    def forward(self, rnn_input, input_lengths, hidden=None):
-        # Note: we run this all at once (over multiple batches of multiple sequences)
-        embeded = self.embeddings(rnn_input)
-        outputs, hidden = self.rnn(embeded)
-        if self.bidirectional:
-            outputs = outputs[:, :, :self.hidden_size] + outputs[:, : ,self.hidden_size:] # Sum bidirectional outputs
-            hidden = hidden[:, :, :self.hidden_size] + hidden[:, : ,self.hidden_size:]     
-            
-        return outputs, hidden
+        return outputs, hidden_t

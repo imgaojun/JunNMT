@@ -13,13 +13,9 @@ class NMTModel(nn.Module):
         # Run wrods through encoder
 
         encoder_outputs, encoder_hidden = self.encoder(src_inputs, src_lengths, None)
-
-
-        decoder_init_hidden = encoder_hidden
             
         all_decoder_outputs , decoder_hiddens = self.decoder(
-                tgt_inputs, decoder_init_hidden, encoder_outputs
+                tgt_inputs, encoder_outputs, encoder_hidden
             )        
-
 
         return all_decoder_outputs

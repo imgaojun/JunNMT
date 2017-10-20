@@ -5,92 +5,73 @@ from nmt.modules.SRU import SRU
 import torch.nn.functional as F
 
 
-# class EncoderBase(nn.Module):
+class DecoderBase(nn.Module):
+    def forward(self, input, context, state):
+        """
+        Forward through the decoder.
+        Args:
+            input (LongTensor): a sequence of input tokens tensors
+                                of size (len x batch x nfeats).
+            context (FloatTensor): output(tensor sequence) from the encoder
+                        RNN of size (src_len x batch x hidden_size).
+            state (FloatTensor): hidden state from the encoder RNN for
+                                 initializing the decoder.
+        Returns:
+            outputs (FloatTensor): a Tensor sequence of output from the decoder
+                                   of shape (len x batch x hidden_size).
+            state (FloatTensor): final hidden state from the decoder.
+            attns (dict of (str, FloatTensor)): a dictionary of different
+                                type of attention Tensor from the decoder
+                                of shape (src_len x batch).
+        """
+        raise NotImplementedError        
 
 
 
-
-class AttnDecoderLSTM(nn.Module):
-    def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
-        super(AttnDecoderLSTM, self).__init__()
-
-        self.bidirectional = bidirectional
-
+class AttnDecoderRNN(DecoderBase):
+    """ The GlobalAttention-based RNN decoder. """
+    def __init__(self, rnn_type, attn_model, embeddings, 
+                hidden_size, output_size, 
+                num_layers=1, dropout=0.1):
+        super(AttnDecoderRNN, self).__init__()        
+        # Basic attributes.
+        self.rnn_type = rnn_type
         self.attn_model = attn_model
-        self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.dropout = dropout
+        self.hidden_size = hidden_size
         self.embeddings = embeddings
+        self.dropout = nn.Dropout(dropout)  
 
-        self.lstm =  nn.LSTM(input_size, hidden_size, num_layers, dropout=self.dropout, bidirectional=bidirectional)
-        
-        if self.bidirectional:
-            self.attention = GlobalAttention(hidden_size*2)
-            self.linear_out = nn.Linear(hidden_size*2, output_size)
+        if rnn_type == "SRU":
+            self.rnn = SRU(
+                    input_size=embeddings.embedding_size,
+                    hidden_size=hidden_size,
+                    num_layers=num_layers,
+                    dropout=dropout)
         else:
-            self.attention = GlobalAttention(hidden_size)
-            self.linear_out = nn.Linear(hidden_size, output_size)    
-    def forward(self, rnn_input, h0, c0, encoder_outputs):
-        embeded = self.embeddings(rnn_input)        
-        rnn_output , (hidden,c_n) = self.lstm(embeded,(h0,c0))
-        attn_h, align_vectors = self.attention(rnn_output.transpose(0,1), encoder_outputs.transpose(0,1))
-        output = self.linear_out(attn_h)
-        return output, hidden, c_n
+            self.rnn = getattr(nn, rnn_type)(
+                    input_size=embeddings.embedding_size,
+                    hidden_size=hidden_size,
+                    num_layers=num_layers,
+                    dropout=dropout)              
 
+        if self.attn_model != 'none':
+            self.attn = GlobalAttention(hidden_size, attn_model)
+        self.linear_out = nn.Linear(hidden_size, output_size)   
 
-class AttnDecoderGRU(nn.Module):
-    def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
-        super(AttnDecoderGRU, self).__init__()
-
-        self.bidirectional = bidirectional
-
-        self.attn_model = attn_model
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.dropout = dropout
-        self.embeddings = embeddings
-
-        self.rnn =  nn.RNN(input_size, hidden_size, num_layers, dropout=dropout, bidirectional=bidirectional)
+    def forward(self, input, context, state):
+        emb = self.embeddings(input)
+        rnn_outputs, hidden = self.rnn(emb, state)
         
         if self.attn_model != 'none':
-            self.attention = GlobalAttention(hidden_size, attn_model)
-        self.linear_out = nn.Linear(hidden_size, output_size)      
-    def forward(self, rnn_input, last_hidden, encoder_outputs):
-        embeded = self.embeddings(rnn_input)        
-        rnn_output , hidden = self.rnn(embeded,last_hidden)
-        if self.attn_model != 'none':
-            rnn_output, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
-        output = self.linear_out(rnn_output)
-        return output, hidden
-    
-class AttnDecoderSRU(nn.Module):
-    def __init__(self, attn_model, embeddings, input_size, hidden_size, output_size, num_layers=1, dropout=0.1, bidirectional=False):
-        super(AttnDecoderSRU, self).__init__()
-        self.attn_model = attn_model
-        self.bidirectional = bidirectional
-        self.hidden_size = hidden_size
-        self.output_size = output_size
-        self.num_layers = num_layers
-        self.dropout = dropout
-        self.embeddings = embeddings
-        self.sru = SRU(input_size, hidden_size,
-                        num_layers = num_layers,        # number of stacking RNN layers
-                        dropout = dropout,           # dropout applied between RNN layers
-                        rnn_dropout = dropout,       # variational dropout applied on linear transformation
-                        use_tanh = 1,            # use tanh?
-                        use_relu = 0,            # use ReLU?
-                        bidirectional = bidirectional    # bidirectional RNN ?
-                    )
-        
-        if self.attn_model != 'none':
-            self.attention = GlobalAttention(hidden_size, attn_model)
-        self.linear_out = nn.Linear(hidden_size, output_size)            
+            # Calculate the attention.
+            attn_outputs, attn_scores = self.attn(
+                rnn_outputs.transpose(0, 1).contiguous(),  # (output_len, batch, d)
+                context.transpose(0, 1)                   # (contxt_len, batch, d)
+            )
 
-    def forward(self, rnn_input, last_hidden, encoder_outputs):
-        embeded = self.embeddings(rnn_input)
-        rnn_output , hidden = self.sru(embeded,last_hidden)
-        if self.attn_model != 'none':
-            rnn_output, align_vectors = self.attention(rnn_output.transpose(0,1).contiguous(), encoder_outputs.transpose(0,1))
-        output = self.linear_out(rnn_output)
+            rnn_outputs = self.dropout(attn_outputs)    # (input_len, batch, d)
 
-        return output, hidden
+        outputs = self.linear_out(rnn_outputs)
+
+        return outputs, hidden
