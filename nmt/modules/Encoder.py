@@ -85,6 +85,8 @@ class EncoderRNN(EncoderBase):
             if self.rnn_type != 'LSTM':
                 hidden_t = torch.cat([hidden_t[0:hidden_t.size(0):2], hidden_t[1:hidden_t.size(0):2]], 2)   
             else:
-                hidden_t[0] = torch.cat([hidden_t[0][0:hidden_t[0].size(0):2], hidden_t[0][1:hidden_t[0].size(0):2]], 2)   
+                hidden, context = hidden_t
+                hidden = torch.cat([hidden[0:hidden.size(0):2], hidden[1:hidden.size(0):2]], 2)   
+                hidden_t = (hidden, context)
 
         return outputs, hidden_t
