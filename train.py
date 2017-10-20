@@ -6,6 +6,7 @@ import argparse
 from torch import optim
 from nmt.Trainer import Trainer
 from nmt.Criteria import Criteria
+from nmt.Loss.NMTLossCompute
 import codecs
 import os
 import shutil
@@ -44,16 +45,17 @@ shutil.copy(args.config, hparams['out_dir'])
 
 if __name__ == '__main__':
     train_model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
-    train_criteria = Criteria()
+    train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
     if hparams['USE_CUDA']:
         train_model = train_model.cuda()
+        train_criterion = train_criterion.cuda()
 
     optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
 
     trainer = Trainer(hparams,
                       train_model,
                       dataset,
-                      train_criteria,
+                      train_criterion,
                       optim,
                       src_vocab_table,
                       tgt_vocab_table)
