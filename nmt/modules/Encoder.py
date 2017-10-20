@@ -8,6 +8,20 @@ from nmt.modules.SRU import SRU
 
 
 
+class EncoderBase(nn.Module):
+    def forward(self, input, lengths=None, hidden=None):
+        """
+        Args:
+            input (LongTensor): len x batch x nfeat.
+            lengths (LongTensor): batch
+            hidden: Initial hidden state.
+        Returns:
+            hidden_t (Variable): Pair of layers x batch x rnn_size - final
+                                    encoder state
+            outputs (FloatTensor):  len x batch x rnn_size -  Memory bank
+        """
+        raise NotImplementedError
+
 class EncoderLSTM(nn.Module):
     def __init__(self, embeddings, input_size, hidden_size, num_layers=1, dropout=0.1, bidirectional=False):
         super(EncoderLSTM, self).__init__()
