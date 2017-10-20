@@ -82,7 +82,7 @@ class EncoderRNN(EncoderBase):
         if self.bidirectional and self.rnn_type != 'SRU':   
         # The encoder hidden is  (layers*directions) x batch x dim.
         # We need to convert it to layers x batch x (directions*dim).
-            if self.rnn_type != 'LSTM'
+            if self.rnn_type != 'LSTM':
                 hidden_t = torch.cat([hidden_t[0:hidden_t.size(0):2], hidden_t[1:hidden_t.size(0):2]], 2)   
             else:
                 hidden_t[0] = torch.cat([hidden_t[0][0:hidden_t[0].size(0):2], hidden_t[0][1:hidden_t[0].size(0):2]], 2)   
