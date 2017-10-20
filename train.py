@@ -5,7 +5,6 @@ import nmt.utils.data_utils as data_utils
 import argparse
 from torch import optim
 from nmt.Trainer import Trainer
-from nmt.Criteria import Criteria
 from nmt.Loss import NMTLossCompute
 import codecs
 import os
