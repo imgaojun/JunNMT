@@ -10,6 +10,9 @@ atten_model: dot #general, dot, none
 decode_max_length: 100
 beam_size: 1
 
+src_max_len: 80
+tgt_max_len: 80
+
 # Vocab
 share_embedding: false
 # Set vocab limit size

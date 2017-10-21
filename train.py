@@ -32,7 +32,9 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['train_tgt_file'],
                                   hparams['batch_size'],
                                   src_vocab_table,
-                                  tgt_vocab_table)
+                                  tgt_vocab_table,
+                                  hparams['src_max_len'],
+                                  hparams['tgt_max_len'])
 
 if not os.path.exists(hparams['out_dir']):
     os.makedirs(hparams['out_dir'])

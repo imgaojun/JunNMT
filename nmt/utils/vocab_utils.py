@@ -53,9 +53,11 @@ def index2word(index, vocab_table):
 def word2index(word, vocab_table):
     return vocab_table.word2index[word]
 
-def seq2index(seq, vocab_table):
+def seq2index(seq, vocab_table, max_len=None):
     seq_idx = []
     words_in = seq.split(' ')
+    if max_len is not None:
+        words_in = words_in[:max_len]
     for w in words_in:
         if w in vocab_table.word2index:
             seq_idx.append(vocab_table.word2index[w])
@@ -70,9 +72,9 @@ def get_tgt_output_seq(seq):
     seq += [EOS_ID]
     return seq
 
-def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, USE_CUDA=True):
-    src_seqs = [seq2index(seq, src_vocab_table) for seq in batch_src_seqs]
-    tgt_seqs = [seq2index(seq, tgt_vocab_table) for seq in batch_tgt_seqs]
+def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, src_max_len, tgt_max_len, USE_CUDA=True):
+    src_seqs = [seq2index(seq, src_vocab_table, src_max_len) for seq in batch_src_seqs]
+    tgt_seqs = [seq2index(seq, tgt_vocab_table, tgt_max_len) for seq in batch_tgt_seqs]
     seq_pairs = sorted(zip(src_seqs, tgt_seqs), key=lambda p: len(p[0]), reverse=True)
     src_seqs, tgt_seqs = zip(*seq_pairs)
 
