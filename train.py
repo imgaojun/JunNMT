@@ -50,7 +50,7 @@ if __name__ == '__main__':
         train_criterion = train_criterion.cuda()
 
     # optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
-    optim = Optim(hparams['optim_method'], hparams['lr'],hparams['max_grad_norm'])
+    optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'])
     optim.set_parameters(train_model.parameters())
 
     trainer = Trainer(hparams,
