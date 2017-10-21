@@ -20,8 +20,6 @@ class Trainer(object):
         self.train_criterion = train_criterion
         self.optim = optim
 
-        self.grad_clip = hparams['grad_clip']
-
         self.src_vocab_table = src_vocab_table
         self.tgt_vocab_table = tgt_vocab_table
 
@@ -39,13 +37,11 @@ class Trainer(object):
                tgt_inputs,
                tgt_lengths,
                tgt_outputs):
-        self.optim.zero_grad()
+        self.model.zero_grad()
         all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
         loss = self.train_criterion.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), tgt_outputs.transpose(0, 1).contiguous(), tgt_lengths)
         loss.backward()
-        torch.nn.utils.clip_grad_norm(self.model.encoder.parameters(), self.grad_clip)
-        torch.nn.utils.clip_grad_norm(self.model.decoder.parameters(), self.grad_clip)
         self.optim.step()
         return loss.data[0]
 

@@ -3,9 +3,9 @@ import nmt.utils.misc_utils as utils
 import nmt.utils.vocab_utils as vocab_utils
 import nmt.utils.data_utils as data_utils
 import argparse
-from torch import optim
 from nmt.Trainer import Trainer
 from nmt.Loss import NMTLossCompute
+from nmt.Optim import Optim
 import codecs
 import os
 import shutil
@@ -49,8 +49,10 @@ if __name__ == '__main__':
         train_model = train_model.cuda()
         train_criterion = train_criterion.cuda()
 
-    optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
-
+    # optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
+    optim = Optim(hparams['method'], hparams['lr'],hparams['max_grad_norm'])
+    optim.set_parameters(train_model.parameters())
+    
     trainer = Trainer(hparams,
                       train_model,
                       dataset,
