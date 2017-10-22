@@ -24,6 +24,16 @@ class NMTModel(nn.Module):
 
         return all_decoder_outputs
     
+    def save_checkpoint(self, filename):
+        torch.save({'encoder_dict': self.encoder.state_dict(),
+                    'decoder_dict': self.decoder.state_dict(),
+                    },
+                   filename)
+
+    def load_checkpoint(self, filename):   
+        cpnt = torch.load(filename)
+        self.encoder.load_state_dict(cpnt['encoder_dict'])
+        self.decoder.load_state_dict(cpnt['decoder_dict'])
 
     def init_weights(self):
         """Initialize weights."""

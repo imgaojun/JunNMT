@@ -178,7 +178,5 @@ class Trainer(object):
 
 
     def save_per_epoch(self, epoch):
-        save_dir = os.path.join(self.out_dir,"epoch%d/"%(epoch))
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-        torch.save(self.model.state_dict(), os.path.join(save_dir,'model.pkl'))
+        model.save_checkpoint(os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
+        
