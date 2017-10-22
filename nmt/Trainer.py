@@ -178,5 +178,5 @@ class Trainer(object):
 
 
     def save_per_epoch(self, epoch):
-        model.save_checkpoint(os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
+        self.model.save_checkpoint(os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
         

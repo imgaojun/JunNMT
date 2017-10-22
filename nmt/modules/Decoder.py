@@ -30,7 +30,7 @@ class DecoderBase(nn.Module):
 
 class AttnDecoderRNN(DecoderBase):
     """ The GlobalAttention-based RNN decoder. """
-    def __init__(self, rnn_type, attn_model, embeddings, 
+    def __init__(self, rnn_type, attn_model, input_size, 
                 hidden_size, output_size, 
                 num_layers=1, dropout=0.1):
         super(AttnDecoderRNN, self).__init__()        
@@ -39,18 +39,17 @@ class AttnDecoderRNN(DecoderBase):
         self.attn_model = attn_model
         self.num_layers = num_layers
         self.hidden_size = hidden_size
-        self.embeddings = embeddings
         self.dropout = nn.Dropout(dropout)  
 
         if rnn_type == "SRU":
             self.rnn = SRU(
-                    input_size=embeddings.embedding_size,
+                    input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
                     dropout=dropout)
         else:
             self.rnn = getattr(nn, rnn_type)(
-                    input_size=embeddings.embedding_size,
+                    input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
                     dropout=dropout)              

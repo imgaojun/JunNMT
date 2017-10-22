@@ -29,7 +29,7 @@ class EncoderBase(nn.Module):
 
 class EncoderRNN(EncoderBase):
     """ The standard RNN encoder. """
-    def __init__(self, rnn_type, embeddings, 
+    def __init__(self, rnn_type, input_size, 
                 hidden_size, num_layers=1, 
                 dropout=0.1, bidirectional=False):
         super(EncoderRNN, self).__init__()
@@ -41,7 +41,6 @@ class EncoderRNN(EncoderBase):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.bidirectional = bidirectional
-        self.embeddings = embeddings
 
         self.no_pack_padded_seq = False
 
@@ -49,14 +48,14 @@ class EncoderRNN(EncoderBase):
             # SRU doesn't support PackedSequence.
             self.no_pack_padded_seq = True
             self.rnn = SRU(
-                    input_size=embeddings.embedding_size,
+                    input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
                     dropout=dropout,
                     bidirectional=bidirectional)
         else:
             self.rnn = getattr(nn, rnn_type)(
-                    input_size=embeddings.embedding_size,
+                    input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
                     dropout=dropout,
