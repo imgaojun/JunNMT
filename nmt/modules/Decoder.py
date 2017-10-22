@@ -60,7 +60,7 @@ class AttnDecoderRNN(DecoderBase):
         self.linear_out = nn.Linear(hidden_size, output_size)   
 
     def forward(self, input, context, state):
-        emb = self.embeddings(input)
+        emb = input
         rnn_outputs, hidden = self.rnn(emb, state)
         
         if self.attn_model != 'none':

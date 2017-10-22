@@ -66,7 +66,7 @@ class EncoderRNN(EncoderBase):
     def forward(self, input, lengths=None, hidden=None):
         """ See EncoderBase.forward() for description of args and returns."""
 
-        emb = self.embeddings(input)
+        emb = input
 
         packed_emb = emb
         if lengths is not None and not self.no_pack_padded_seq:

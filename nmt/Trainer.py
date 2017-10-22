@@ -122,7 +122,7 @@ class Trainer(object):
 
         self.model.eval()
         # Run wrods through encoder
-        encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_length, None)    
+        encoder_outputs, encoder_hidden = self.model.encode(src_input, src_length, None)    
 
 
         # Create starting vectors for decoder
@@ -138,7 +138,7 @@ class Trainer(object):
         # Run through decoder
         for di in range(max_length):
             decoder_input = torch.unsqueeze(decoder_input,0)
-            decoder_output, decoder_hidden = self.model.decoder(
+            decoder_output, decoder_hidden = self.model.decode(
                 decoder_input, encoder_outputs, decoder_hidden
             )                
             # Choose top word from output

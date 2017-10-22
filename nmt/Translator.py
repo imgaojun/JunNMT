@@ -11,7 +11,7 @@ class Translator(object):
         self.model.eval()
     def decode(self, src_input, src_input_length):
         
-        encoder_outputs, encoder_hidden = self.model.encoder(src_input, src_input_length, None)
+        encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_length, None)
         decoder_init_hidden = encoder_hidden
 
         # Create starting vectors for decoder
@@ -34,7 +34,7 @@ class Translator(object):
         decoder_hidden = decoder_init_hidden
         for di in range(self.max_length):
             decoder_input = torch.unsqueeze(decoder_input,0)
-            decoder_output, decoder_hidden = self.model.decoder(
+            decoder_output, decoder_hidden = self.model.decode(
                 decoder_input, encoder_outputs, decoder_hidden 
             )
 
