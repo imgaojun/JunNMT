@@ -26,7 +26,7 @@ model = model_helper.create_base_model(hparams,
 
 print('Loading parameters ...')
 
-model.load_state_dict(torch.load(args.model))
+model.load_checkpoint(args.model)
 
 if hparams['USE_CUDA']:
     model = model.cuda()
