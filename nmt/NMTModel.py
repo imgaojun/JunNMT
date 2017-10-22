@@ -57,6 +57,7 @@ class NMTModel(nn.Module):
 
     def init_weights(self):
         """Initialize weights."""
-        initrange = 0.1
-        self.embedding_encoder.weight.data.uniform_(-initrange, initrange)
-        self.embedding_DEcoder.weight.data.uniform_(-initrange, initrange)
+        # initrange = 0.1
+        # self.embedding_encoder.weight.data.uniform_(-initrange, initrange)
+        # self.embedding_decoder.weight.data.uniform_(-initrange, initrange)
+        pass
