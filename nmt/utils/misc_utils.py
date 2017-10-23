@@ -1,12 +1,16 @@
 import yaml
 import torch.utils.data as data
 import codecs
+from collections import OrderedDict
 def load_hparams(config_file):
     with codecs.open(config_file, 'r', encoding='utf8') as f:
+        hparams = OrderedDict()
         hparams = yaml.load(f)
         return hparams
 
-
+def print_hparams(hparams):
+    for k,v in hparams.items():
+        print(k,v)
 
 
 class TrainDataSet(data.Dataset):
@@ -29,6 +33,3 @@ class TrainDataSet(data.Dataset):
     def __len__(self):
         return len(self.src_dataset)
 
-# def save_hparams()
-
-# def print_hparams()

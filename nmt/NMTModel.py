@@ -2,12 +2,13 @@ import torch
 import torch.nn as nn
 
 class NMTModel(nn.Module):
-    def __init__(self, embedding_encoder, embedding_decoder, encoder, decoder):
+    def __init__(self, embedding_encoder, embedding_decoder, encoder, decoder, generator):
         super(NMTModel, self).__init__()
         self.embedding_encoder = embedding_encoder
         self.embedding_decoder = embedding_decoder
         self.encoder = encoder
         self.decoder = decoder
+        self.generator = generator
         self.init_weights()
 
     def forward(self, src_inputs, tgt_inputs, src_lengths):
@@ -19,12 +20,12 @@ class NMTModel(nn.Module):
 
         decoder_init_hidden = encoder_hidden
             
-        all_decoder_outputs , decoder_hiddens = self.decode(
+        decoder_outputs , decoder_hiddens = self.decode(
                 tgt_inputs, encoder_outputs, decoder_init_hidden
             )        
 
-
-        return all_decoder_outputs
+        
+        return decoder_outputs
 
 
     def encode(self, input, lengths=None, hidden=None):
@@ -35,10 +36,12 @@ class NMTModel(nn.Module):
 
     def decode(self, input, context, state):
         emb = self.embedding_decoder(input)
-        all_decoder_outputs , decoder_hiddens = self.decoder(
+        decoder_outputs , decoder_hiddens = self.decoder(
                 emb, context, state
             )     
-        return all_decoder_outputs , decoder_hiddens
+
+        outputs = self.generator(decoder_outputs)
+        return outputs, decoder_hiddens
     
     def save_checkpoint(self, filename):
         torch.save({'encoder_dict': self.encoder.state_dict(),

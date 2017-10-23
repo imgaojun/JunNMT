@@ -45,7 +45,6 @@ class VocabTable(object):
                     idx += 1
 
         self.vocab_size = len(self.word2index)
-        print("vocab size %d"%(self.vocab_size))
 
 def index2word(index, vocab_table):
     return vocab_table.index2word[index]

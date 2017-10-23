@@ -31,8 +31,7 @@ class DecoderBase(nn.Module):
 class AttnDecoderRNN(DecoderBase):
     """ The GlobalAttention-based RNN decoder. """
     def __init__(self, rnn_type, attn_model, input_size, 
-                hidden_size, output_size, 
-                num_layers=1, dropout=0.1):
+                hidden_size, num_layers=1, dropout=0.1):
         super(AttnDecoderRNN, self).__init__()        
         # Basic attributes.
         self.rnn_type = rnn_type
@@ -56,7 +55,6 @@ class AttnDecoderRNN(DecoderBase):
 
         if self.attn_model != 'none':
             self.attn = GlobalAttention(hidden_size, attn_model)
-        self.linear_out = nn.Linear(hidden_size, output_size)   
 
     def forward(self, input, context, state):
         emb = input
@@ -71,6 +69,5 @@ class AttnDecoderRNN(DecoderBase):
 
             rnn_outputs = self.dropout(attn_outputs)    # (input_len, batch, d)
 
-        outputs = self.linear_out(rnn_outputs)
 
-        return outputs, hidden
+        return rnn_outputs, hidden

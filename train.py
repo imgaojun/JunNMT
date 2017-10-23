@@ -14,7 +14,6 @@ train_parser.add_argument("--config", type=str, default="./config.yml")
 args = train_parser.parse_args()
 hparams = utils.load_hparams(args.config)
 
-
 eval_pairs = []
 
 with codecs.open(hparams['dev_src_file'], 'r', encoding='utf8',errors='replace') as src_f:
@@ -27,7 +26,14 @@ with codecs.open(hparams['dev_src_file'], 'r', encoding='utf8',errors='replace')
 src_vocab_table = vocab_utils.VocabTable(hparams['src_vocab_file'], hparams['src_vocab_size'])
 tgt_vocab_table = vocab_utils.VocabTable(hparams['tgt_vocab_file'], hparams['tgt_vocab_size'])
 
+# print vocab info
+print("src_vocab_size %d, tgt_vocab_size %d"%(src_vocab_table.vocab_size, \
+                                                tgt_vocab_table.vocab_size))
+
+
 print('Loading training data ...')
+print("train_src_file: %s"%(hparams['train_src_file']))
+print("train_tgt_file: %s"%(hparams['train_tgt_file']))
 dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['train_tgt_file'],
                                   hparams['batch_size'],
@@ -51,7 +57,8 @@ if __name__ == '__main__':
         train_model = train_model.cuda()
         train_criterion = train_criterion.cuda()
 
-    # optim = optim.Adam(train_model.parameters(), lr=hparams['learning_rate'])
+    print("Using %s optim_method, learning_rate %f, max_grad_norm %f"%\
+            (hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm']))
     optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'])
     optim.set_parameters(train_model.parameters())
 
