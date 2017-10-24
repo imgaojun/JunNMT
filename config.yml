@@ -21,11 +21,11 @@ tgt_vocab_size: 30000
 
 
 # File
-# train_src_file: /home/xiapeng/gaojun/data/trans/train.cn
-# train_tgt_file: /home/xiapeng/gaojun/data/trans/train.en
+train_src_file: /home/xiapeng/gaojun/data/trans/train.cn
+train_tgt_file: /home/xiapeng/gaojun/data/trans/train.en
 
-train_src_file: /home/xiapeng/gaojun/trans/test/nist02.cn
-train_tgt_file: /home/xiapeng/gaojun/trans/test/nist02.en0
+# train_src_file: /home/xiapeng/gaojun/trans/test/nist02.cn
+# train_tgt_file: /home/xiapeng/gaojun/trans/test/nist02.en0
 
 
 dev_src_file: /home/xiapeng/gaojun/trans/test/nist02.cn
