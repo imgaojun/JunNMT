@@ -72,6 +72,7 @@ if __name__ == '__main__':
         shutil.copy(args.config, hparams['out_dir'])
     else:
         if hparams['checkpoint'] is not None:
+            print("Loading chekpoint : %s"%(hparams['checkpoint']))
             trainer.load_checkpoint(os.path.join(hparams['out_dir'],hparams['checkpoint']))
         else:
             pass
