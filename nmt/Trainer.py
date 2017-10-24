@@ -183,6 +183,6 @@ class Trainer(object):
         self.model.save_checkpoint(epoch, global_step, 
                                         os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
 
-    def load_checkpoint(filenmae):
+    def load_checkpoint(self, filenmae):
         self.step_epoch, self.global_step =self.model.load_checkpoint(filenmae)
         

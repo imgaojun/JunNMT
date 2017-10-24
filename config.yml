@@ -46,3 +46,4 @@ steps_per_stats: 100
 steps_per_eval: 1000
 batch_size: 20
 out_dir: 
+checkpoint: 

@@ -42,12 +42,7 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['src_max_len'],
                                   hparams['tgt_max_len'])
 
-if not os.path.exists(hparams['out_dir']):
-    os.makedirs(hparams['out_dir'])
 
-print('saving config file to %s ...'%(hparams['out_dir']))
-# save config.yml
-shutil.copy(args.config, hparams['out_dir'])
 
 
 if __name__ == '__main__':
@@ -70,4 +65,17 @@ if __name__ == '__main__':
                       src_vocab_table,
                       tgt_vocab_table)
     
+    if not os.path.exists(hparams['out_dir']):
+        os.makedirs(hparams['out_dir'])
+        print('saving config file to %s ...'%(hparams['out_dir']))
+        # save config.yml
+        shutil.copy(args.config, hparams['out_dir'])
+    else:
+        if hparams['checkpoint'] is not None:
+            trainer.load_checkpoint(os.path.join(hparams['out_dir'],hparams['checkpoint']))
+        else:
+            pass
+
+
+
     trainer.train(hparams,eval_pairs)
