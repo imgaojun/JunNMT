@@ -47,7 +47,8 @@ class NMTModel(nn.Module):
         torch.save({'encoder_dict': self.encoder.state_dict(),
                     'decoder_dict': self.decoder.state_dict(),
                     'embedding_encoder_dict': self.embedding_encoder.state_dict(),
-                    'embedding_decoder_dict': self.embedding_decoder.state_dict()
+                    'embedding_decoder_dict': self.embedding_decoder.state_dict(),
+                    'generator_dict': self.generator.state_dict(),
                     },
                    filename)
 
@@ -57,7 +58,7 @@ class NMTModel(nn.Module):
         self.embedding_decoder.load_state_dict(cpnt['embedding_decoder_dict'])
         self.encoder.load_state_dict(cpnt['encoder_dict'])
         self.decoder.load_state_dict(cpnt['decoder_dict'])
-
+        self.generator.load_state_dict(cpnt['generator_dict'])
     def init_weights(self):
         """Initialize weights."""
         # initrange = 0.1
