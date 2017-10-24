@@ -30,7 +30,9 @@ class Trainer(object):
         # Set model in training mode.
         self.model.train()       
 
-     
+        self.global_step = 0
+        self.step_epoch = 0
+
     def update(self,
                src_inputs,
                src_lengths,
@@ -53,8 +55,8 @@ class Trainer(object):
         steps_per_stats = hparams['steps_per_stats']
         steps_per_eval = hparams['steps_per_eval']
 
-        global_step = 0
-        step_epoch = 0
+        global_step = self.global_step
+        step_epoch = self.step_epoch
         avg_step_time  = 0.0
 
         last_stats_step = global_step
@@ -113,7 +115,7 @@ class Trainer(object):
 
 
             print('saving best model ...')
-            self.save_per_epoch(step_epoch)
+            self.save_per_epoch(step_epoch, global_step)
 
     def infer(self,
                src_input,
@@ -177,6 +179,10 @@ class Trainer(object):
         print('< out: ', output_sentence)     
 
 
-    def save_per_epoch(self, epoch):
-        self.model.save_checkpoint(os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
+    def save_per_epoch(self, epoch, global_step):
+        self.model.save_checkpoint(epoch, global_step, 
+                                        os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
+
+    def load_checkpoint(filenmae):
+        self.step_epoch, self.global_step =self.model.load_checkpoint(filenmae)
         

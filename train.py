@@ -69,4 +69,5 @@ if __name__ == '__main__':
                       optim,
                       src_vocab_table,
                       tgt_vocab_table)
+    
     trainer.train(hparams,eval_pairs)
