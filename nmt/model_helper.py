@@ -74,7 +74,7 @@ def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
                                                 hparams['embedding_size'])
     encoder = create_encoder(hparams)
     decoder = create_decoder(hparams)
-    generator = create_generator(hparams['embedding_size'], tgt_vocab_size)
+    generator = create_generator(hparams['hidden_size'], tgt_vocab_size)
     model = NMTModel(embedding_encoder, 
                      embedding_decoder, 
                      encoder, 
