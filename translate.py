@@ -49,7 +49,7 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             decoded_words = translator.decode(src_input_var, src_input_length)
 
             sentence_out = ' '.join(decoded_words)
-            # sentence_out = sentence_out.replace(' <UNK>','')
+            sentence_out = sentence_out.replace(' <UNK>','')
             tgt_file.write(sentence_out+'\n')
 
 
