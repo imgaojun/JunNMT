@@ -47,3 +47,7 @@ steps_per_eval: 1000
 batch_size: 20
 out_dir: 
 checkpoint: 
+
+# Tensorboard
+log_dir: 
+prefix: 
