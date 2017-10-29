@@ -30,8 +30,8 @@ class Statistics(object):
 
     def print_out(self, epoch, batch, n_batches, start):
         t = self.elapsed_time()
-        print(("Epoch %2d, %5d/%5d; ppl: %6.2f; " +
-               "%3.0f src tok/s; %3.0f tgt tok/s; %6.0f s elapsed") %
+        print(("Epoch %2d, %5d/%5d| ppl: %6.2f| " +
+               "%3.0f src tok/s| %3.0f tgt tok/s| %6.0f s elapsed") %
               (epoch, batch, n_batches,
                self.ppl(),
                self.n_src_words / (t + 1e-5),
@@ -104,11 +104,11 @@ class Trainer(object):
         # for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
 
             step_batch += 1
-            
-            loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
 
-            report_stats.update(loss,sum(src_input_lengths),sum(tgt_input_lengths))
-            total_stats.update(loss,sum(src_input_lengths),sum(tgt_input_lengths))
+            loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
+            losses = sum(tgt_input_lengths) * loss
+            report_stats.update(losses,sum(src_input_lengths),sum(tgt_input_lengths))
+            total_stats.update(losses,sum(src_input_lengths),sum(tgt_input_lengths))
 
             if report_func is not None:
                 report_stats = report_func(
