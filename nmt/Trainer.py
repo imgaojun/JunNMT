@@ -185,4 +185,3 @@ class Trainer(object):
         """ Called for each epoch to update learning rate. """
         # self.optim.updateLearningRate(ppl, epoch) 
         self.save_per_epoch(epoch)
-        self.train_dataset.init_iterator()
