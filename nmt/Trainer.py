@@ -128,7 +128,7 @@ class Trainer(object):
                     os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
 
     def load_checkpoint(self, filenmae):
-        self.step_epoch, self.global_step =self.model.load_checkpoint(filenmae)
+        self.model.load_checkpoint(filenmae)
         
 
     def epoch_step(self, ppl, epoch):

@@ -7,7 +7,7 @@ class Optim(object):
     def __init__(self, method, lr, max_grad_norm,
                  lr_decay=1, start_decay_at=None,
                  beta1=0.9, beta2=0.98):
-
+        self.last_ppl = None
         self.lr = lr
         self.max_grad_norm = max_grad_norm
         self.method = method
