@@ -113,8 +113,8 @@ class Trainer(object):
 
             if report_func is not None:
                 report_stats = report_func(
-                        epoch, step_batch, len(self.train_dataset.train_iter),
-                        total_stats.start_time, self.optim.lr, report_stats, self.global_step) 
+                        epoch, step_batch, len(self.global_step,self.train_dataset.train_iter),
+                        total_stats.start_time, self.optim.lr, report_stats) 
 
 
         return total_stats           
