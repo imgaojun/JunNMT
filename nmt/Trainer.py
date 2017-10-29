@@ -36,7 +36,7 @@ class Statistics(object):
                self.ppl(),
                self.n_src_words / (t + 1e-5),
                self.n_words / (t + 1e-5),
-               time.time() - start))
+               time.time() - self.start_time))
         sys.stdout.flush()
 
     def log(self, prefix, summary_writer, lr, global_step):
@@ -107,9 +107,12 @@ class Trainer(object):
             self.global_step += 1
 
             loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
-            losses = sum(tgt_input_lengths) * loss
-            report_stats.update(losses,sum(src_input_lengths),sum(tgt_input_lengths))
-            total_stats.update(losses,sum(src_input_lengths),sum(tgt_input_lengths))
+
+            n_src_words = sum(src_input_lengths)
+            n_words = sum(tgt_input_lengths)
+            losses = n_words * loss
+            report_stats.update(losses, n_src_words, n_words)
+            total_stats.update(losses, n_src_words, n_words)
 
             if report_func is not None:
                 report_stats = report_func(self.global_step,
@@ -118,68 +121,6 @@ class Trainer(object):
 
 
         return total_stats           
-
-        # num_train_epochs = hparams['num_train_epochs']
-        # steps_per_stats = hparams['steps_per_stats']
-        # steps_per_eval = hparams['steps_per_eval']
-
-        # global_step = self.global_step
-        # step_epoch = self.step_epoch
-        # avg_step_time  = 0.0
-
-        # last_stats_step = global_step
-        # last_eval_step = global_step        
-        
-
-        # step_time, checkpoint_loss = 0.0, 0.0              
-        # start_train_time = time.time()
-      
-
-        # while step_epoch < num_train_epochs:
-        #     step_epoch += 1
-
-        #     while True:
-        #         try:
-        #             src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_dataset.iterator
-
-        #         except StopIteration:     
-        #             print('end of epoch')  
-        #             self.train_dataset.init_iterator()
-        #             break         
-
-        #         global_step += 1
-        #         start_time = time.time()                
-        #         batch_size = src_input_var.size(1)
-        #         # Run the update function
-        #         step_loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
-                    
-        #         # update statistics
-        #         step_time += (time.time() - start_time)
-
-        #         # Keep track of loss
-        #         checkpoint_loss += (step_loss * batch_size)
-
-        #         # Once in a while, we print statistics.
-        #         if global_step - last_stats_step >= steps_per_stats:
-        #             last_stats_step = global_step
-        #             # Print statistics for the previous epoch.
-        #             avg_step_time = step_time / steps_per_stats
-        #             avg_step_loss = checkpoint_loss / steps_per_stats
-        #             checkpoint_loss = 0.0
-        #             step_time = 0.0
-
-        #             print("  global step %d epoch %d step-time %.5fs step-loss %.3f"%
-        #                     (global_step,
-        #                     step_epoch,
-        #                     avg_step_time,
-        #                     avg_step_loss)
-        #                 )           
-        #         if global_step - last_eval_step >= steps_per_eval:
-        #             last_eval_step = global_step
-
-        #     print('saving best model ...')
-        #     self.save_per_epoch(step_epoch, global_step)
-
 
 
     def save_per_epoch(self, epoch):
@@ -192,5 +133,6 @@ class Trainer(object):
 
     def epoch_step(self, ppl, epoch):
         """ Called for each epoch to update learning rate. """
-        # self.optim.updateLearningRate(ppl, epoch) 
+        self.optim.updateLearningRate(ppl, epoch) 
         self.save_per_epoch(epoch)
+        self.train_dataset.init_iterator()
