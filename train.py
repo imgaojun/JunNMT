@@ -99,7 +99,7 @@ if __name__ == '__main__':
     model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
     train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
     if hparams['USE_CUDA']:
-        train_model = model.cuda()
+        model = model.cuda()
         train_criterion = train_criterion.cuda()
 
     print("Using %s optim_method, learning_rate %f, max_grad_norm %f"%\
