@@ -35,3 +35,21 @@ class Optim(object):
         if self.max_grad_norm:
             clip_grad_norm(self.params, self.max_grad_norm)
         self.optimizer.step()
+
+    def updateLearningRate(self, ppl, epoch):
+        """
+        Decay learning rate if val perf does not improve
+        or we hit the start_decay_at limit.
+        """
+
+        if self.start_decay_at is not None and epoch >= self.start_decay_at:
+            self.start_decay = True
+        if self.last_ppl is not None and ppl > self.last_ppl:
+            self.start_decay = True
+
+        if self.start_decay:
+            self.lr = self.lr * self.lr_decay
+            print("Decaying learning rate to %g" % self.lr)
+
+        self.last_ppl = ppl
+        self.optimizer.param_groups[0]['lr'] = self.lr        
