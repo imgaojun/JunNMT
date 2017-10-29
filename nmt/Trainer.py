@@ -88,16 +88,23 @@ class Trainer(object):
         self.optim.step()
         return loss.data[0]
 
-    def train(self, step_epoch, report_func=None):
+    def train(self, epoch, report_func=None):
         """ Called for each epoch to train. """
         total_stats = Statistics()
         report_stats = Statistics()
 
-        for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
+        step_batch = 0
+        while True:
+            try:
+                src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_dataset.iterator
 
-            src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var \
-                            = batch_inputs
+            except StopIteration:     
+                print('end of epoch')  
+                break                 
+        # for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
 
+            step_batch += 1
+            
             loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
 
             report_stats.update(loss,sum(src_input_lengths),sum(tgt_input_lengths))
@@ -105,7 +112,7 @@ class Trainer(object):
 
             if report_func is not None:
                 report_stats = report_func(
-                        step_epoch, step_batch, len(self.train_dataset.train_iter),
+                        epoch, step_batch, len(self.train_dataset.train_iter),
                         total_stats.start_time, self.optim.lr, report_stats) 
 
 
