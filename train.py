@@ -7,6 +7,7 @@ from nmt.Trainer import Trainer
 from nmt.Loss import NMTLossCompute
 from nmt.Optim import Optim
 from nmt.Trainer import Statistics
+from tensorboardX import SummaryWriter
 import codecs
 import os
 import shutil
