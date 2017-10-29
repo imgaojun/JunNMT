@@ -97,7 +97,7 @@ class Trainer(object):
 
             src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var \
                             = batch_inputs
-            print(src_input_var)
+
             loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
 
             report_stats.update(loss,sum(src_input_lengths),sum(tgt_input_lengths))
