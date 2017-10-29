@@ -43,14 +43,12 @@ class NMTModel(nn.Module):
         outputs = self.generator(decoder_outputs)
         return outputs, decoder_hiddens
     
-    def save_checkpoint(self, epoch, global_step, filename):
+    def save_checkpoint(self, epoch, filename):
         torch.save({'encoder_dict': self.encoder.state_dict(),
                     'decoder_dict': self.decoder.state_dict(),
                     'embedding_encoder_dict': self.embedding_encoder.state_dict(),
                     'embedding_decoder_dict': self.embedding_decoder.state_dict(),
                     'generator_dict': self.generator.state_dict(),
-                    'epoch': epoch,
-                    'global_step': global_step,
                     },
                    filename)
 
@@ -61,9 +59,9 @@ class NMTModel(nn.Module):
         self.encoder.load_state_dict(cpnt['encoder_dict'])
         self.decoder.load_state_dict(cpnt['decoder_dict'])
         self.generator.load_state_dict(cpnt['generator_dict'])
-        epoch = cpnt['epoch']
-        global_step = cpnt['global_step']
-        return epoch, global_step
+        # epoch = cpnt['epoch']
+        # global_step = cpnt['global_step']
+        # return epoch, global_step
     def init_weights(self):
         """Initialize weights."""
         # initrange = 0.1

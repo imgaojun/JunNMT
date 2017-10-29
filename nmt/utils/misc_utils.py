@@ -2,6 +2,7 @@ import yaml
 import torch.utils.data as data
 import codecs
 from collections import OrderedDict
+import math
 def load_hparams(config_file):
     with codecs.open(config_file, 'r', encoding='utf8') as f:
         hparams = OrderedDict()
@@ -11,7 +12,14 @@ def load_hparams(config_file):
 def print_hparams(hparams):
     for k,v in hparams.items():
         print(k,v)
-
+        
+def safe_exp(value):
+    """Exponentiation with catching of overflow error."""
+    try:
+        ans = math.exp(value)
+    except OverflowError:
+        ans = float("inf")
+    return ans
 
 class TrainDataSet(data.Dataset):
     def __init__(self, src_file, tgt_file):

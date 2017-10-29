@@ -6,6 +6,7 @@ import argparse
 from nmt.Trainer import Trainer
 from nmt.Loss import NMTLossCompute
 from nmt.Optim import Optim
+from nmt.Trainer import Statistics
 import codecs
 import os
 import shutil
@@ -44,39 +45,72 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
 
 
 
+summery_writer = SummaryWriter()
 
-if __name__ == '__main__':
-    train_model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
-    train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
-    if hparams['USE_CUDA']:
-        train_model = train_model.cuda()
-        train_criterion = train_criterion.cuda()
 
-    print("Using %s optim_method, learning_rate %f, max_grad_norm %f"%\
-            (hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm']))
-    optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'])
-    optim.set_parameters(train_model.parameters())
+def report_func(epoch, batch, num_batches,
+                start_time, lr, report_stats):
+    """
+    This is the user-defined batch-level traing progress
+    report function.
+    Args:
+        epoch(int): current epoch count.
+        batch(int): current batch count.
+        num_batches(int): total number of batches.
+        start_time(float): last report time.
+        lr(float): current learning rate.
+        report_stats(Statistics): old Statistics instance.
+    Returns:
+        report_stats(Statistics): updated Statistics instance.
+    """
+    if batch % hparams['steps_per_stats'] == -1 % hparams['steps_per_stats']:
+        report_stats.print_out(epoch, batch+1, num_batches, start_time)
+        report_stats.log("progress", summery_writer, lr)
+        report_stats = Statistics()
 
+    return report_stats
+
+
+def train_model(model, train_criterion, optim):
+
+
+    
     trainer = Trainer(hparams,
-                      train_model,
+                      model,
                       dataset,
                       train_criterion,
                       optim,
                       src_vocab_table,
                       tgt_vocab_table)
+
+    num_train_epochs = hparams['num_train_epochs']
+    for step_epoch in  range(num_train_epochs):
+        # 1. Train for one epoch on the training set.
+        train_stats = trainer.train(step_epoch, report_func)
+        print('Train perplexity: %g' % train_stats.ppl())
+
+        trainer.epoch_step(train_stats.ppl(),step_epoch)
+
+
+
+
+if __name__ == '__main__':
+    model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
+    train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
+    if hparams['USE_CUDA']:
+        train_model = model.cuda()
+        train_criterion = train_criterion.cuda()
+
+    print("Using %s optim_method, learning_rate %f, max_grad_norm %f"%\
+            (hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm']))
+    optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'])
+    optim.set_parameters(model.parameters())
+
     
     if not os.path.exists(hparams['out_dir']):
         os.makedirs(hparams['out_dir'])
         print('saving config file to %s ...'%(hparams['out_dir']))
         # save config.yml
         shutil.copy(args.config, hparams['out_dir'])
-    else:
-        if hparams['checkpoint'] is not None:
-            print("Loading chekpoint : %s"%(hparams['checkpoint']))
-            trainer.load_checkpoint(os.path.join(hparams['out_dir'],hparams['checkpoint']))
-        else:
-            pass
 
-
-
-    trainer.train(hparams,eval_pairs)
+    train_model(model, train_criterion, optim)
