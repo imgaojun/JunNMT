@@ -96,7 +96,8 @@ class Trainer(object):
         for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
 
             src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var \
-                            = batch_inputs 
+                            = batch_inputs
+            print(src_input_var)
             loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
 
             report_stats.update(loss,sum(src_input_lengths),sum(tgt_input_lengths))
