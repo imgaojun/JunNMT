@@ -93,7 +93,7 @@ class Trainer(object):
         total_stats = Statistics()
         report_stats = Statistics()
 
-        for step_batch, batch_inputs in enumerate(self.train_dataset.iterator):
+        for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
 
             src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var \
                             = batch_inputs 
@@ -104,7 +104,7 @@ class Trainer(object):
 
             if report_func is not None:
                 report_stats = report_func(
-                        step_epoch, step_batch, len(self.train_dataset.iterator),
+                        step_epoch, step_batch, len(self.train_dataset.train_iter),
                         total_stats.start_time, self.optim.lr, report_stats) 
 
 
