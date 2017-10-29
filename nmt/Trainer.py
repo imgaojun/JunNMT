@@ -39,11 +39,11 @@ class Statistics(object):
                time.time() - start))
         sys.stdout.flush()
 
-    def log(self, prefix, summary_writer, lr):
+    def log(self, prefix, summary_writer, lr, global_step):
         t = self.elapsed_time()
-        summary_writer.add_scalar(prefix + "_ppl", self.ppl())
-        summary_writer.add_scalar(prefix + "_tgtper",  self.n_words / t)
-        summary_writer.add_scalar(prefix + "_lr", lr)
+        summary_writer.add_scalar(prefix + "_ppl", self.ppl(), global_step)
+        summary_writer.add_scalar(prefix + "_tgtper",  self.n_words / t, global_step)
+        summary_writer.add_scalar(prefix + "_lr", lr, global_step)
 
 
 class Trainer(object):
@@ -104,6 +104,7 @@ class Trainer(object):
         # for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
 
             step_batch += 1
+            self.global_step += 1
 
             loss = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
             losses = sum(tgt_input_lengths) * loss
@@ -113,7 +114,7 @@ class Trainer(object):
             if report_func is not None:
                 report_stats = report_func(
                         epoch, step_batch, len(self.train_dataset.train_iter),
-                        total_stats.start_time, self.optim.lr, report_stats) 
+                        total_stats.start_time, self.optim.lr, report_stats, self.global_step) 
 
 
         return total_stats           

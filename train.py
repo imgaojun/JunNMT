@@ -49,7 +49,7 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
 summery_writer = SummaryWriter(hparams['log_dir'])
 
 
-def report_func(epoch, batch, num_batches,
+def report_func(global_step, epoch, batch, num_batches,
                 start_time, lr, report_stats):
     """
     This is the user-defined batch-level traing progress
@@ -66,7 +66,7 @@ def report_func(epoch, batch, num_batches,
     """
     if batch % hparams['steps_per_stats'] == -1 % hparams['steps_per_stats']:
         report_stats.print_out(epoch, batch+1, num_batches, start_time)
-        report_stats.log("progress", summery_writer, lr)
+        report_stats.log("progress", summery_writer, lr, global_step)
         report_stats = Statistics()
 
     return report_stats
