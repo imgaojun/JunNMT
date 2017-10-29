@@ -112,8 +112,8 @@ class Trainer(object):
             total_stats.update(losses,sum(src_input_lengths),sum(tgt_input_lengths))
 
             if report_func is not None:
-                report_stats = report_func(
-                        epoch, step_batch, len(self.global_step,self.train_dataset.train_iter),
+                report_stats = report_func(self.global_step,
+                        epoch, step_batch, len(self.train_dataset.train_iter),
                         total_stats.start_time, self.optim.lr, report_stats) 
 
 
