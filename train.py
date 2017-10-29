@@ -46,7 +46,7 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
 
 
 
-summery_writer = SummaryWriter()
+summery_writer = SummaryWriter(hparams['log_dir'])
 
 
 def report_func(epoch, batch, num_batches,
