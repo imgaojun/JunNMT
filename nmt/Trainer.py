@@ -42,7 +42,6 @@ class Statistics(object):
     def log(self, prefix, summary_writer, lr, global_step):
         t = self.elapsed_time()
         summary_writer.add_scalar(prefix + "_ppl", self.ppl(), global_step)
-        summary_writer.add_scalar(prefix + "_tgtper",  self.n_words / t, global_step)
         summary_writer.add_scalar(prefix + "_lr", lr, global_step)
 
 
