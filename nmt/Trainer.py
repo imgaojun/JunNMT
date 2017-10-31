@@ -49,7 +49,8 @@ class Trainer(object):
     def __init__(self, 
                  hparams,
                  model, 
-                 train_dataset, 
+                 train_dataset,
+                 valid_dataset, 
                  train_criterion, 
                  optim, 
                  src_vocab_table,
@@ -57,6 +58,7 @@ class Trainer(object):
 
         self.model = model
         self.train_dataset = train_dataset
+        self.valid_dataset = valid_dataset
         self.train_criterion = train_criterion
         self.optim = optim
 
@@ -121,6 +123,35 @@ class Trainer(object):
 
         return total_stats           
 
+    def validate(self):
+        self.model.eval()
+        stats = Statistics()
+
+        while True:
+            try:
+                src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.valid_dataset.iterator
+
+            except StopIteration:     
+                print('end of epoch')  
+                break                 
+        # for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
+
+
+            all_decoder_outputs = self.model(src_input_var,tgt_input_var,src_input_lengths)
+            loss = self.train_criterion.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
+                                                     tgt_output_var.transpose(0, 1).contiguous(), 
+                                                     tgt_input_lengths)
+            loss = loss.data[0]
+            n_src_words = sum(src_input_lengths)
+            n_words = sum(tgt_input_lengths)
+            losses = n_words * loss
+
+            stats.update(losses, n_src_words, n_words)        
+        # Set model back to training mode.
+        self.model.train()
+
+
+        return stats
 
     def save_per_epoch(self, epoch):
         self.model.save_checkpoint(epoch, 
@@ -135,3 +166,4 @@ class Trainer(object):
         self.optim.updateLearningRate(ppl, epoch) 
         self.save_per_epoch(epoch)
         self.train_dataset.init_iterator()
+        self.valid_dataset.init_iterator()

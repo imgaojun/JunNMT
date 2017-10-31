@@ -36,7 +36,7 @@ print("src_vocab_size %d, tgt_vocab_size %d"%(src_vocab_table.vocab_size, \
 print('Loading training data ...')
 print("train_src_file: %s"%(hparams['train_src_file']))
 print("train_tgt_file: %s"%(hparams['train_tgt_file']))
-dataset = data_utils.TrainDataSet(hparams['train_src_file'],
+train_dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['train_tgt_file'],
                                   hparams['batch_size'],
                                   src_vocab_table,
@@ -44,7 +44,13 @@ dataset = data_utils.TrainDataSet(hparams['train_src_file'],
                                   hparams['src_max_len'],
                                   hparams['tgt_max_len'])
 
-
+valid_dataset = data_utils.TrainDataSet(hparams['dev_src_file'],
+                                  hparams['dev_tgt_file'],
+                                  hparams['batch_size'],
+                                  src_vocab_table,
+                                  tgt_vocab_table,
+                                  hparams['src_max_len'],
+                                  hparams['tgt_max_len'])
 
 summery_writer = SummaryWriter(hparams['log_dir'])
 
@@ -78,7 +84,8 @@ def train_model(model, train_criterion, optim):
     
     trainer = Trainer(hparams,
                       model,
-                      dataset,
+                      train_dataset,
+                      valid_dataset,
                       train_criterion,
                       optim,
                       src_vocab_table,
@@ -90,7 +97,14 @@ def train_model(model, train_criterion, optim):
         train_stats = trainer.train(step_epoch, report_func)
         print('Train perplexity: %g' % train_stats.ppl())
 
-        trainer.epoch_step(train_stats.ppl(),step_epoch)
+        # 2. Validate on the validation set.
+        valid_stats = trainer.validate()
+        print('Validation perplexity: %g' % valid_stats.ppl())
+
+        train_stats.log("train", summery_writer, optim.lr, step_epoch)
+        valid_stats.log("valid", summery_writer, optim.lr, step_epoch)
+
+        trainer.epoch_step(valid_stats.ppl(),step_epoch)
 
 
 

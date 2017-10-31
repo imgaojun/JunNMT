@@ -67,7 +67,10 @@ class AttnDecoderRNN(DecoderBase):
                 context.transpose(0, 1)                   # (contxt_len, batch, d)
             )
 
-            rnn_outputs = self.dropout(attn_outputs)    # (input_len, batch, d)
+            outputs  = self.dropout(attn_outputs)    # (input_len, batch, d)
+
+        else:
+            outputs  = self.dropout(rnn_outputs)
 
 
-        return rnn_outputs, hidden
+        return outputs , hidden

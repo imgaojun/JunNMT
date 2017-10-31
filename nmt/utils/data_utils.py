@@ -52,4 +52,3 @@ class TrainDataSet(object):
 
     def init_iterator(self):
         self.train_iter = iter(self.train_dataloader)
-
