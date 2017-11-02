@@ -87,8 +87,7 @@ def test_bleu():
             )
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(hparams['dev_tgt_file']),
-                                                             os.path.join(hparams['out_dir'],
-                                                             './translate.tmp')
+                                                             os.path.join(hparams['out_dir'],'./translate.tmp')
                                                              ))
     output = output.read()
     # Get bleu value
@@ -149,6 +148,6 @@ if __name__ == '__main__':
         os.makedirs(hparams['out_dir'])
         print('saving config file to %s ...'%(hparams['out_dir']))
         # save config.yml
-        shutil.copy(args.config, hparams['out_dir'])
+        shutil.copy(args.config, os.path.join(hparams['out_dir'],'config.yml'))
 
     train_model(model, train_criterion, optim)
