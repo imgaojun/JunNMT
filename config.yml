@@ -3,7 +3,7 @@ rnn_type: GRU #RNN, LSTM, GRU, SRU
 bidirectional: false
 embedding_size: 100
 hidden_size: 100
-num_layers: 4
+num_layers: 1
 dropout: 0.0
 atten_model: dot #general, dot, none
 
@@ -20,31 +20,35 @@ tgt_vocab_size: 30000
 
 
 # File
-train_src_file: /home/xiapeng/gaojun/data/trans/train.cn
-train_tgt_file: /home/xiapeng/gaojun/data/trans/train.en
+# train_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.cn
+# train_tgt_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.en
 
-# train_src_file: /home/xiapeng/gaojun/trans/test/nist02.cn
-# train_tgt_file: /home/xiapeng/gaojun/trans/test/nist02.en0
+train_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
+train_tgt_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
 
 
-dev_src_file: /home/xiapeng/gaojun/trans/test/nist02.cn
-dev_tgt_file: /home/xiapeng/gaojun/trans/test/nist02.en0
+dev_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
+dev_tgt_file: 
+  - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
+  - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en1
+  - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en2
+  - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en3
 
-src_vocab_file: /home/xiapeng/gaojun/JunNMT_test/nmt_test/src_vocab.cn
-tgt_vocab_file: /home/xiapeng/gaojun/JunNMT_test/nmt_test/tgt_vocab.en
+src_vocab_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/src_vocab.cn
+tgt_vocab_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/src_vocab.en
 
 # Misc
 USE_CUDA: true
 
 # Train
-optim_method: adadelta #adadelta, adam, sgd
+optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
 learning_rate: 0.0004
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
 batch_size: 20
-out_dir: 
+out_dir: ./out_dir
 checkpoint: 
 
 
@@ -52,6 +56,6 @@ checkpoint:
 replace_unk: true
 decode_max_length: 100
 beam_size: 1
+
 # Tensorboard
-log_dir: 
-prefix: 
+log_dir: ./log_dir

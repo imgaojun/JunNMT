@@ -3,6 +3,7 @@ import torch.utils.data as data
 import codecs
 from collections import OrderedDict
 import math
+import os
 def load_hparams(config_file):
     with codecs.open(config_file, 'r', encoding='utf8') as f:
         hparams = OrderedDict()
@@ -20,6 +21,14 @@ def safe_exp(value):
     except OverflowError:
         ans = float("inf")
     return ans
+
+
+def latest_checkpoint(model_dir):
+    cnpt_file = os.path.join(model_dir,'checkpoint')
+    cnpt = open(cnpt_file,'r').readline().strip().split(':')[-1]
+    cnpt = os.path.join(model_dir,cnpt)
+    return cnpt
+
 
 class TrainDataSet(data.Dataset):
     def __init__(self, src_file, tgt_file):

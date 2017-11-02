@@ -39,11 +39,10 @@ class Statistics(object):
                time.time() - self.start_time))
         sys.stdout.flush()
 
-    def log(self, prefix, summary_writer, lr, global_step):
-        t = self.elapsed_time()
-        summary_writer.add_scalar(prefix + "_ppl", self.ppl(), global_step)
-        summary_writer.add_scalar(prefix + "_lr", lr, global_step)
-
+    def log(self, prefix, summary_writer, step, **kwargs):
+        summary_writer.add_scalar(prefix + "/ppl", self.ppl(), step)
+        for key in kwargs:
+            summary_writer.add_scalar(prefix + '/' + key, kwargs[key],step)
 
 class Trainer(object):
     def __init__(self, 
@@ -154,9 +153,15 @@ class Trainer(object):
         return stats
 
     def save_per_epoch(self, epoch):
+        f = open(os.path.join(self.out_dir,'checkpoint'),'w')
+        f.write('latest_checkpoint:checkpoint_epoch%d.pkl'%(epoch))
+        f.close()
         self.model.save_checkpoint(epoch, 
                     os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
+        
+        
 
+    
     def load_checkpoint(self, filenmae):
         self.model.load_checkpoint(filenmae)
         

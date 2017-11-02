@@ -66,7 +66,7 @@ def seq2index(seq, vocab_table, max_len=None):
     return seq_idx
 
 def get_src_input_seq(seq):
-    seq = seq + [EOS_ID]
+    # seq = seq + [EOS_ID]
     return seq
 
 def get_tgt_input_seq(seq):
