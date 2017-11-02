@@ -63,12 +63,17 @@ def seq2index(seq, vocab_table, max_len=None):
         else:
             seq_idx.append(vocab_table.word2index[UNK_token])
 
-    return seq_idx + [EOS_ID]
+    return seq_idx
+
+def get_src_input_seq(seq):
+    seq = seq + [EOS_ID]
+    return seq
+
 def get_tgt_input_seq(seq):
     seq = [SOS_ID] + seq
     return seq
 def get_tgt_output_seq(seq):
-    seq += [EOS_ID]
+    seq = seq + [EOS_ID]
     return seq
 
 def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, src_max_len, tgt_max_len, USE_CUDA=True):
@@ -78,6 +83,7 @@ def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, sr
     src_seqs, tgt_seqs = zip(*seq_pairs)
 
     # For input and target sequences, get array of lengths and pad with 0s to max length
+    src_inputs = [get_src_input_seq(s) for s in src_seqs]
     src_input_lengths = [len(s) for s in src_seqs]
     paded_src_inputs = [pad_seq(s, max(src_input_lengths)) for s in src_seqs]
     

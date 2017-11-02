@@ -6,15 +6,14 @@ hidden_size: 100
 num_layers: 4
 dropout: 0.0
 atten_model: dot #general, dot, none
-# Decode
-decode_max_length: 100
-beam_size: 1
+
 
 src_max_len: 80
 tgt_max_len: 80
 
 # Vocab
 share_embedding: false
+
 # Set vocab limit size
 src_vocab_size: 30000
 tgt_vocab_size: 30000
@@ -48,6 +47,11 @@ batch_size: 20
 out_dir: 
 checkpoint: 
 
+
+# Translate
+replace_unk: true
+decode_max_length: 100
+beam_size: 1
 # Tensorboard
 log_dir: 
 prefix: 
