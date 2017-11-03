@@ -84,7 +84,7 @@ def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, sr
 
     # For input and target sequences, get array of lengths and pad with 0s to max length
     src_inputs = [get_src_input_seq(s) for s in src_seqs]
-    src_input_lengths = [len(s) for s in src_seqs]
+    src_input_lengths = [len(s) for s in src_inputs]
     paded_src_inputs = [pad_seq(s, max(src_input_lengths)) for s in src_seqs]
     
     tgt_inputs = [get_tgt_input_seq(s) for s in tgt_seqs]
