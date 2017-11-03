@@ -70,7 +70,6 @@ class AttnDecoderRNN(DecoderBase):
             outputs  = self.dropout(attn_outputs)    # (input_len, batch, d)
 
         else:
-            print('no attention')
             outputs  = self.dropout(rnn_outputs)
 
 
