@@ -47,6 +47,7 @@ class Translator(object):
             if ni == vocab_utils.UNK_ID and self.replace_unk:
                 ni == topi[1]
             if ni == vocab_utils.EOS_ID:
+                print('fuck')
                 break
             else:
 
