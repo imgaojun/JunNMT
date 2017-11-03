@@ -42,6 +42,7 @@ class Translator(object):
             # Choose top word from output
             topv, topi = decoder_output.data.topk(2)
             ni = topi[0][0]
+            print(topi)
             if all(ni == vocab_utils.UNK_ID) and self.replace_unk:
                 ni == topi[1][0]
             # ni = ni.cpu().numpy().tolist()[0]
