@@ -103,7 +103,7 @@ def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, sr
         src_input_var = src_input_var.cuda()
         tgt_input_var = tgt_input_var.cuda() 
         tgt_output_var = tgt_output_var.cuda() 
-
+    print(src_input_lengths)
     return src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var
 
 
