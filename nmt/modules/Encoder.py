@@ -42,7 +42,7 @@ class EncoderRNN(EncoderBase):
         self.num_layers = num_layers
         self.bidirectional = bidirectional
 
-        self.no_pack_padded_seq = True
+        self.no_pack_padded_seq = False
 
         if rnn_type == "SRU":
             # SRU doesn't support PackedSequence.

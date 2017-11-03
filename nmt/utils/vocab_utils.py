@@ -109,8 +109,9 @@ def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, sr
 
 def src_seq2var(src_seq, vocab_table):
     seq_idx = [seq2index(src_seq, vocab_table)]
+    src_input = [get_src_input_seq(seq_idx)]
     src_input_length = [len(seq_idx)]
-    src_input_var = Variable(torch.LongTensor(seq_idx)).transpose(0, 1)
+    src_input_var = Variable(torch.LongTensor(src_input)).transpose(0, 1)
     if USE_CUDA:
         src_input_var = src_input_var.cuda() 
     return src_input_var, src_input_length
