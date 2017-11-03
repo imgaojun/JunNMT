@@ -2,11 +2,12 @@ import nmt.utils.vocab_utils as vocab_utils
 import torch
 from torch.autograd import Variable
 class Translator(object):
-    def __init__(self, model, tgt_vocab_table, beam_size, max_length, USE_CUDA=True):
+    def __init__(self, model, tgt_vocab_table, beam_size, max_length, replace_unk=True, USE_CUDA=True):
         self.model = model
         self.tgt_vocab_table = tgt_vocab_table
         self.beam_size = beam_size
         self.USE_CUDA = USE_CUDA
+        self.replace_unk = replace_unk
         self.max_length = max_length
         self.model.eval()
     def decode(self, src_input, src_input_length):
@@ -39,12 +40,15 @@ class Translator(object):
             )
 
             # Choose top word from output
-            topv, topi = decoder_output.data.topk(1)
+            topv, topi = decoder_output.data.topk(2)
             ni = topi[0][0]
-            ni = ni.cpu().numpy().tolist()[0]
-            if  ni == vocab_utils.EOS_ID:
+            if all(ni == vocab_utils.UNK_ID) and self.replace_unk:
+                ni == topi[1][0]
+            # ni = ni.cpu().numpy().tolist()[0]
+            if  all(ni == vocab_utils.EOS_ID):
                 break
             else:
+
                 decoded_words.append(self.tgt_vocab_table.index2word[ni])
                 
             # Next input is chosen word
