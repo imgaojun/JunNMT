@@ -48,6 +48,9 @@ class TrainDataSet(object):
         src_seqs,tgt_seqs = self.train_iter.next()
         src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = \
             vocab_utils.batch2var(src_seqs,tgt_seqs,self.src_vocab_table, self.tgt_vocab_table, self.src_max_len, self.tgt_max_len)
+
+        print(src_input_lengths)
+        print(src_seqs)
         return src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var
 
     def init_iterator(self):
