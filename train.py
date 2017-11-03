@@ -138,6 +138,8 @@ if __name__ == '__main__':
         model = model.cuda()
         train_criterion = train_criterion.cuda()
 
+    model = torch.nn.DataParallel(model, device_ids=[0, 1, 2], dim=1)
+
     print("Using %s optim_method, learning_rate %f, max_grad_norm %f"%\
             (hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm']))
     optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'],0.5)
