@@ -6,6 +6,7 @@ Neural Machine Translation in Pytorch
 ### Requirements
 - Python >= 3.5
 - Pytorch >= 0.20
+- tensorboardx
 
 ### Training
 Edit the `JunNMT/config.yml`, and excute `JunNMT/train.py` to train a model.
