@@ -10,7 +10,6 @@ class Translator(object):
         self.replace_unk = replace_unk
         self.max_length = max_length
         self.model.eval()
-        self.model.encoder.no_pack_padded_seq = True
     def decode(self, src_input, src_input_length):
         
         encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_length, None)

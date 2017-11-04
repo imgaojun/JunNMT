@@ -112,6 +112,7 @@ def src_seq2var(src_seq, vocab_table):
     src_input = [get_src_input_seq(seq_idx)]
     src_input_length = [len(seq_idx)]
     src_input_var = Variable(torch.LongTensor(src_input)).transpose(0, 1)
+    print(src_input_var)
     if USE_CUDA:
         src_input_var = src_input_var.cuda() 
     return src_input_var, src_input_length

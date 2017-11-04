@@ -46,7 +46,7 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             src_input_var, src_input_length= \
                 vocab_utils.src_seq2var(src_seq ,src_vocab_table)
 
-            decoded_words = translator.decode(src_input_var, src_input_length)
+            decoded_words = translator.decode(src_input_var)
 
             sentence_out = ' '.join(decoded_words)
             sentence_out = sentence_out.replace(' <UNK>','')
