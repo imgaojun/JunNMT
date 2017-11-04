@@ -34,7 +34,8 @@ if hparams['USE_CUDA']:
 translator = Translator(model, 
                         tgt_vocab_table, 
                         hparams['beam_size'], 
-                        hparams['decode_max_length'])
+                        hparams['decode_max_length'],
+                        hparams['replace_unk'])
 
 
 
