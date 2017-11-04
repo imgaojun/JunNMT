@@ -13,6 +13,7 @@ import os
 import shutil
 import re
 import torch
+import torch.nn as nn
 train_parser = argparse.ArgumentParser()
 train_parser.add_argument("--config", type=str)
 train_parser.add_argument("--nmt_dir", type=str)
@@ -50,13 +51,10 @@ valid_dataset = data_utils.TrainDataSet(hparams['dev_src_file'],
 summery_writer = SummaryWriter(hparams['log_dir'])
 
 
-def weight_init(m): 
-	if isinstance(m, nn.Linear):
-        print('weight')
-        print(m.weight.data)
-		nn.init.orthogonal(m.weight.data)
-        print(m.weight.data)
-
+def weights_init(m): 
+    if isinstance(m, nn.Linear):
+        nn.init.xavier_normal(m.weight.data)
+       
 def report_func(global_step, epoch, batch, num_batches,
                 start_time, lr, report_stats):
     """
@@ -141,6 +139,7 @@ def train_model(model, train_criterion, optim):
 
 if __name__ == '__main__':
     model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
+    model.apply(weights_init)
     train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
     if hparams['USE_CUDA']:
         model = model.cuda()
