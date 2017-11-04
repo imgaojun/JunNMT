@@ -50,6 +50,13 @@ valid_dataset = data_utils.TrainDataSet(hparams['dev_src_file'],
 summery_writer = SummaryWriter(hparams['log_dir'])
 
 
+def weight_init(m): 
+	if isinstance(m, nn.Linear):
+        print('weight')
+        print(m.weight.data)
+		nn.init.orthogonal(m.weight.data)
+        print(m.weight.data)
+
 def report_func(global_step, epoch, batch, num_batches,
                 start_time, lr, report_stats):
     """

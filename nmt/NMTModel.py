@@ -27,9 +27,6 @@ class NMTModel(nn.Module):
         
         return decoder_outputs
 
-    @staticmethod
-    def weight_init(m):
-        pass
 
 
     def encode(self, input, lengths=None, hidden=None):
