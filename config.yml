@@ -6,7 +6,7 @@ hidden_size: 100
 num_layers: 1
 dropout: 0.0
 atten_model: dot #general, dot, none
-
+param_init: 1.0
 
 src_max_len: 80
 tgt_max_len: 80

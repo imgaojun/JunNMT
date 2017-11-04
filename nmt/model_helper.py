@@ -80,6 +80,9 @@ def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
                      encoder, 
                      decoder, 
                      generator)
-
+    if hparams['param_init'] != 0.0:
+        print('Intializing model parameters.')
+        for p in model.parameters():
+            p.data.uniform_(-hparams['param_init'], hparams['param_init'])    
     return model
 
