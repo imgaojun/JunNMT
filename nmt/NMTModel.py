@@ -18,7 +18,7 @@ class NMTModel(nn.Module):
         encoder_outputs, encoder_hidden = self.encode(src_inputs, src_lengths, None)
 
 
-        decoder_init_hidden = encoder_hidden
+        decoder_init_hidden = self.decoder.init_decoder_state(encoder_hidden)
             
         decoder_outputs , decoder_hiddens = self.decode(
                 tgt_inputs, encoder_outputs, decoder_init_hidden

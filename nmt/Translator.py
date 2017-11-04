@@ -13,7 +13,7 @@ class Translator(object):
     def decode(self, src_input, src_input_length=None):
         
         encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_length, None)
-        decoder_init_hidden = encoder_hidden
+        decoder_init_hidden = self.model.decoder.init_decoder_state(encoder_hidden)
 
         # Create starting vectors for decoder
         decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID]), volatile=True) # SOS
