@@ -5,7 +5,7 @@ embedding_size: 100
 hidden_size: 100
 num_layers: 1
 dropout: 0.0
-atten_model: dot #general, dot, none
+atten_model: general #general, dot, none
 param_init: 0.1
 
 src_max_len: 80
@@ -44,6 +44,7 @@ USE_CUDA: true
 optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
 learning_rate: 0.001
+learning_rate_decay: 0.5
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
