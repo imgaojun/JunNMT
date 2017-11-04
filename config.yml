@@ -43,7 +43,7 @@ USE_CUDA: true
 # Train
 optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
-learning_rate: 0.0004
+learning_rate: 0.001
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
