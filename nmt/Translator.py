@@ -45,7 +45,6 @@ class Translator(object):
             ni = topi[0]
   
             if ni == vocab_utils.UNK_ID and self.replace_unk:
-                print('replace unk')
                 ni == topi[1]
             if ni == vocab_utils.EOS_ID:
                 break
