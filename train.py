@@ -84,13 +84,13 @@ def test_bleu():
                 --model %s'%(args.nmt_dir,
                              os.path.join(hparams['out_dir'],'config.yml'),
                              hparams['dev_src_file'],
-                             os.path.join(hparams['out_dir'],'./translate.tmp'),
+                             os.path.join(hparams['out_dir'],'translate.tmp'),
                              utils.latest_checkpoint(hparams['out_dir']),
                             )
             )
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(hparams['dev_tgt_file']),
-                                                             os.path.join(hparams['out_dir'],'./translate.tmp')
+                                                             os.path.join(hparams['out_dir'],'translate.tmp')
                                                              ))
     output = output.read()
     # Get bleu value
