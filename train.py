@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
     print("Using %s optim_method, learning_rate %f, max_grad_norm %f"%\
             (hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm']))
-    optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'],0.5)
+    optim = Optim(hparams['optim_method'], hparams['learning_rate'],hparams['max_grad_norm'],hparams['learning_rate_decay'])
     optim.set_parameters(model.parameters())
 
     
