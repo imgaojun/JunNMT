@@ -76,7 +76,7 @@ def report_func(global_step, epoch, batch, num_batches,
 
 
 def test_bleu():
-    os.system('export CUDA_VISIBLE_DEVICES=0')
+    # os.system('export CUDA_VISIBLE_DEVICES=0')
     os.system('python3 %s/translate.py \
                 --config %s \
                 --src_in %s \
