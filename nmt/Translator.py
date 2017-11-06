@@ -15,6 +15,31 @@ class Translator(object):
         encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_length, None)
         decoder_init_hidden = self.model.decoder.init_decoder_state(encoder_hidden)
 
+        context_h = encoder_outputs
+        batch_size = context_h.size(1)
+
+        # Expand tensors for each beam.
+        context = Variable(context_h.data.repeat(1, beam_size, 1))
+
+        dec_states = [
+            Variable(decoder_init_hidden.data.repeat(1, beam_size, 1)),
+        ]
+
+        beam = [
+            Beam(beam_size, cuda=True)
+            for k in range(batch_size)
+        ]                
+
+        batch_idx = list(range(batch_size))
+        remaining_sents = batch_size
+
+        for i in range(self.max_length):
+
+            input = torch.stack(
+                [b.get_current_state() for b in beam if not b.done]
+            ).t().contiguous().view(1, -1)
+
+
         # Create starting vectors for decoder
         decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID]), volatile=True) # SOS
         if self.USE_CUDA:
@@ -60,6 +85,8 @@ class Translator(object):
         
         
 
-    def _beam_decode(self):
+    def decode_batch(self):
+        beam_size = self.beam_size
+
         pass
 
