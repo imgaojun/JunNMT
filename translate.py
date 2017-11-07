@@ -46,11 +46,12 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             src_seq = line.strip()
             src_input_var, src_input_lengths= \
                 vocab_utils.src_seq2var([src_seq] ,src_vocab_table)
-            print(src_input_var)
-            print(src_input_lengths)
+ 
             hypotheses, scores = translator.decode(src_input_var,src_input_lengths)
             all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
-            print(all_hyp_inds)
+            
+            all_hyp_words = [vocab_utils.idxs2words(idxs,tgt_vocab_table) for idxs in all_hyp_inds]
+            print(all_hyp_words)
             break
             # sentence_out = ' '.join(decoded_words)
             # sentence_out = sentence_out.replace(' <UNK>','')

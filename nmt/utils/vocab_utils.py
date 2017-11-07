@@ -117,3 +117,7 @@ def src_seq2var(batch_src_seqs, vocab_table):
     if USE_CUDA:
         src_input_var = src_input_var.cuda() 
     return src_input_var, src_input_lengths
+
+def idxs2words(idxs, vocab_table):
+    words_list = [vocab_table.index2word[idx] for idx in idxs]
+    return words_list
