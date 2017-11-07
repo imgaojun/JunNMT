@@ -10,9 +10,9 @@ class Translator(object):
         self.replace_unk = replace_unk
         self.max_length = max_length
         self.model.eval()
-    def decode(self, src_input, src_input_length=None):
+    def decode(self, src_input, src_input_lengths=None):
         
-        encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_length, None)
+        encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_lengths, None)
         decoder_init_hidden = self.model.decoder.init_decoder_state(encoder_hidden)
 
         context_h = encoder_outputs
@@ -30,6 +30,10 @@ class Translator(object):
             for k in range(batch_size)
         ]                
 
+
+        dec_out = dec_states[0].squeeze(0)
+
+
         batch_idx = list(range(batch_size))
         remaining_sents = batch_size
 
@@ -40,17 +44,108 @@ class Translator(object):
             ).t().contiguous().view(1, -1)
 
 
-        # Create starting vectors for decoder
-        decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID]), volatile=True) # SOS
-        if self.USE_CUDA:
-            decoder_input = decoder_input.cuda()
-        
-        if self.beam_size == 1:
-            decoded_words = self._greedy_decode(decoder_init_hidden,decoder_input, encoder_outputs)
-        else:
-            pass
+            
 
-        return decoded_words
+            decoder_output, decoder_hidden = self.model.decode(
+                Variable(input).transpose(1, 0), 
+                context, 
+                dec_states[0].squeeze(0) 
+            )
+
+            dec_states = [
+                decoder_hidden.unsqueeze(0)
+            ]
+
+            dec_out = decoder_output.squeeze(1)
+
+            out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
+
+
+            word_lk = out.view(
+                beam_size,
+                remaining_sents,
+                -1
+            ).transpose(0, 1).contiguous()
+
+            active = []
+            for b in range(batch_size):
+                if beam[b].done:
+                    continue
+
+                idx = batch_idx[b]
+                if not beam[b].advance(word_lk.data[idx]):
+                    active += [b]
+
+                for dec_state in dec_states:  # iterate over h, c
+                    # layers x beam*sent x dim
+                    sent_states = dec_state.view(
+                        -1, beam_size, remaining_sents, dec_state.size(2)
+                    )[:, :, idx]
+                    sent_states.data.copy_(
+                        sent_states.data.index_select(
+                            1,
+                            beam[b].get_current_origin()
+                        )
+                    )
+
+            if not active:
+                break         
+
+            # in this section, the sentences that are still active are
+            # compacted so that the decoder is not run on completed sentences
+            active_idx = torch.cuda.LongTensor([batch_idx[k] for k in active])
+            batch_idx = {beam: idx for idx, beam in enumerate(active)}                   
+
+
+            def update_active(t):
+                # select only the remaining active sentences
+                view = t.data.view(
+                    -1, remaining_sents,
+                    self.model.decoder.hidden_size
+                )
+                new_size = list(t.size())
+                new_size[-2] = new_size[-2] * len(active_idx) \
+                    // remaining_sents
+                return Variable(view.index_select(
+                    1, active_idx
+                ).view(*new_size))   
+
+
+            dec_states = (
+                update_active(dec_states[0]),
+            )
+            dec_out = update_active(dec_out)
+            context = update_active(context)
+
+            remaining_sents = len(active)                         
+
+        #  (4) package everything up
+
+        allHyp, allScores = [], []
+        n_best = 1
+
+        for b in range(batch_size):
+            scores, ks = beam[b].sort_best()
+
+            allScores += [scores[:n_best]]
+            hyps = zip(*[beam[b].get_hyp(k) for k in ks[:n_best]])
+            allHyp += [hyps]
+
+        return allHyp, allScores
+
+
+
+        # # Create starting vectors for decoder
+        # decoder_input = Variable(torch.LongTensor([vocab_utils.SOS_ID]), volatile=True) # SOS
+        # if self.USE_CUDA:
+        #     decoder_input = decoder_input.cuda()
+        
+        # if self.beam_size == 1:
+        #     decoded_words = self._greedy_decode(decoder_init_hidden,decoder_input, encoder_outputs)
+        # else:
+        #     pass
+
+        # return decoded_words
 
 
     def _greedy_decode(self, decoder_init_hidden, decoder_input, encoder_outputs):

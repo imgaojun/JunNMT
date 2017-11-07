@@ -24,8 +24,9 @@ class NMTModel(nn.Module):
                 tgt_inputs, encoder_outputs, decoder_init_hidden
             )        
 
+        outputs = self.generator(decoder_outputs)
         
-        return decoder_outputs
+        return outputs
 
 
 
@@ -41,8 +42,8 @@ class NMTModel(nn.Module):
                 emb, context, state
             )     
 
-        outputs = self.generator(decoder_outputs)
-        return outputs, decoder_hiddens
+        
+        return decoder_outputs, decoder_hiddens
     
     def save_checkpoint(self, epoch, filename):
         torch.save({'encoder_dict': self.encoder.state_dict(),
