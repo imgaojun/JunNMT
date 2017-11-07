@@ -43,8 +43,10 @@ translator = Translator(model,
 print('start translating ...')
 with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file,\
         codecs.open(args.tgt_out, 'wb', encoding='utf8') as tgt_file:
-    process_bar = ShowProcess(len(src_file.readlines()))
-    for line in src_file:
+        src_lines = src_file.readlines()
+    process_bar = ShowProcess(len(src_lines))
+    print('start translating ...')
+    for line in src_lines:
         src_seq = line.strip()
         src_input_var, src_input_lengths= \
             vocab_utils.src_seq2var([src_seq] ,src_vocab_table)
