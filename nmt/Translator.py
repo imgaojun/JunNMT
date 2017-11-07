@@ -50,7 +50,7 @@ class Translator(object):
             print('dec_states')
             print(dec_states[0])
             decoder_output, decoder_hidden = self.model.decode(
-                Variable(input).transpose(1, 0), 
+                Variable(input), 
                 context, 
                 dec_states[0].squeeze(0) 
             )
