@@ -19,7 +19,7 @@ class Translator(object):
 
         context_h = encoder_outputs
         batch_size = context_h.size(1)
-
+        print('batch size %d'%(batch_size))
         # Expand tensors for each beam.
         context = Variable(context_h.data.repeat(1, beam_size, 1))
 
@@ -45,9 +45,10 @@ class Translator(object):
                 [b.get_current_state() for b in beam if not b.done]
             ).t().contiguous().view(1, -1)
 
-
-            
-
+            print('input')
+            print(input)
+            print('dec_states')
+            print(dec_states[0])
             decoder_output, decoder_hidden = self.model.decode(
                 Variable(input).transpose(1, 0), 
                 context, 
