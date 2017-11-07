@@ -40,10 +40,10 @@ class AttnDecoderRNN(DecoderBase):
         self.num_layers = num_layers
         self.hidden_size = hidden_size
         self.dropout = nn.Dropout(dropout)  
-        self.merge_net = nn.Sequential(
-                            nn.Linear(hidden_size, hidden_size),
-                            nn.ReLU()
-                        )
+        # self.merge_net = nn.Sequential(
+        #                     nn.Linear(hidden_size, hidden_size),
+        #                     nn.ReLU()
+        #                 )
         if rnn_type == "SRU":
             self.rnn = SRU(
                     input_size=input_size,
@@ -82,7 +82,8 @@ class AttnDecoderRNN(DecoderBase):
 
     def init_decoder_state(self, enc_hidden):
         if isinstance(enc_hidden, tuple):  # GRU
-            h = self.merge_net(enc_hidden)
+            # h = self.merge_net(enc_hidden)
+            h = enc_hidden
         else:  # LSTM
             h = enc_hidden
         return h
