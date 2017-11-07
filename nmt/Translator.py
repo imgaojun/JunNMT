@@ -52,11 +52,11 @@ class Translator(object):
             decoder_output, decoder_hidden = self.model.decode(
                 Variable(input), 
                 context, 
-                dec_states[0].squeeze(0) 
+                dec_states[0]
             )
 
             dec_states = [
-                decoder_hidden.unsqueeze(0)
+                decoder_hidden
             ]
 
             dec_out = decoder_output.squeeze(1)
