@@ -43,7 +43,7 @@ translator = Translator(model,
 print('start translating ...')
 with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file,\
         codecs.open(args.tgt_out, 'wb', encoding='utf8') as tgt_file:
-        src_lines = src_file.readlines()
+    src_lines = src_file.readlines()
     process_bar = ShowProcess(len(src_lines))
     print('start translating ...')
     for line in src_lines:
