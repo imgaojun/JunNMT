@@ -49,13 +49,15 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
  
             hypotheses, scores = translator.decode(src_input_var,src_input_lengths)
             all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
-            print(all_hyp_inds)
+            
             all_hyp_words = [vocab_utils.idxs2words(idxs,tgt_vocab_table) for idxs in all_hyp_inds]
             
-            break
+            
             sentence_out = ' '.join(all_hyp_words[0])
             sentence_out = sentence_out.replace(' <UNK>','')
             sentence_out = sentence_out.replace(' </S>','')
+            print(sentence_out)
+            break
             tgt_file.write(sentence_out+'\n')
 
 

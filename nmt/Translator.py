@@ -33,7 +33,7 @@ class Translator(object):
         ]                
 
 
-        dec_out = dec_states[0].squeeze(0)
+        dec_out = dec_states[0][-1].squeeze(0)
 
 
         batch_idx = list(range(batch_size))
@@ -45,10 +45,10 @@ class Translator(object):
                 [b.get_current_state() for b in beam if not b.done]
             ).t().contiguous().view(1, -1)
 
-            print('input')
-            print(input)
-            print('dec_states')
-            print(dec_states[0])
+            # print('input')
+            # print(input)
+            # print('dec_states')
+            # print(dec_states[0])
             decoder_output, decoder_hidden = self.model.decode(
                 Variable(input), 
                 context, 
@@ -58,7 +58,7 @@ class Translator(object):
             dec_states = [
                 decoder_hidden
             ]
-
+            print(decoder_output)
             dec_out = decoder_output.squeeze(1)
 
             out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
