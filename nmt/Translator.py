@@ -61,7 +61,6 @@ class Translator(object):
             dec_out = decoder_output.squeeze(0)
 
             out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
-            print(out)
 
 
             word_lk = out.view(

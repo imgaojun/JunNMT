@@ -56,8 +56,7 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             sentence_out = ' '.join(all_hyp_words[0])
             sentence_out = sentence_out.replace(' <UNK>','')
             sentence_out = sentence_out.replace(' </S>','')
-            print(sentence_out)
-            break
+
             tgt_file.write(sentence_out+'\n')
 
 
