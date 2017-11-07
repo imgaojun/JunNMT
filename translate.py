@@ -46,7 +46,8 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             src_seq = line.strip()
             src_input_var, src_input_lengths= \
                 vocab_utils.src_seq2var([src_seq] ,src_vocab_table)
-
+            print(src_input_var)
+            print(src_input_lengths)
             allHyp, allScores = translator.decode(src_input_var,src_input_lengths)
 
             print(allHyp)
