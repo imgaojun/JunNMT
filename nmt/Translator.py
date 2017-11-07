@@ -19,7 +19,6 @@ class Translator(object):
 
         context_h = encoder_outputs
         batch_size = context_h.size(1)
-        print('batch size %d'%(batch_size))
         # Expand tensors for each beam.
         context = Variable(context_h.data.repeat(1, beam_size, 1))
 

@@ -2,6 +2,7 @@ from nmt.Translator import Translator
 import nmt.utils.vocab_utils as vocab_utils
 import nmt.model_helper as model_helper
 import nmt.utils.misc_utils as utils
+from nmt.utils.ShowProcess import ShowProcess
 import torch
 import argparse
 import codecs
@@ -40,23 +41,26 @@ translator = Translator(model,
 
 
 print('start translating ...')
-with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file:
-    with codecs.open(args.tgt_out, 'wb', encoding='utf8') as tgt_file:
-        for line in src_file:
-            src_seq = line.strip()
-            src_input_var, src_input_lengths= \
-                vocab_utils.src_seq2var([src_seq] ,src_vocab_table)
- 
-            hypotheses, scores = translator.decode(src_input_var,src_input_lengths)
-            all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
-            
-            all_hyp_words = [vocab_utils.idxs2words(idxs,tgt_vocab_table) for idxs in all_hyp_inds]
-            
-            
-            sentence_out = ' '.join(all_hyp_words[0])
-            sentence_out = sentence_out.replace(' <UNK>','')
-            sentence_out = sentence_out.replace(' </S>','')
+with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file, \ 
+        codecs.open(args.tgt_out, 'wb', encoding='utf8') as tgt_file:
+    process_bar = ShowProcess(len(src_file))
+    for line in src_file:
+        src_seq = line.strip()
+        src_input_var, src_input_lengths= \
+            vocab_utils.src_seq2var([src_seq] ,src_vocab_table)
 
-            tgt_file.write(sentence_out+'\n')
+        hypotheses, scores = translator.decode(src_input_var,src_input_lengths)
+        all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
+        
+        all_hyp_words = [vocab_utils.idxs2words(idxs,tgt_vocab_table) for idxs in all_hyp_inds]
+        
+        
+        sentence_out = ' '.join(all_hyp_words[0])
+        sentence_out = sentence_out.replace(' <UNK>','')
+        sentence_out = sentence_out.replace(' </S>','')
+
+        tgt_file.write(sentence_out+'\n')
+
+        process_bar.show_process()
 
 
