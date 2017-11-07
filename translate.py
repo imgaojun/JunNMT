@@ -50,7 +50,7 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             print(src_input_lengths)
             allHyp, allScores = translator.decode(src_input_var,src_input_lengths)
 
-            print(allHyp)
+            print(allHyp[0])
             break
             # sentence_out = ' '.join(decoded_words)
             # sentence_out = sentence_out.replace(' <UNK>','')
