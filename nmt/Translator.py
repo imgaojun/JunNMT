@@ -61,6 +61,7 @@ class Translator(object):
             dec_out = decoder_output.squeeze(1)
 
             out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
+            print(out)
 
 
             word_lk = out.view(
@@ -68,7 +69,6 @@ class Translator(object):
                 remaining_sents,
                 -1
             ).transpose(0, 1).contiguous()
-            print(word_lk)
 
             active = []
             for b in range(batch_size):
