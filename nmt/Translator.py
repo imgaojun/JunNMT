@@ -2,6 +2,7 @@ import nmt.utils.vocab_utils as vocab_utils
 import torch
 from torch.autograd import Variable
 from nmt.modules.Beam import Beam
+import torch.nn.functional as F
 class Translator(object):
     def __init__(self, model, tgt_vocab_table, beam_size, max_length, replace_unk=True, USE_CUDA=True):
         self.model = model
