@@ -51,10 +51,10 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
             all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
             
             all_hyp_words = [vocab_utils.idxs2words(idxs,tgt_vocab_table) for idxs in all_hyp_inds]
-            print(all_hyp_words)
             break
-            # sentence_out = ' '.join(decoded_words)
-            # sentence_out = sentence_out.replace(' <UNK>','')
-            # tgt_file.write(sentence_out+'\n')
+            sentence_out = ' '.join(all_hyp_words[0])
+            sentence_out = sentence_out.replace(' <UNK>','')
+            sentence_out = sentence_out.replace(' </S>','')
+            tgt_file.write(sentence_out+'\n')
 
 
