@@ -108,7 +108,7 @@ def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, sr
 
 
 def src_seq2var(batch_src_seqs, vocab_table):
-    src_seqs = [seq2index(seq, src_vocab_table, src_max_len) for seq in batch_src_seqs]
+    src_seqs = [seq2index(seq, vocab_table, src_max_len) for seq in batch_src_seqs]
     src_seqs = sorted(src_seqs, key=lambda p: len(p), reverse=True)
     src_inputs = [get_src_input_seq(s) for s in src_seqs]
     src_input_lengths = [len(s) for s in src_inputs]
