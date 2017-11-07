@@ -58,7 +58,7 @@ class Translator(object):
             dec_states = [
                 decoder_hidden
             ]
-            dec_out = decoder_output.squeeze(1)
+            dec_out = decoder_output.squeeze(0)
 
             out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
             print(out)
