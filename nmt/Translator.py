@@ -11,7 +11,7 @@ class Translator(object):
         self.max_length = max_length
         self.model.eval()
     def decode(self, src_input, src_input_lengths=None):
-        
+        beam_size = self.beam_size
         encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_lengths, None)
         decoder_init_hidden = self.model.decoder.init_decoder_state(encoder_hidden)
 
