@@ -14,7 +14,7 @@
 # https://github.com/pytorch/examples/blob/master/OpenNMT/onmt/Beam.py
 
 import torch
-from nmt.utils.vocab_utils
+import nmt.utils.vocab_utils as vocab_utils
 
 class Beam(object):
     """Ordered beam of candidate outputs."""
