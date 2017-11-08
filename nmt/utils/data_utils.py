@@ -1,7 +1,12 @@
 import torch.utils.data as data
 import codecs
 import nmt.utils.vocab_utils as vocab_utils
-class TextDataSet(data.Dataset):
+
+
+
+
+
+class InputDataSet(data.Dataset):
     def __init__(self, src_file, tgt_file):
         self.src_dataset = []
         self.tgt_dataset = []
@@ -30,7 +35,7 @@ class TrainDataSet(object):
                  tgt_vocab_table,
                  src_max_len,
                  tgt_max_len):
-        self.train_dataset = TextDataSet(src_file, tgt_file)
+        self.train_dataset = InputDataSet(src_file, tgt_file)
         self.train_dataloader = data.DataLoader(dataset=self.train_dataset,
                                batch_size=batch_size,
                                shuffle=True,
@@ -54,3 +59,31 @@ class TrainDataSet(object):
 
     def init_iterator(self):
         self.train_iter = iter(self.train_dataloader)
+
+
+# class InferDataSet(object):
+#     def __init__(self, 
+#                  src_file, 
+#                  batch_size,
+#                  src_vocab_table,
+#                  src_max_len):
+#         self.infer_dataset = InputDataSet(src_file)
+#         self.infer_dataloader = data.DataLoader(dataset=self.train_dataset,
+#                                batch_size=batch_size,
+#                                shuffle=False,
+#                                num_workers=4)
+
+#         self.infer_iter = iter(self.train_dataloader)
+
+#         self.src_vocab_table = src_vocab_table
+#         self.src_max_len = src_max_len
+    
+#     @property
+#     def iterator(self):
+#         src_seqs = self.infer_iter.next()
+#         src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = \
+#             vocab_utils.batch2var(src_seqs,tgt_seqs,self.src_vocab_table, self.tgt_vocab_table, self.src_max_len, self.tgt_max_len)
+
+
+#         return src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var
+    

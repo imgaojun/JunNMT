@@ -15,8 +15,8 @@ tgt_max_len: 80
 share_embedding: false
 
 # Set vocab limit size
-src_vocab_size: 30000
-tgt_vocab_size: 30000
+src_vocab_size: 50000
+tgt_vocab_size: 50000
 
 
 # File
@@ -45,6 +45,7 @@ optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
 learning_rate: 0.001
 learning_rate_decay: 0.5
+weight_decay: 0 #  weight decay(L2 penalty)
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
