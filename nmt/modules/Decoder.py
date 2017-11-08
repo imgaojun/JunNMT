@@ -49,13 +49,13 @@ class AttnDecoderRNN(DecoderBase):
                     input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
-                    dropout=0.0)
+                    dropout=dropout)
         else:
             self.rnn = getattr(nn, rnn_type)(
                     input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
-                    dropout=0.0)              
+                    dropout=dropout)              
 
         if self.attn_model != 'none':
             self.attn = GlobalAttention(hidden_size, attn_model)

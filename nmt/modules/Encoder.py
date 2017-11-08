@@ -51,14 +51,14 @@ class EncoderRNN(EncoderBase):
                     input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
-                    dropout=0.0,
+                    dropout=dropout,
                     bidirectional=bidirectional)
         else:
             self.rnn = getattr(nn, rnn_type)(
                     input_size=input_size,
                     hidden_size=hidden_size,
                     num_layers=num_layers,
-                    dropout=0.0,
+                    dropout=dropout,
                     bidirectional=bidirectional)
         
         
