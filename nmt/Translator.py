@@ -22,9 +22,19 @@ class Translator(object):
         # Expand tensors for each beam.
         context = Variable(context_h.data.repeat(1, beam_size, 1))
 
-        dec_states = [
-            Variable(decoder_init_hidden.data.repeat(1, beam_size, 1)),
-        ]
+        if isinstance(decoder_init_hidden, tuple): # GRU
+            dec_states = Variable(decoder_init_hidden.data.repeat(1, beam_size, 1))
+     
+        else: # LSTM
+            dec_states = (
+                Variable(decoder_init_hidden[0].data.repeat(1, beam_size, 1)),
+                Variable(decoder_init_hidden[1].data.repeat(1, beam_size, 1)),
+            )    
+
+
+        # dec_states = [
+        #     Variable(decoder_init_hidden.data.repeat(1, beam_size, 1)),
+        # ]
 
         beam = [
             Beam(beam_size, cuda=True)
@@ -51,12 +61,20 @@ class Translator(object):
             decoder_output, decoder_hidden = self.model.decode(
                 Variable(input), 
                 context, 
-                dec_states[0]
+                dec_states
             )
-
-            dec_states = [
-                decoder_hidden
-            ]
+            if isinstance(decoder_init_hidden, tuple): # GRU
+                dec_states = [
+                    decoder_hidden
+                ]                
+            else:
+                dec_states = [
+                    decoder_hidden[0],
+                    decoder_hidden[1]
+                ]
+            # dec_states = [
+            #     decoder_hidden
+            # ]
             dec_out = decoder_output.squeeze(0)
 
             out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
@@ -111,10 +129,16 @@ class Translator(object):
                     1, active_idx
                 ).view(*new_size))   
 
+            if isinstance(decoder_init_hidden, tuple): # GRU
+                dec_states = (
+                    update_active(dec_states[0]),
+                )
+            else:
 
-            dec_states = (
-                update_active(dec_states[0]),
-            )
+                dec_states = (
+                    update_active(dec_states[0]),
+                    update_active(dec_states[1]),
+                )
             dec_out = update_active(dec_out)
             context = update_active(context)
 

@@ -1,5 +1,5 @@
 from nmt.modules.Encoder import EncoderRNN
-from nmt.modules.Decoder import AttnDecoderRNN
+from nmt.modules.Decoder import AttnDecoderRNN,InputFeedDecoder
 from nmt.modules.Embedding import Embedding
 from nmt.NMTModel import NMTModel
 import torch
@@ -43,6 +43,7 @@ def create_encoder(hparams):
 
 def create_decoder(hparams):
 
+    decoder_type = hparams['decoder_type']
     rnn_type = hparams['rnn_type']    
     atten_model = hparams['atten_model']
     input_size = hparams['embedding_size']
@@ -50,12 +51,20 @@ def create_decoder(hparams):
     num_layers = hparams['num_layers']
     dropout = hparams['dropout']    
 
-    decoder = AttnDecoderRNN(rnn_type,
-                            atten_model,
-                            input_size,
-                            hidden_size,
-                            num_layers,
-                            dropout)
+    if decoder_type == 'AttnDecoderRNN':
+        decoder = AttnDecoderRNN(rnn_type,
+                                atten_model,
+                                input_size,
+                                hidden_size,
+                                num_layers,
+                                dropout)
+    elif decoder_type == 'InputFeedDecoder':
+        decoder = InputFeedDecoder(rnn_type,
+                                atten_model,
+                                input_size,
+                                hidden_size,
+                                num_layers,
+                                dropout)        
    
 
     return decoder
