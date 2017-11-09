@@ -3,6 +3,7 @@ import torch.nn as nn
 from nmt.modules.Attention import GlobalAttention
 from nmt.modules.SRU import SRU
 import torch.nn.functional as F
+from torch.autograd import Variable
 
 class DecoderBase(nn.Module):
     def forward(self, input, context, state):
