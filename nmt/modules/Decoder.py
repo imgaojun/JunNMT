@@ -127,6 +127,7 @@ class InputFeedDecoder(DecoderBase):
         for i, emb_t in enumerate(emb.split(1)):
             emb_t = emb_t.squeeze(0)
             emb_t = torch.cat([emb_t, output], 1)  
+            print(emb_t)
 
             rnn_output, hidden = self.rnn(emb_t, hidden)
             attn_output, attn = self.attn(
