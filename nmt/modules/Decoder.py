@@ -119,7 +119,7 @@ class InputFeedDecoder(DecoderBase):
 
     def forward(self, input, context, state):
         outputs = []
-        output = init_input_feed(context).squeeze(0)
+        output = self.init_input_feed(context).squeeze(0)
         emb  = input
         hidden = state
 
