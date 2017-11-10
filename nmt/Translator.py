@@ -130,9 +130,8 @@ class Translator(object):
                 ).view(*new_size))   
 
             if not isinstance(decoder_init_hidden, tuple): # GRU
-                dec_states = (
-                    update_active(dec_states[0]),
-                )
+                dec_states = update_active(dec_states[0])
+                
             else:
 
                 dec_states = (
