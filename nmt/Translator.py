@@ -22,7 +22,7 @@ class Translator(object):
         # Expand tensors for each beam.
         context = Variable(context_h.data.repeat(1, beam_size, 1))
 
-        if isinstance(decoder_init_hidden, tuple): # GRU
+        if not isinstance(decoder_init_hidden, tuple): # GRU
             dec_states = Variable(decoder_init_hidden.data.repeat(1, beam_size, 1))
      
         else: # LSTM
@@ -63,7 +63,7 @@ class Translator(object):
                 context, 
                 dec_states
             )
-            if isinstance(decoder_init_hidden, tuple): # GRU
+            if not isinstance(decoder_init_hidden, tuple): # GRU
                 dec_states = [
                     decoder_hidden
                 ]                
@@ -129,7 +129,7 @@ class Translator(object):
                     1, active_idx
                 ).view(*new_size))   
 
-            if isinstance(decoder_init_hidden, tuple): # GRU
+            if not isinstance(decoder_init_hidden, tuple): # GRU
                 dec_states = (
                     update_active(dec_states[0]),
                 )
