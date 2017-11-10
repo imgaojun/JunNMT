@@ -82,9 +82,9 @@ class AttnDecoderRNN(DecoderBase):
 
 
     def init_decoder_state(self, enc_hidden):
-        if isinstance(enc_hidden, tuple):  # GRU
+        if not isinstance(enc_hidden, tuple):  # GRU
             # h = self.merge_net(enc_hidden)
-            h = enc_hidden
+            h = self.hidden_init_net(enc_hidden)
         else:  # LSTM
             h = enc_hidden
         return h
