@@ -43,7 +43,7 @@ class AttnDecoderRNN(DecoderBase):
         self.dropout = nn.Dropout(dropout)  
         self.hidden_init_net = nn.Sequential(
                             nn.Linear(hidden_size, hidden_size),
-                            nn.tanh()
+                            nn.Tanh()
                         )
         if rnn_type == "SRU":
             self.rnn = SRU(
