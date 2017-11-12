@@ -27,7 +27,7 @@ train_tgt_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.en
 
 
 dev_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
-dev_tgt_file: 
+dev_tgt_file: # Multiple reference
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en1
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en2
