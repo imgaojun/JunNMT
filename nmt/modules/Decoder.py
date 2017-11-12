@@ -98,7 +98,7 @@ class InputFeedDecoder(DecoderBase):
         super(InputFeedDecoder, self).__init__()    
         # Basic attributes.
         self.rnn_type = rnn_type
-        self.attn_model = attn_model
+        self.attn_type = attn_type
         self.num_layers = num_layers
         self.embedding_size = embedding_size
         self.hidden_size = hidden_size
@@ -121,12 +121,14 @@ class InputFeedDecoder(DecoderBase):
 
             rnn_output, hidden = self.rnn(emb_t, hidden)
             attn_output, attn = self.attn(
-                                rnn_output.transpose(0, 1).contiguous(),  # (output_len, batch, d)
+                                rnn_output.contiguous(),  # (output_len, batch, d)
                                 context.transpose(0, 1)                   # (contxt_len, batch, d)
                             )    
 
             output = self.dropout(attn_output)
             outputs += [output]
+        outputs = torch.stack(outputs)
+        # print(outputs)
         return outputs, hidden
 
     def init_decoder_state(self, enc_hidden):

@@ -37,6 +37,15 @@ class GlobalAttention(nn.Module):
             return torch.bmm(h_t, h_s_)
 
     def forward(self, input, context):
+
+        # one step input
+        if input.dim() == 2:
+            one_step = True
+            input = input.unsqueeze(1)
+        else:
+            one_step = False
+
+
         batch, sourceL, dim = context.size()
         batch_, targetL, dim_ = input.size()
 
@@ -57,8 +66,14 @@ class GlobalAttention(nn.Module):
         if self.attn_type in ["general", "dot"]:
             attn_h = self.tanh(attn_h)
 
-        attn_h = attn_h.transpose(0, 1).contiguous()
-        align_vectors = align_vectors.transpose(0, 1).contiguous()
+
+        if one_step:
+            attn_h = attn_h.squeeze(1)
+            align_vectors = align_vectors.squeeze(1)
+        else:        
+
+            attn_h = attn_h.transpose(0, 1).contiguous()
+            align_vectors = align_vectors.transpose(0, 1).contiguous()
 
         # Check output sizes
         # targetL_, batch_, dim_ = attn_h.size()
