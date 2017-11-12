@@ -6,12 +6,12 @@ bidirectional: false
 embedding_size: 100
 hidden_size: 100
 num_layers: 1
-dropout: 0.0
+dropout: 0.3
 atten_model: general #general, dot, none
 param_init: 0.1
 
-src_max_len: 80
-tgt_max_len: 80
+src_max_len: 50
+tgt_max_len: 50
 
 # Vocab
 share_embedding: false
@@ -22,11 +22,8 @@ tgt_vocab_size: 50000
 
 
 # File
-# train_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.cn
-# train_tgt_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.en
-
-train_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
-train_tgt_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
+train_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.cn
+train_tgt_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/train/train.en
 
 
 dev_src_file: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
