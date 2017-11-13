@@ -110,6 +110,7 @@ class Trainer(object):
 
             n_src_words = sum(src_input_lengths)
             n_words = sum(tgt_input_lengths)
+            step_batch_size = src_input_var.size(1)
             losses = n_words * loss
             report_stats.update(losses, n_src_words, n_words)
             total_stats.update(losses, n_src_words, n_words)
@@ -133,8 +134,6 @@ class Trainer(object):
             except StopIteration:     
                 print('end of epoch')  
                 break                 
-        # for step_batch, batch_inputs in enumerate(self.train_dataset.train_iter):
-
 
             all_decoder_outputs = self.model(src_input_var,tgt_input_var,src_input_lengths)
             loss = self.train_criterion.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
