@@ -1,6 +1,6 @@
 # Network
 encoder_type:
-decoder_type: AttnDecoderRNN
+decoder_type: AttnDecoderRNN #InputFeedDecoder, AttnDecoderRNN
 rnn_type: GRU #RNN, LSTM, GRU, SRU
 bidirectional: false
 embedding_size: 100
