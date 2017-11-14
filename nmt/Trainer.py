@@ -142,7 +142,8 @@ class Trainer(object):
             loss = loss.data[0]
             n_src_words = sum(src_input_lengths)
             n_words = sum(tgt_input_lengths)
-            losses = n_words * loss
+            step_batch_size = src_input_var.size(1)
+            losses = step_batch_size * loss
 
             stats.update(losses, n_src_words, n_words)        
         # Set model back to training mode.
