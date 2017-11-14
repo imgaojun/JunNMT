@@ -33,8 +33,8 @@ class TrainDataSet(object):
                  batch_size,
                  src_vocab_table,
                  tgt_vocab_table,
-                 src_max_len,
-                 tgt_max_len):
+                 src_max_len=None,
+                 tgt_max_len=None):
         self.train_dataset = InputDataSet(src_file, tgt_file)
         self.train_dataloader = data.DataLoader(dataset=self.train_dataset,
                                batch_size=batch_size,
