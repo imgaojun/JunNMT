@@ -19,15 +19,30 @@ class NMTLossCompute(nn.Module):
         self.criterion = nn.CrossEntropyLoss(weight, size_average=False)
 
 
-    def compute_loss(self, logits, target, length):
+    def compute_loss(self, output, target, length):
         length = Variable(torch.LongTensor(length)).cuda()
-        batch_size = logits.size(0)
-        logits = self.bottle(logits)
+        batch_size = output.size(0)
+        output = self.bottle(output)
         target = target.view(-1)
-        losses = self.criterion(logits,target)
-        # loss = losses.sum()/length.float().sum()
-        loss = losses.div(batch_size)
+        loss = self.criterion(logits,target)
+        # loss = loss.sum()/length.float().sum()
+        loss = loss.div(batch_size)
         return  loss
+
+    # def make_shard_state(self, batch, output, range_, attns=None):
+    #     """ See base class for args description. """
+    #     return {
+    #         "output": output,
+    #         "target": batch.tgt[range_[0] + 1: range_[1]],
+    #     }
+
+
+    # def shard_compute_loss(self,output, target, shard_size):
+    #     time_steps = output.size(1)
+    #     for shard in range(0,time_steps,shard_size):
+    #         loss = 
+
+    # def monolithic_compute_loss(self):
 
     def bottle(self, v):
         return v.view(-1, v.size(2))

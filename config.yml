@@ -44,6 +44,7 @@ optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
 learning_rate: 0.001
 learning_rate_decay: 0.5
+start_decay_at: 8
 weight_decay: 0 #  weight decay(L2 penalty)
 num_train_epochs: 100
 steps_per_stats: 100
