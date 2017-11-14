@@ -76,7 +76,7 @@ def get_tgt_output_seq(seq):
     seq = seq + [EOS_ID]
     return seq
 
-def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, src_max_len, tgt_max_len, USE_CUDA=True):
+def batch2var(batch_src_seqs,batch_tgt_seqs ,src_vocab_table,tgt_vocab_table, src_max_len=None, tgt_max_len=None, USE_CUDA=True):
     src_seqs = [seq2index(seq, src_vocab_table, src_max_len) for seq in batch_src_seqs]
     tgt_seqs = [seq2index(seq, tgt_vocab_table, tgt_max_len) for seq in batch_tgt_seqs]
     seq_pairs = sorted(zip(src_seqs, tgt_seqs), key=lambda p: len(p[0]), reverse=True)

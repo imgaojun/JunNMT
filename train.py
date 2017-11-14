@@ -44,9 +44,7 @@ valid_dataset = data_utils.TrainDataSet(hparams['dev_src_file'],
                                   hparams['dev_tgt_file'][0],
                                   hparams['batch_size'],
                                   src_vocab_table,
-                                  tgt_vocab_table,
-                                  hparams['src_max_len'],
-                                  hparams['tgt_max_len'])
+                                  tgt_vocab_table)
 
 summery_writer = SummaryWriter(hparams['log_dir'])
 
