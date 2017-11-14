@@ -22,14 +22,11 @@ class NMTLossCompute(nn.Module):
     def compute_loss(self, logits, target, length):
         length = Variable(torch.LongTensor(length)).cuda()
         batch_size = logits.size(0)
-        print(logits)
         logits = self.bottle(logits)
         target = target.view(-1)
         losses = self.criterion(logits,target)
-        loss = losses.sum()/length.float().sum()
-        
-        print(losses)
-        # loss = losses.div(batch_size)
+        # loss = losses.sum()/length.float().sum()
+        loss = losses.div(batch_size)
         return  loss
 
     def bottle(self, v):
