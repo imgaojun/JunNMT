@@ -24,7 +24,7 @@ class NMTLossCompute(nn.Module):
         batch_size = output.size(0)
         output = self.bottle(output)
         target = target.view(-1)
-        loss = self.criterion(logits,target)
+        loss = self.criterion(output,target)
         # loss = loss.sum()/length.float().sum()
         loss = loss.div(batch_size)
         return  loss
