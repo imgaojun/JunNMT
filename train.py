@@ -69,7 +69,9 @@ def report_func(global_step, epoch, batch, num_batches,
     """
     if batch % hparams['steps_per_stats'] == -1 % hparams['steps_per_stats']:
         report_stats.print_out(epoch, batch+1, num_batches, start_time)
-        report_stats.log("progress", summery_writer, global_step, learning_rate=lr)
+        report_stats.log("progress", summery_writer, global_step, learning_rate=lr, 
+                                                                  ppl=report_stats.ppl(),
+                                                                  accuracy=report_stats.accuracy())
         report_stats = Statistics()
 
     return report_stats
@@ -128,8 +130,13 @@ def train_model(model, train_criterion, optim):
         trainer.epoch_step(valid_stats.ppl(),step_epoch)
         
         valid_bleu = test_bleu()
-        train_stats.log("train", summery_writer, step_epoch, learning_rate=optim.lr, )
-        valid_stats.log("valid", summery_writer, step_epoch, learning_rate=optim.lr, bleu=valid_bleu)
+        train_stats.log("train", summery_writer, step_epoch, 
+                        learning_rate=optim.lr, 
+                        accuracy=train_stats.accuracy())
+        valid_stats.log("valid", summery_writer, step_epoch, 
+                        learning_rate=optim.lr, 
+                        bleu=valid_bleu,
+                        accuracy=valid_stats.accuracy())
 
         
 

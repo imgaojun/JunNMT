@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.nn import functional
 from torch.autograd import Variable
-
+from nmt.Trainer import Statistics
 
 
 
@@ -19,30 +19,30 @@ class NMTLossCompute(nn.Module):
         self.criterion = nn.CrossEntropyLoss(weight, size_average=False)
 
 
-    def compute_loss(self, output, target, length):
-        length = Variable(torch.LongTensor(length)).cuda()
-        batch_size = output.size(0)
-        output = self.bottle(output)
+    def compute_loss(self, logits, target, length):
+        # length = Variable(torch.LongTensor(length)).cuda()
+        # batch_size = output.size(0)
+        logits = self.bottle(logits)
         target = target.view(-1)
-        loss = self.criterion(output,target)
+        loss = self.criterion(logits,target)
         # loss = loss.sum()/length.float().sum()
-        loss = loss.div(batch_size)
-        return  loss
+        loss_data = loss.data.clone()
+        stats = self.stats(loss_data, logits.data, target.data)
+        return  loss, stats
 
-    # def make_shard_state(self, batch, output, range_, attns=None):
-    #     """ See base class for args description. """
-    #     return {
-    #         "output": output,
-    #         "target": batch.tgt[range_[0] + 1: range_[1]],
-    #     }
-
-
-    # def shard_compute_loss(self,output, target, shard_size):
-    #     time_steps = output.size(1)
-    #     for shard in range(0,time_steps,shard_size):
-    #         loss = 
-
-    # def monolithic_compute_loss(self):
+    def stats(self, loss, scores, target):
+        """
+        Compute and return a Statistics object.
+        Args:
+            loss(Tensor): the loss computed by the loss criterion.
+            scores(Tensor): a sequence of predict output with scores.
+        """
+        pred = scores.max(1)[1]
+        non_padding = target.ne(self.padding_idx)
+        num_correct = pred.eq(target) \
+                          .masked_select(non_padding) \
+                          .sum()
+        return Statistics(loss[0], non_padding.sum(), num_correct)
 
     def bottle(self, v):
         return v.view(-1, v.size(2))
