@@ -149,7 +149,8 @@ if __name__ == '__main__':
                   hparams['learning_rate'],
                   hparams['max_grad_norm'],
                   hparams['learning_rate_decay'],
-                  hparams['weight_decay'])
+                  hparams['weight_decay'],
+                  hparams['start_decay_at'])
                   
     optim.set_parameters(model.parameters())
 
