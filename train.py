@@ -111,9 +111,7 @@ def train_model(model, train_criterion, valid_criterion, optim):
                       valid_dataset,
                       train_criterion,
                       valid_criterion,
-                      optim,
-                      src_vocab_table,
-                      tgt_vocab_table)
+                      optim)
 
     num_train_epochs = hparams['num_train_epochs']
     for step_epoch in  range(num_train_epochs):
@@ -130,9 +128,11 @@ def train_model(model, train_criterion, valid_criterion, optim):
         
         valid_bleu = test_bleu()
         train_stats.log("train", summery_writer, step_epoch, 
+                        ppl=train_stats.ppl(),
                         learning_rate=optim.lr, 
                         accuracy=train_stats.accuracy())
         valid_stats.log("valid", summery_writer, step_epoch, 
+                        ppl=valid_stats.ppl(),
                         learning_rate=optim.lr, 
                         bleu=valid_bleu,
                         accuracy=valid_stats.accuracy())

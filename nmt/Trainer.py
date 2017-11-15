@@ -56,9 +56,7 @@ class Trainer(object):
                  valid_dataset, 
                  train_criterion, 
                  valid_criterion,
-                 optim, 
-                 src_vocab_table,
-                 tgt_vocab_table):
+                 optim):
 
         self.model = model
         self.train_dataset = train_dataset
@@ -66,9 +64,6 @@ class Trainer(object):
         self.train_criterion = train_criterion
         self.valid_criterion = valid_criterion
         self.optim = optim
-
-        self.src_vocab_table = src_vocab_table
-        self.tgt_vocab_table = tgt_vocab_table
 
         self.USE_CUDA = hparams['USE_CUDA']
 
