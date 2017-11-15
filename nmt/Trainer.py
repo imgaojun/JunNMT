@@ -140,8 +140,7 @@ class Trainer(object):
 
             all_decoder_outputs = self.model(src_input_var,tgt_input_var,src_input_lengths)
             stats = self.train_criterion.compute_valid_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
-                                                     tgt_output_var.transpose(0, 1).contiguous(), 
-                                                     tgt_input_lengths)
+                                                     tgt_output_var.transpose(0, 1).contiguous())
             valid_stats.update(stats)        
         # Set model back to training mode.
         self.model.train()
