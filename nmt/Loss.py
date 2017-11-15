@@ -29,7 +29,14 @@ class NMTLossCompute(nn.Module):
         loss_data = loss.data.clone()
         stats = self.stats(loss_data, logits.data, target.data)
         return  loss, stats
+    def compute_valid_loss(self, logits, target):
 
+        logits = self.bottle(logits)
+        target = target.view(-1)
+        loss = self.criterion(logits,target)
+        loss_data = loss.data.clone()
+        stats = self.stats(loss_data, logits.data, target.data)
+        return  stats        
     def stats(self, loss, scores, target):
         """
         Compute and return a Statistics object.
