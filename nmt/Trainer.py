@@ -44,7 +44,7 @@ class Statistics(object):
         sys.stdout.flush()
 
     def log(self, prefix, summary_writer, step, **kwargs):
-        # summary_writer.add_scalar(prefix + "/ppl", self.ppl(), step)
+
         for key in kwargs:
             summary_writer.add_scalar(prefix + '/' + key, kwargs[key],step)
 

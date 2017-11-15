@@ -99,6 +99,10 @@ def test_bleu():
     return bleu_val
 
 
+def print_config(config):
+    for k,v in config.items():
+        print(k + ': ' +  str(v))
+        summery_writer.add_text('config', k+': '+str(v), global_step=None)
 
 
 def train_model(model, train_criterion, valid_criterion, optim):
@@ -168,5 +172,5 @@ if __name__ == '__main__':
         print('saving config file to %s ...'%(hparams['out_dir']))
         # save config.yml
         shutil.copy(args.config, os.path.join(hparams['out_dir'],'config.yml'))
-
+    print_config(hparams)
     train_model(model, train_criterion, valid_criterion, optim)
