@@ -101,7 +101,7 @@ def test_bleu():
 
 
 
-def train_model(model, train_criterion, optim):
+def train_model(model, train_criterion, valid_criterion, optim):
 
 
     
@@ -110,6 +110,7 @@ def train_model(model, train_criterion, optim):
                       train_dataset,
                       valid_dataset,
                       train_criterion,
+                      valid_criterion,
                       optim,
                       src_vocab_table,
                       tgt_vocab_table)
@@ -142,9 +143,11 @@ def train_model(model, train_criterion, optim):
 if __name__ == '__main__':
     model = model_helper.create_base_model(hparams,src_vocab_table.vocab_size,tgt_vocab_table.vocab_size)
     train_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID)
+    valid_criterion = NMTLossCompute(tgt_vocab_table.vocab_size, vocab_utils.PAD_ID) 
     if hparams['USE_CUDA']:
         model = model.cuda()
         train_criterion = train_criterion.cuda()
+        valid_criterion = valid_criterion.cuda()
 
     # model = torch.nn.DataParallel(model, dim=1)
 
@@ -166,4 +169,4 @@ if __name__ == '__main__':
         # save config.yml
         shutil.copy(args.config, os.path.join(hparams['out_dir'],'config.yml'))
 
-    train_model(model, train_criterion, optim)
+    train_model(model, train_criterion, valid_criterion, optim)

@@ -55,6 +55,7 @@ class Trainer(object):
                  train_dataset,
                  valid_dataset, 
                  train_criterion, 
+                 valid_criterion,
                  optim, 
                  src_vocab_table,
                  tgt_vocab_table):
@@ -63,6 +64,7 @@ class Trainer(object):
         self.train_dataset = train_dataset
         self.valid_dataset = valid_dataset
         self.train_criterion = train_criterion
+        self.valid_criterion = valid_criterion
         self.optim = optim
 
         self.src_vocab_table = src_vocab_table
@@ -139,7 +141,7 @@ class Trainer(object):
                 break                 
 
             all_decoder_outputs = self.model(src_input_var,tgt_input_var,src_input_lengths)
-            stats = self.train_criterion.compute_valid_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
+            stats = self.valid_criterion.compute_valid_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
                                                      tgt_output_var.transpose(0, 1).contiguous())
             valid_stats.update(stats)        
         # Set model back to training mode.
