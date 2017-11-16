@@ -36,7 +36,7 @@ class Statistics(object):
         t = self.elapsed_time()
 
         out_info = ("Epoch %2d, %5d/%5d| acc: %6.2f| ppl: %6.2f| " + \
-               "%3.0f tgt tok/s| %4.0f s elapsed") %
+               "%3.0f tgt tok/s| %4.0f s elapsed") % \
               (epoch, batch, n_batches,
                self.accuracy(),
                self.ppl(),
