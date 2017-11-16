@@ -35,7 +35,7 @@ class Statistics(object):
     def print_out(self, epoch, batch, n_batches, start, summary_writer=None):
         t = self.elapsed_time()
 
-        out_info = ("Epoch %2d, %5d/%5d| acc: %6.2f| ppl: %6.2f| " +
+        out_info = ("Epoch %2d, %5d/%5d| acc: %6.2f| ppl: %6.2f| " + \
                "%3.0f tgt tok/s| %4.0f s elapsed") %
               (epoch, batch, n_batches,
                self.accuracy(),
