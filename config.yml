@@ -54,7 +54,7 @@ out_dir: ./out_dir
 checkpoint: 
 
 
-# Translate
+# Test
 replace_unk: true
 decode_max_length: 100
 beam_size: 3

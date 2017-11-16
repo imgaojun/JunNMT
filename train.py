@@ -66,7 +66,7 @@ def report_func(global_step, epoch, batch, num_batches,
         report_stats(Statistics): updated Statistics instance.
     """
     if batch % hparams['steps_per_stats'] == -1 % hparams['steps_per_stats']:
-        report_stats.print_out(epoch, batch+1, num_batches, start_time)
+        report_stats.print_out(epoch, batch+1, num_batches, start_time,summery_writer)
         report_stats.log("progress", summery_writer, global_step, learning_rate=lr, 
                                                                   ppl=report_stats.ppl(),
                                                                   accuracy=report_stats.accuracy())
@@ -97,12 +97,6 @@ def test_bleu():
     bleu_val = re.findall('BLEU = (.*?),',output,re.S)[0]
     bleu_val = float(bleu_val)
     return bleu_val
-
-
-def print_config(config):
-    for k,v in config.items():
-        print(k + ': ' +  str(v))
-        summery_writer.add_text('config', k+': '+str(v), global_step=None)
 
 
 def train_model(model, train_criterion, valid_criterion, optim):
@@ -172,5 +166,5 @@ if __name__ == '__main__':
         print('saving config file to %s ...'%(hparams['out_dir']))
         # save config.yml
         shutil.copy(args.config, os.path.join(hparams['out_dir'],'config.yml'))
-    print_config(hparams)
+
     train_model(model, train_criterion, valid_criterion, optim)
