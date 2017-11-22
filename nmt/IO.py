@@ -62,7 +62,7 @@ class NMTDataset(torchtext.data.Dataset):
     @staticmethod
     def sort_key(ex):
         "Sort in reverse size order"
-        return len(ex.src)
+        return -len(ex.src)
 
 
     def __getstate__(self):
