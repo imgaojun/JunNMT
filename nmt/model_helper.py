@@ -11,10 +11,11 @@ import torch.nn as nn
 def create_emb_for_encoder_and_decoder(src_vocab_size,
                                        tgt_vocab_size,
                                        src_embed_size,
-                                       tgt_embed_size):
+                                       tgt_embed_size,
+                                       padding_idx):
 
-    embedding_encoder = Embedding(src_vocab_size,src_embed_size)
-    embedding_decoder = Embedding(tgt_vocab_size,tgt_embed_size)
+    embedding_encoder = Embedding(src_vocab_size,src_embed_size,padding_idx)
+    embedding_decoder = Embedding(tgt_vocab_size,tgt_embed_size,padding_idx)
 
         
     return embedding_encoder, embedding_decoder
@@ -71,12 +72,13 @@ def create_generator(input_size, output_size):
     return generator
 
 
-def create_base_model(hparams,src_vocab_size,tgt_vocab_size):
+def create_base_model(hparams,src_vocab_size, tgt_vocab_size, padding_idx):
     embedding_encoder, embedding_decoder = \
             create_emb_for_encoder_and_decoder(src_vocab_size,
                                                 tgt_vocab_size,
                                                 hparams.embedding_size,
-                                                hparams.embedding_size)
+                                                hparams.embedding_size,
+                                                padding_idx)
     encoder = create_encoder(hparams)
     decoder = create_decoder(hparams)
     generator = create_generator(hparams.hidden_size, tgt_vocab_size)

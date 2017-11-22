@@ -84,7 +84,6 @@ class Trainer(object):
                tgt_outputs):
         self.model.zero_grad()
         batch_size = src_inputs.size(1)
-        print(batch_size)
         all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
         loss, stats = self.train_loss.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 

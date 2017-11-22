@@ -99,7 +99,7 @@ def load_fields(train, valid):
 
 def build_model(model_opt, fields):
     print('Building model...')
-    model = model_helper.create_base_model(model_opt,len(fields['src'].vocab), len(fields['tgt'].vocab))
+    model = model_helper.create_base_model(model_opt, len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
 
     print(model)
 
@@ -160,8 +160,8 @@ def train_model(model, train_data, valid_data, fields, optim):
 
     train_loss = NMTLossCompute(len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
     valid_loss = NMTLossCompute(len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD]) 
-    
-
+    print('padding_idx')
+    print(fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
     if opt.USE_CUDA:
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
