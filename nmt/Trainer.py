@@ -108,7 +108,6 @@ class Trainer(object):
             tgt_input_var = batch.tgt[0][:-1]
             tgt_output_var = batch.tgt[0][1:]
             tgt_input_lengths = (batch.tgt[1] - 1).tolist()
-            print(src_input_lengths)
             stats = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
 
             report_stats.update(stats)
