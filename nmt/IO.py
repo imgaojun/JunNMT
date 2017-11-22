@@ -55,7 +55,7 @@ class NMTDataset(torchtext.data.Dataset):
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
         make_example = torchtext.data.Example.fromlist
-        with io.open(src_path, encoding="utf8") as src_f,io.open(tgt_path, encoding="utf8") as tgt_f: 
+        with io.open(src_path, encoding="utf8",errors='replace') as src_f,io.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
             examples = [make_example(list(line), fields) for line in zip(src_f,tgt_f)]
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
