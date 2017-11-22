@@ -68,7 +68,7 @@ def make_train_data_iter(train_data, opt):
     return nmt.IO.OrderedIterator(
                 dataset=train_data, batch_size=opt.batch_size,
                 device=args.gpuid[0] if args.gpuid else -1,                
-                repeat=False, sort=True,shuffle=False)
+                repeat=False, sort=True)
 
 
 def make_valid_data_iter(valid_data, opt):
@@ -81,7 +81,7 @@ def make_valid_data_iter(valid_data, opt):
     return nmt.IO.OrderedIterator(
                 dataset=valid_data, batch_size=opt.batch_size,
                 device=args.gpuid[0] if args.gpuid else -1,                                
-                train=False, sort=True,shuffle=False)
+                train=False, sort=True)
 
 def load_fields(train, valid):
     fields = nmt.IO.load_fields(
@@ -160,8 +160,7 @@ def train_model(model, train_data, valid_data, fields, optim):
 
     train_loss = NMTLossCompute(len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
     valid_loss = NMTLossCompute(len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD]) 
-    print('padding_idx')
-    print(fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
+
     if opt.USE_CUDA:
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
