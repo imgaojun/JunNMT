@@ -17,8 +17,8 @@ tgt_max_len: 50
 share_embedding: false
 
 # Set vocab limit size
-src_vocab_size: 50000
-tgt_vocab_size: 50000
+src_vocab_size: 30000
+tgt_vocab_size: 30000
 
 
 # File

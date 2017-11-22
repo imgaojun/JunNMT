@@ -1,13 +1,19 @@
 import yaml
 import torch.utils.data as data
 import codecs
-from collections import OrderedDict
 import math
 import os
+import sys, time
+
+class HParams(object):
+    def __init__(self, **entries): 
+        self.__dict__.update(entries)   
+
+
 def load_hparams(config_file):
     with codecs.open(config_file, 'r', encoding='utf8') as f:
-        hparams = OrderedDict()
-        hparams = yaml.load(f)
+        configs = yaml.load(f)
+        hparams = HParams(**configs)
         return hparams
 
 def print_hparams(hparams):
@@ -29,24 +35,36 @@ def latest_checkpoint(model_dir):
     cnpt = os.path.join(model_dir,cnpt)
     return cnpt
 
+ 
+class ShowProcess():
+    """
+    显示处理进度的类
+    调用该类相关函数即可实现处理进度的显示
+    """
+    i = 1 # 当前的处理进度
+    max_steps = 0 # 总共需要处理的次数
+    max_arrow = 50 #进度条的长度
 
-class TrainDataSet(data.Dataset):
-    def __init__(self, src_file, tgt_file):
-        self.src_dataset = []
-        self.tgt_dataset = []
+    # 初始化函数，需要知道总共的处理次数
+    def __init__(self, max_steps):
+        self.max_steps = max_steps
+        self.i = 1
 
-        with codecs.open(src_file, 'r', encoding='utf8', errors='replace') as src_f:
-            with codecs.open(tgt_file, 'r', encoding='utf8', errors='replace') as tgt_f:
-                for src_seq in src_f:
-                    tgt_seq = tgt_f.readline()
-                    self.src_dataset.append(src_seq.strip())
-                    self.tgt_dataset.append(tgt_seq.strip())
-    def __getitem__(self, index):
-        src_seq = self.src_dataset[index]
-        tgt_seq = self.tgt_dataset[index]
+    # 显示函数，根据当前的处理进度i显示进度
+    # 效果为[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]100.00%
+    def show_process(self, i=None):
+        if i is not None:
+            self.i = i
+        num_arrow = int(self.i * self.max_arrow / self.max_steps) #计算显示多少个'>'
+        num_line = self.max_arrow - num_arrow #计算显示多少个'-'
+        percent = self.i * 100.0 / self.max_steps #计算完成进度，格式为xx.xx%
+        process_bar = '[' + '>' * num_arrow + '-' * num_line + ']'\
+                      + '%.2f' % percent + '%' + '\r' #带输出的字符串，'\r'表示不换行回到最左边
+        sys.stdout.write(process_bar) #这两句打印字符到终端
+        sys.stdout.flush()
+        self.i += 1
 
-        return src_seq, tgt_seq
-
-    def __len__(self):
-        return len(self.src_dataset)
-
+    def close(self, words='done'):
+        print('')
+        print(words)
+        self.i = 1

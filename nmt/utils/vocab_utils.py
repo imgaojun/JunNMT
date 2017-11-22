@@ -58,10 +58,8 @@ def seq2index(seq, vocab_table, max_len=None):
     if max_len is not None:
         words_in = words_in[:max_len]
     for w in words_in:
-        if w in vocab_table.word2index:
-            seq_idx.append(vocab_table.word2index[w])
-        else:
-            seq_idx.append(vocab_table.word2index[UNK_token])
+        if w in vocab_table:
+            seq_idx.append(vocab_table[w])
 
     return seq_idx
 
@@ -118,6 +116,6 @@ def src_seq2var(batch_src_seqs, vocab_table):
         src_input_var = src_input_var.cuda() 
     return src_input_var, src_input_lengths
 
-def idxs2words(idxs, vocab_table):
-    words_list = [vocab_table.index2word[idx] for idx in idxs]
+def idxs2words(idxs, index2word):
+    words_list = [index2word[idx] for idx in idxs]
     return words_list

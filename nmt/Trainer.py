@@ -43,13 +43,6 @@ class Statistics(object):
                self.n_words / (t + 1e-5),
                time.time() - self.start_time)
 
-        # print(("Epoch %2d, %5d/%5d| acc: %6.2f| ppl: %6.2f| " +
-        #        "%3.0f tgt tok/s| %4.0f s elapsed") %
-        #       (epoch, batch, n_batches,
-        #        self.accuracy(),
-        #        self.ppl(),
-        #        self.n_words / (t + 1e-5),
-        #        time.time() - self.start_time))
         print(out_info)
         if summary_writer is not None:
             summary_writer.add_text('progress',out_info,epoch)
@@ -62,24 +55,20 @@ class Statistics(object):
 
 class Trainer(object):
     def __init__(self, 
-                 hparams,
-                 model, 
-                 train_dataset,
-                 valid_dataset, 
-                 train_criterion, 
-                 valid_criterion,
-                 optim):
+                 opt,
+                 model, train_iter, valid_iter,
+                 train_loss, valid_loss, optim,):
 
         self.model = model
-        self.train_dataset = train_dataset
-        self.valid_dataset = valid_dataset
-        self.train_criterion = train_criterion
-        self.valid_criterion = valid_criterion
+        self.train_iter = train_iter
+        self.valid_iter = valid_iter
+        self.train_loss = train_loss
+        self.valid_loss = valid_loss
         self.optim = optim
 
-        self.USE_CUDA = hparams['USE_CUDA']
+        self.USE_CUDA = opt.USE_CUDA
 
-        self.out_dir = hparams['out_dir']
+        self.out_dir = opt.out_dir
 
         # Set model in training mode.
         self.model.train()       
@@ -97,7 +86,7 @@ class Trainer(object):
         batch_size = src_inputs.size(1)
         all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
-        loss, stats = self.train_criterion.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
+        loss, stats = self.train_loss.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
                                                         tgt_outputs.transpose(0, 1).contiguous(), 
                                                         tgt_lengths)
         loss = loss.div(batch_size)
@@ -109,19 +98,16 @@ class Trainer(object):
         """ Called for each epoch to train. """
         total_stats = Statistics()
         report_stats = Statistics()
+         
+        for step_batch, batch in enumerate(self.train_iter):
 
-        step_batch = 0
-        while True:
-            try:
-                src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.train_dataset.iterator
-
-            except StopIteration:     
-                print('end of epoch')  
-                break                 
-
-            step_batch += 1
             self.global_step += 1
 
+            src_input_var = batch.src[0]
+            src_input_lengths = batch.src[1].tolist()
+            tgt_input_var = batch.tgt[0][:-1]
+            tgt_output_var = batch.tgt[0][1:]
+            tgt_input_lengths = (batch.tgt[1] - 1).tolist()
             stats = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
 
             report_stats.update(stats)
@@ -129,7 +115,7 @@ class Trainer(object):
 
             if report_func is not None:
                 report_stats = report_func(self.global_step,
-                        epoch, step_batch, len(self.train_dataset.train_iter),
+                        epoch, step_batch, len(self.train_iter),
                         total_stats.start_time, self.optim.lr, report_stats) 
 
 
@@ -139,16 +125,18 @@ class Trainer(object):
         self.model.eval()
         valid_stats = Statistics()
 
-        while True:
-            try:
-                src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = self.valid_dataset.iterator
+        for step_batch, batch in enumerate(self.valid_iter):
 
-            except StopIteration:     
-                print('end of epoch')  
-                break                 
+            self.global_step += 1
 
-            all_decoder_outputs = self.model(src_input_var,tgt_input_var,src_input_lengths)
-            stats = self.valid_criterion.compute_valid_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
+            src_input_var = batch.src[0]
+            src_input_lengths = batch.src[1].tolist()
+
+            tgt_input_var = batch.tgt[0][:-1]
+            tgt_output_var = batch.tgt[0][1:]
+            
+            all_decoder_outputs = self.model(src_input_var, tgt_input_var, src_input_lengths)
+            stats = self.valid_loss.compute_valid_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
                                                      tgt_output_var.transpose(0, 1).contiguous())
             valid_stats.update(stats)        
         # Set model back to training mode.
@@ -173,5 +161,3 @@ class Trainer(object):
         """ Called for each epoch to update learning rate. """
         self.optim.updateLearningRate(ppl, epoch) 
         self.save_per_epoch(epoch)
-        self.train_dataset.init_iterator()
-        self.valid_dataset.init_iterator()
