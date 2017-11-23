@@ -16,7 +16,7 @@ class NMTLossCompute(nn.Module):
         self.padding_idx = padding_idx
         weight = torch.ones(tgt_vocab_size)
         weight[self.padding_idx] = 0
-        self.criterion = nn.CrossEntropyLoss(weight, size_average=False)
+        self.criterion = nn.NLLLoss(weight, size_average=False)
 
 
     def compute_loss(self, logits, target, length):

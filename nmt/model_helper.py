@@ -68,7 +68,9 @@ def create_decoder(hparams):
     return decoder
 
 def create_generator(input_size, output_size):
-    generator = nn.Linear(input_size, output_size)
+    generator = nn.Sequential(
+        nn.Linear(input_size, output_size),
+        nn.LogSoftmax())
     return generator
 
 
