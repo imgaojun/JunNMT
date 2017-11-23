@@ -43,6 +43,7 @@ cd demo
 
 #### Copy scripts
 Copy necessary scripts to our project
+
 ```
 cp JunNMT/scripts/preprocess.sh ./
 cp JunNMT/scripts/train.sh ./
@@ -51,6 +52,7 @@ cp JunNMT/scripts/traslate.sh ./
 #### Do preprocess
 
 Edit the script `preprocess.sh`.
+
 | parameter     | description |
 |---            |--- |
 | -train_src PATH |  source training file |
