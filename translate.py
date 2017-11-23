@@ -18,7 +18,7 @@ hparams = utils.load_hparams(args.config)
 fields = nmt.IO.load_fields(
             torch.load(args.data + '.vocab.pt'))
 
-model = model_helper.create_base_model(hparams,len(fields['src'].vocab), len(fields['tgt'].vocab))
+model = model_helper.create_base_model(hparams,len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
 
 
 print('Loading parameters ...')
