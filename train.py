@@ -1,12 +1,5 @@
-import nmt.model_helper as model_helper
 import nmt.utils.misc_utils as utils
-import nmt.utils.vocab_utils as vocab_utils
-import nmt.utils.data_utils as data_utils
 import argparse
-from nmt.Trainer import Trainer
-from nmt.Loss import NMTLossCompute
-from nmt.Optim import Optim
-from nmt.Trainer import Statistics
 from tensorboardX import SummaryWriter
 import codecs
 import os
@@ -15,7 +8,7 @@ import re
 import torch
 import torch.nn as nn
 from torch import cuda
-import nmt.IO
+import nmt
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
@@ -99,7 +92,7 @@ def load_fields(train, valid):
 
 def build_model(model_opt, fields):
     print('Building model...')
-    model = model_helper.create_base_model(model_opt, len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
+    model = nmt.model_helper.create_base_model(model_opt, len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
 
     print(model)
 
@@ -107,7 +100,7 @@ def build_model(model_opt, fields):
 
 
 def build_optim(model, optim_opt):
-    optim = Optim(optim_opt.optim_method, 
+    optim = nmt.Optim(optim_opt.optim_method, 
                   optim_opt.learning_rate,
                   optim_opt.max_grad_norm,
                   optim_opt.learning_rate_decay,
@@ -158,14 +151,14 @@ def train_model(model, train_data, valid_data, fields, optim):
     train_iter = make_train_data_iter(train_data, opt)
     valid_iter = make_valid_data_iter(valid_data, opt)
 
-    train_loss = NMTLossCompute(model.generator,fields['tgt'].vocab)
-    valid_loss = NMTLossCompute(model.generator,fields['tgt'].vocab) 
+    train_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab)
+    valid_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab) 
 
     if opt.USE_CUDA:
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
 
-    trainer = Trainer(opt,
+    trainer = nmt.Trainer(opt,
                       model,
                       train_iter,
                       valid_iter,

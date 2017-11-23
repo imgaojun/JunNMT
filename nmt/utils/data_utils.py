@@ -1,89 +1,37 @@
-import torch.utils.data as data
-import codecs
-import nmt.utils.vocab_utils as vocab_utils
-
-
-
-
-
-class InputDataSet(data.Dataset):
-    def __init__(self, src_file, tgt_file):
-        self.src_dataset = []
-        self.tgt_dataset = []
-
-        with codecs.open(src_file, 'r', encoding='utf8', errors='replace') as src_f:
-            with codecs.open(tgt_file, 'r', encoding='utf8', errors='replace') as tgt_f:
-                for src_seq in src_f:
-                    tgt_seq = tgt_f.readline()
-                    self.src_dataset.append(src_seq.strip())
-                    self.tgt_dataset.append(tgt_seq.strip())
-    def __getitem__(self, index):
-        src_seq = self.src_dataset[index]
-        tgt_seq = self.tgt_dataset[index]
-
-        return src_seq, tgt_seq
-
-    def __len__(self):
-        return len(self.src_dataset)
-
-class TrainDataSet(object):
-    def __init__(self, 
-                 src_file, 
-                 tgt_file, 
-                 batch_size,
-                 src_vocab_table,
-                 tgt_vocab_table,
-                 src_max_len=None,
-                 tgt_max_len=None):
-        self.train_dataset = InputDataSet(src_file, tgt_file)
-        self.train_dataloader = data.DataLoader(dataset=self.train_dataset,
-                               batch_size=batch_size,
-                               shuffle=True,
-                               num_workers=4)
-
-        self.train_iter = iter(self.train_dataloader)
-
-        self.src_vocab_table = src_vocab_table
-        self.tgt_vocab_table = tgt_vocab_table
-        self.src_max_len = src_max_len
-        self.tgt_max_len = tgt_max_len
+import nmt
+from torch.autograd import Variable
+import torch
+# Pad a with the PAD symbol
+def pad_seq(seq, max_length, padding_idx):
+    seq += [padding_idx for i in range(max_length - len(seq))]
+    return seq
     
-    @property
-    def iterator(self):
-        src_seqs,tgt_seqs = self.train_iter.next()
-        src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = \
-            vocab_utils.batch2var(src_seqs,tgt_seqs,self.src_vocab_table, self.tgt_vocab_table, self.src_max_len, self.tgt_max_len)
+def get_src_input_seq(seq):
+    seq = seq
+    return seq
 
+def seq2indices(seq, word2index, max_len=None):
+    seq_idx = []
+    words_in = seq.split(' ')
+    if max_len is not None:
+        words_in = words_in[:max_len]
+    for w in words_in:
+        if w in word2index:
+            seq_idx.append(word2index[w])
 
-        return src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var
+    return seq_idx
 
-    def init_iterator(self):
-        self.train_iter = iter(self.train_dataloader)
+def batch_seq2var(batch_src_seqs, word2index, USE_CUDA=True):
+    src_seqs = [seq2indices(seq, word2index) for seq in batch_src_seqs]
+    src_seqs = sorted(src_seqs, key=lambda p: len(p), reverse=True)
+    src_inputs = [get_src_input_seq(s) for s in src_seqs]
+    src_input_lengths = [len(s) for s in src_inputs]
+    paded_src_inputs = [pad_seq(s, max(src_input_lengths), word2index[nmt.IO.PAD_WORD]) for s in src_seqs]    
+    src_input_var = Variable(torch.LongTensor(paded_src_inputs)).transpose(0, 1)
+    if USE_CUDA:
+        src_input_var = src_input_var.cuda() 
+    return src_input_var, src_input_lengths
 
-
-# class InferDataSet(object):
-#     def __init__(self, 
-#                  src_file, 
-#                  batch_size,
-#                  src_vocab_table,
-#                  src_max_len):
-#         self.infer_dataset = InputDataSet(src_file)
-#         self.infer_dataloader = data.DataLoader(dataset=self.train_dataset,
-#                                batch_size=batch_size,
-#                                shuffle=False,
-#                                num_workers=4)
-
-#         self.infer_iter = iter(self.train_dataloader)
-
-#         self.src_vocab_table = src_vocab_table
-#         self.src_max_len = src_max_len
-    
-#     @property
-#     def iterator(self):
-#         src_seqs = self.infer_iter.next()
-#         src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var = \
-#             vocab_utils.batch2var(src_seqs,tgt_seqs,self.src_vocab_table, self.tgt_vocab_table, self.src_max_len, self.tgt_max_len)
-
-
-#         return src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var
-    
+def indices2words(idxs, index2word):
+    words_list = [index2word[idx] for idx in idxs]
+    return words_list

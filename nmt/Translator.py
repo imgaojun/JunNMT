@@ -1,13 +1,11 @@
-import nmt.utils.vocab_utils as vocab_utils
 import torch
 from torch.autograd import Variable
-from nmt.modules.Beam import Beam
+import nmt
 import torch.nn.functional as F
 class Translator(object):
-    def __init__(self, model, beam_size, max_length, replace_unk=True, USE_CUDA=True):
+    def __init__(self, model, beam_size, max_length, replace_unk=True):
         self.model = model
         self.beam_size = beam_size
-        self.USE_CUDA = USE_CUDA
         self.replace_unk = replace_unk
         self.max_length = max_length
         self.model.eval()
@@ -30,13 +28,8 @@ class Translator(object):
                 Variable(decoder_init_hidden[1].data.repeat(1, beam_size, 1)),
             )    
 
-
-        # dec_states = [
-        #     Variable(decoder_init_hidden.data.repeat(1, beam_size, 1)),
-        # ]
-
         beam = [
-            Beam(beam_size, cuda=True)
+            nmt.Beam(beam_size, cuda=True)
             for k in range(batch_size)
         ]                
 
@@ -53,10 +46,6 @@ class Translator(object):
                 [b.get_current_state() for b in beam if not b.done]
             ).t().contiguous().view(1, -1)
 
-            # print('input')
-            # print(input)
-            # print('dec_states')
-            # print(dec_states[0])
             decoder_output, decoder_hidden = self.model.decode(
                 Variable(input), 
                 context, 
@@ -71,9 +60,7 @@ class Translator(object):
                     decoder_hidden[0],
                     decoder_hidden[1]
                 ]
-            # dec_states = [
-            #     decoder_hidden
-            # ]
+
             dec_out = decoder_output.squeeze(0)
 
             out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
@@ -155,11 +142,4 @@ class Translator(object):
             allHyp += [hyps]
 
         return allHyp, allScores
-
-        
-
-    def decode_batch(self):
-        beam_size = self.beam_size
-
-        pass
 
