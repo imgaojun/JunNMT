@@ -39,6 +39,7 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
     process_bar = nmt.misc_utils.ShowProcess(len(src_lines))
     for line in src_lines:
         src_seq = line.strip()
+        print(src_seq)
         src_input_var, src_input_lengths= \
             nmt.data_utils.batch_seq2var([src_seq] ,fields['src'].vocab.stoi)
 
