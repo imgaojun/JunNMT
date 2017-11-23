@@ -1,5 +1,4 @@
 import time
-import nmt.utils.vocab_utils as vocab_utils
 import nmt.utils.misc_utils as utils
 import torch
 from torch.autograd import Variable
