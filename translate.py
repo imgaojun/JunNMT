@@ -2,19 +2,21 @@ import torch
 import argparse
 import codecs
 import nmt
-infer_parser = argparse.ArgumentParser()
-infer_parser.add_argument("--config", type=str, default="./config.yml")
-infer_parser.add_argument("--src_in", type=str)
-infer_parser.add_argument("--tgt_out", type=str)
-infer_parser.add_argument("--model", type=str)
-infer_parser.add_argument("--data", type=str)
-args = infer_parser.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument("--config", type=str, default="./config.yml")
+parser.add_argument("--src_in", type=str)
+parser.add_argument("--tgt_out", type=str)
+parser.add_argument("--model", type=str)
+parser.add_argument("--data", type=str)
+args = parser.parse_args()
 hparams = nmt.misc_utils.load_hparams(args.config)
 
 fields = nmt.IO.load_fields(
             torch.load(args.data + '.vocab.pt'))
 
-model = nmt.model_helper.create_base_model(hparams,len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
+model = nmt.model_helper.create_base_model(hparams,len(fields['src'].vocab), 
+                                           len(fields['tgt'].vocab), 
+                                           fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
 
 
 print('Loading parameters ...')

@@ -16,9 +16,6 @@ def load_hparams(config_file):
         hparams = HParams(**configs)
         return hparams
 
-def print_hparams(hparams):
-    for k,v in hparams.items():
-        print(k,v)
         
 def safe_exp(value):
     """Exponentiation with catching of overflow error."""
