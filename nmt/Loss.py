@@ -3,32 +3,53 @@ import torch.nn as nn
 from torch.nn import functional
 from torch.autograd import Variable
 from nmt.Trainer import Statistics
-
+import nmt.IO
 
 
 class NMTLossCompute(nn.Module):
     """
     Standard NMT Loss Computation.
     """
-    def __init__(self, tgt_vocab_size, padding_idx):
+    def __init__(self, generator, tgt_vocab):
         super(NMTLossCompute, self).__init__()
-        self.tgt_vocab_size = tgt_vocab_size
-        self.padding_idx = padding_idx
-        weight = torch.ones(tgt_vocab_size)
+        self.generator = generator
+        self.tgt_vocab = tgt_vocab
+        self.padding_idx = tgt_vocab.stoi[nmt.IO.PAD_WORD]
+        weight = torch.ones(len(tgt_vocab))
         weight[self.padding_idx] = 0
         self.criterion = nn.NLLLoss(weight, size_average=False)
 
+    def make_shard_state(self, batch, output):
+        """ See base class for args description. """
+        return {
+            "output": output,
+            "target": batch.tgt[1:],
+            }   
 
-    def compute_loss(self, logits, target, length):
-        # length = Variable(torch.LongTensor(length)).cuda()
-        # batch_size = output.size(0)
-        logits = self.bottle(logits)
+    def compute_loss(self, batch, output, target):
+
+        scores = self.generator(self.bottle(output))
         target = target.view(-1)
-        loss = self.criterion(logits,target)
-        # loss = loss.sum()/length.float().sum()
+        loss = self.criterion(scores,target)
+
         loss_data = loss.data.clone()
-        stats = self.stats(loss_data, logits.data, target.data)
+        stats = self.stats(loss_data, scores.data, target.data)
         return  loss, stats
+
+    def sharded_compute_loss(self, batch, output, shard_size):
+        """
+        Compute the loss in shards for efficiency.
+        """
+        batch_stats = Statistics()
+        shard_state = self.make_shard_state(batch, output)
+
+        for shard in shards(shard_state, shard_size):
+            loss, stats = self.compute_loss(batch, **shard)
+            loss.div(batch.batch_size).backward()
+            batch_stats.update(stats)
+
+        return batch_stats
+
     def compute_valid_loss(self, logits, target):
 
         logits = self.bottle(logits)
@@ -37,6 +58,17 @@ class NMTLossCompute(nn.Module):
         loss_data = loss.data.clone()
         stats = self.stats(loss_data, logits.data, target.data)
         return  stats        
+        
+    def monolithic_compute_loss(self, batch, output):
+        """
+        Compute the loss monolithically, not dividing into shards.
+        """
+
+        shard_state = self.make_shard_state(batch, output)
+        _, batch_stats = self.compute_loss(batch, **shard_state)
+
+        return batch_stats
+
     def stats(self, loss, scores, target):
         """
         Compute and return a Statistics object.
@@ -58,50 +90,54 @@ class NMTLossCompute(nn.Module):
         return v.view(-1, batch_size, v.size(1))        
 
 
-class MaskCrossEntropy(object):
-
-    def _sequence_mask(self, sequence_length, max_len=None):
-        if max_len is None:
-            max_len = sequence_length.data.max()
-        batch_size = sequence_length.size(0)
-        seq_range = torch.arange(0, max_len).long()
-        seq_range_expand = seq_range.unsqueeze(0).expand(batch_size, max_len)
-        seq_range_expand = Variable(seq_range_expand)
-        if sequence_length.is_cuda:
-            seq_range_expand = seq_range_expand.cuda()
-        seq_length_expand = (sequence_length.unsqueeze(1)
-                            .expand_as(seq_range_expand))
-        return seq_range_expand < seq_length_expand
+def filter_shard_state(state):
+    for k, v in state.items():
+        if v is not None:
+            if isinstance(v, Variable) and v.requires_grad:
+                v = Variable(v.data, requires_grad=True, volatile=False)
+            yield k, v
 
 
-    def compute_loss(self, logits, target, length):
-        length = Variable(torch.LongTensor(length)).cuda()
-        """
-        Args:
-            logits: A Variable containing a FloatTensor of size
-                (batch, max_len, num_classes) which contains the
-                unnormalized probability for each class.
-            target: A Variable containing a LongTensor of size
-                (batch, max_len) which contains the index of the true
-                class for each corresponding step.
-            length: A Variable containing a LongTensor of size (batch,)
-                which contains the length of each data in a batch.
-        Returns:
-            loss: An average loss value masked by the length.
-        """
+def shards(state, shard_size, eval=False):
+    """
+    Args:
+        state: A dictionary which corresponds to the output of
+               *LossCompute.make_shard_state(). The values for
+               those keys are Tensor-like or None.
+        shard_size: The maximum size of the shards yielded by the model.
+        eval: If True, only yield the state, nothing else.
+              Otherwise, yield shards.
+    Yields:
+        Each yielded shard is a dict.
+    Side effect:
+        After the last shard, this function does back-propagation.
+    """
+    if eval:
+        yield state
+    else:
+        # non_none: the subdict of the state dictionary where the values
+        # are not None.
+        non_none = dict(filter_shard_state(state))
+        
+        # Now, the iteration:
+        # state is a dictionary of sequences of tensor-like but we
+        # want a sequence of dictionaries of tensors.
+        # First, unzip the dictionary into a sequence of keys and a
+        # sequence of tensor-like sequences.
+        keys, values = zip(*((k, torch.split(v, shard_size))
+                             for k, v in non_none.items()))
 
-        # logits_flat: (batch * max_len, num_classes)
-        logits_flat = logits.view(-1, logits.size(-1))
-        # log_probs_flat: (batch * max_len, num_classes)
-        log_probs_flat = functional.log_softmax(logits_flat)
-        # target_flat: (batch * max_len, 1)
-        target_flat = target.view(-1, 1)
-        # losses_flat: (batch * max_len, 1)
-        losses_flat = -torch.gather(log_probs_flat, dim=1, index=target_flat)
-        # losses: (batch, max_len)
-        losses = losses_flat.view(*target.size())
-        # mask: (batch, max_len)
-        mask = self._sequence_mask(sequence_length=length, max_len=target.size(1))
-        losses = losses * mask.float()
-        loss = losses.sum() / length.float().sum()
-        return loss         
+        # Now, yield a dictionary for each shard. The keys are always
+        # the same. values is a sequence of length #keys where each
+        # element is a sequence of length #shards. We want to iterate
+        # over the shards, not over the keys: therefore, the values need
+        # to be re-zipped by shard and then each shard can be paired
+        # with the keys.
+        for shard_tensors in zip(*values):
+            yield dict(zip(keys, shard_tensors))
+
+        # Assumed backprop'd
+        variables = ((state[k], v.grad.data) for k, v in non_none.items()
+                     if isinstance(v, Variable) and v.grad is not None)
+        inputs, grads = zip(*variables)
+        torch.autograd.backward(inputs, grads)

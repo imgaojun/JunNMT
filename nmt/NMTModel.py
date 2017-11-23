@@ -24,8 +24,8 @@ class NMTModel(nn.Module):
                 tgt_inputs, encoder_outputs, decoder_init_hidden
             )        
 
-        outputs = self.generator(decoder_outputs)
-        
+        # outputs = self.generator(decoder_outputs)
+        outputs = decoder_outputs
         return outputs
 
 

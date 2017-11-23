@@ -25,7 +25,7 @@ def get_fields():
 
     fields = {}
     fields["src"] = torchtext.data.Field(pad_token=PAD_WORD,include_lengths=True)
-    fields["tgt"] = torchtext.data.Field(init_token=BOS_WORD, eos_token=EOS_WORD,pad_token=PAD_WORD,include_lengths=True)
+    fields["tgt"] = torchtext.data.Field(init_token=BOS_WORD, eos_token=EOS_WORD,pad_token=PAD_WORD)
     return fields
 
 def load_fields(vocab):

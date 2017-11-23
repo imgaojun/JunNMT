@@ -158,8 +158,8 @@ def train_model(model, train_data, valid_data, fields, optim):
     train_iter = make_train_data_iter(train_data, opt)
     valid_iter = make_valid_data_iter(valid_data, opt)
 
-    train_loss = NMTLossCompute(len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
-    valid_loss = NMTLossCompute(len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD]) 
+    train_loss = NMTLossCompute(model.generator,fields['tgt'].vocab)
+    valid_loss = NMTLossCompute(model.generator,fields['tgt'].vocab) 
 
     if opt.USE_CUDA:
         train_loss = train_loss.cuda()

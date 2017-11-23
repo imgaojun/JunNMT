@@ -54,8 +54,7 @@ class Statistics(object):
             summary_writer.add_scalar(prefix + '/' + key, kwargs[key],step)
 
 class Trainer(object):
-    def __init__(self, 
-                 opt,
+    def __init__(self, opt,
                  model, train_iter, valid_iter,
                  train_loss, valid_loss, optim,):
 
@@ -66,8 +65,6 @@ class Trainer(object):
         self.valid_loss = valid_loss
         self.optim = optim
 
-        self.USE_CUDA = opt.USE_CUDA
-
         self.out_dir = opt.out_dir
 
         # Set model in training mode.
@@ -76,21 +73,16 @@ class Trainer(object):
         self.global_step = 0
         self.step_epoch = 0
 
-    def update(self,
-               src_inputs,
-               src_lengths,
-               tgt_inputs,
-               tgt_lengths,
-               tgt_outputs):
+    def update(self, batch, shard_size):
         self.model.zero_grad()
-        batch_size = src_inputs.size(1)
-        all_decoder_outputs = self.model(src_inputs,tgt_inputs,src_lengths)
+        src_inputs = batch.src[0]
+        src_lengths = batch.src[1].tolist()
+        tgt_inputs = batch.tgt[:-1]
 
-        loss, stats = self.train_loss.compute_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
-                                                        tgt_outputs.transpose(0, 1).contiguous(), 
-                                                        tgt_lengths)
-        loss = loss.div(batch_size)
-        loss.backward()
+        outputs = self.model(src_inputs,tgt_inputs,src_lengths)
+
+        stats = self.train_loss.sharded_compute_loss(batch, outputs, shard_size)
+
         self.optim.step()
         return stats
 
@@ -103,12 +95,7 @@ class Trainer(object):
 
             self.global_step += 1
 
-            src_input_var = batch.src[0]
-            src_input_lengths = batch.src[1].tolist()
-            tgt_input_var = batch.tgt[0][:-1]
-            tgt_output_var = batch.tgt[0][1:]
-            tgt_input_lengths = (batch.tgt[1] - 1).tolist()
-            stats = self.update(src_input_var, src_input_lengths, tgt_input_var, tgt_input_lengths, tgt_output_var)
+            stats = self.update(batch, 32)
 
             report_stats.update(stats)
             total_stats.update(stats)
@@ -127,17 +114,13 @@ class Trainer(object):
 
         for step_batch, batch in enumerate(self.valid_iter):
 
-            self.global_step += 1
+            src_inputs = batch.src[0]
+            src_lengths = batch.src[1].tolist()
+            tgt_inputs = batch.tgt[:-1]
 
-            src_input_var = batch.src[0]
-            src_input_lengths = batch.src[1].tolist()
+            outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
-            tgt_input_var = batch.tgt[0][:-1]
-            tgt_output_var = batch.tgt[0][1:]
-            
-            all_decoder_outputs = self.model(src_input_var, tgt_input_var, src_input_lengths)
-            stats = self.valid_loss.compute_valid_loss(all_decoder_outputs.transpose(0, 1).contiguous(), 
-                                                     tgt_output_var.transpose(0, 1).contiguous())
+            stats = self.valid_loss.monolithic_compute_loss(batch, outputs)
             valid_stats.update(stats)        
         # Set model back to training mode.
         self.model.train()
