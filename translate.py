@@ -25,6 +25,7 @@ if hparams.USE_CUDA:
     model = model.cuda()
 
 translator = nmt.Translator(model, 
+                        fields['tgt'].vocab,
                         hparams.beam_size, 
                         hparams.decode_max_length,
                         hparams.replace_unk)

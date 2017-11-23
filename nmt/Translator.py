@@ -3,11 +3,12 @@ from torch.autograd import Variable
 import nmt
 import torch.nn.functional as F
 class Translator(object):
-    def __init__(self, model, beam_size, max_length, replace_unk=True):
+    def __init__(self, model, vocab, beam_size, max_length, replace_unk=True):
         self.model = model
         self.beam_size = beam_size
         self.replace_unk = replace_unk
         self.max_length = max_length
+        self.vocab=vocab
         self.model.eval()
     def translate(self, src_input, src_input_lengths=None):
         beam_size = self.beam_size
@@ -29,7 +30,7 @@ class Translator(object):
             )    
 
         beam = [
-            nmt.Beam(beam_size, cuda=True)
+            nmt.Beam(beam_size, self.vocab, cuda=True)
             for k in range(batch_size)
         ]                
 

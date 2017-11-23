@@ -14,18 +14,18 @@
 # https://github.com/pytorch/examples/blob/master/OpenNMT/onmt/Beam.py
 
 import torch
-import nmt.utils.vocab_utils as vocab_utils
+import nmt
 
 class Beam(object):
     """Ordered beam of candidate outputs."""
 
-    def __init__(self, size, cuda=False):
+    def __init__(self, size, vocab, cuda=False):
         """Initialize params."""
         self.size = size
         self.done = False
-        self.pad = vocab_utils.PAD_ID
-        self.bos = vocab_utils.SOS_ID
-        self.eos = vocab_utils.EOS_ID
+        self.pad = vocab.stoi[nmt.IO.PAD_WORD]
+        self.bos = vocab.stoi[nmt.IO.BOS_WORD]
+        self.eos = vocab.stoi[nmt.IO.EOS_WORD]
         self.tt = torch.cuda if cuda else torch
 
         # The score for each translation on the beam.
