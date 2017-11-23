@@ -128,14 +128,14 @@ def test_bleu():
                 --model %s \
                 --data %s' %(args.nmt_dir,
                              os.path.join(opt.out_dir,'config.yml'),
-                             opt.dev_src_file,
+                             opt.multi_bleu_src,
                              os.path.join(opt.out_dir,'translate.tmp'),
                              utils.latest_checkpoint(opt.out_dir),
                              args.data,
                             )
             )
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
-                                                             ' '.join(opt.dev_tgt_file),
+                                                             ' '.join(opt.multi_bleu_refs),
                                                              os.path.join(opt.out_dir,'translate.tmp')
                                                              ))
     output = output.read()
