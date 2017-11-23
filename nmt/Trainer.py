@@ -32,7 +32,7 @@ class Statistics(object):
     def elapsed_time(self):
         return time.time() - self.start_time
 
-    def print_out(self, epoch, batch, n_batches, start, summary_writer=None):
+    def print_out(self, epoch, batch, n_batches, start):
         t = self.elapsed_time()
 
         out_info = ("Epoch %2d, %5d/%5d| acc: %6.2f| ppl: %6.2f| " + \
@@ -44,8 +44,6 @@ class Statistics(object):
                time.time() - self.start_time)
 
         print(out_info)
-        if summary_writer is not None:
-            summary_writer.add_text('progress',out_info,epoch)
         sys.stdout.flush()
 
     def log(self, prefix, summary_writer, step, **kwargs):

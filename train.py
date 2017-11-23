@@ -47,7 +47,7 @@ def report_func(global_step, epoch, batch, num_batches,
         report_stats(Statistics): updated Statistics instance.
     """
     if batch % opt.steps_per_stats == -1 % opt.steps_per_stats:
-        report_stats.print_out(epoch, batch+1, num_batches, start_time,summery_writer)
+        report_stats.print_out(epoch, batch+1, num_batches, start_time)
         report_stats.log("progress", summery_writer, global_step, learning_rate=lr, 
                                                                   ppl=report_stats.ppl(),
                                                                   accuracy=report_stats.accuracy())
