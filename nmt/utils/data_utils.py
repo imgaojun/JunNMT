@@ -16,8 +16,7 @@ def seq2indices(seq, word2index, max_len=None):
     if max_len is not None:
         words_in = words_in[:max_len]
     for w in words_in:
-        if w in word2index:
-            seq_idx.append(word2index[w])
+        seq_idx.append(word2index[w])
 
     return seq_idx
 
