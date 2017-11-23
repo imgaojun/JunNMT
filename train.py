@@ -44,7 +44,7 @@ def report_func(global_step, epoch, batch, num_batches,
         report_stats.log("progress", summery_writer, global_step, learning_rate=lr, 
                                                                   ppl=report_stats.ppl(),
                                                                   accuracy=report_stats.accuracy())
-        report_stats = Statistics()
+        report_stats = nmt.Statistics()
 
     return report_stats
 
