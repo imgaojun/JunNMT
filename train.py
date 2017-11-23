@@ -159,12 +159,12 @@ def train_model(model, train_data, valid_data, fields, optim):
         valid_loss = valid_loss.cuda()    
 
     trainer = nmt.Trainer(opt,
-                      model,
-                      train_iter,
-                      valid_iter,
-                      train_loss,
-                      valid_loss,
-                      optim)
+                        model,
+                        train_iter,
+                        valid_iter,
+                        train_loss,
+                        valid_loss,
+                        optim)
 
     num_train_epochs = opt.num_train_epochs
     for step_epoch in  range(num_train_epochs):
