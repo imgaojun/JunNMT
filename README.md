@@ -24,7 +24,7 @@ cd demo
 ```
 
 #### 2.Copy scripts
-Copy necessary scripts to the project.
+Copy some useful scripts and template configuration to the project.
 
 ```
 cp JunNMT/scripts/preprocess.sh ./
@@ -34,7 +34,7 @@ cp JunNMT/config.yml ./
 ```
 #### 3.Do preprocess
 
-Edit the script `preprocess.sh`.
+Edit the script file `preprocess.sh`.
 
 ```
 NMT_DIR = PATH_TO_JunNMT
@@ -49,14 +49,14 @@ python3 ${NMT_DIR}/preprocess.py \
 
 | parameter     | description |
 |---            |--- |
-| -train_src PATH |  source training file |
-| -train_tgt PATH |  target training file |
-| -valid_src PATH |  valid_src file |
-| -valid_tgt PATH |  valid_tgt file |
-| -save_data STR  |  the prefix of data file name |
-| -config PATH    |  configuration file |
+| -train_src FILE |  Source Training Set |
+| -train_tgt FILE |  Target Training Set |
+| -valid_src FILE |  Source Validation Set |
+| -valid_tgt FILE |  Target Validation Set |
+| -save_data STR  |  the Prefix of Output File Name |
+| -config FILE    |  Configuration File |
 
-Run the command:
+Run the following command and This commad will prepare training set, validation set and vocab file for your project.
 
 ```
 sh preprocess.sh
@@ -76,12 +76,12 @@ python3 ../train.py \
 
 | parameter     | description |
 |---            |---          |
-| -gpuid INT    |  choose to use which gpu |
-| -config PATH  |  configuration file |
-| -nmt_dir PATH |  path to JunNMT |
-| -data STR     |  the prefix of data file name |
+| -gpuid INT    |  Choose Which GPU A Program Uses |
+| -config FILE  |  Configuration File |
+| -nmt_dir PATH |  Path to JunNMT Directory |
+| -data STR     |  the Prefix of Data File Name |
 
-Run the command:
+Run the command to train a model.
 
 ```
 sh train.sh
@@ -90,13 +90,13 @@ sh train.sh
 #### 5.Visualize training progress
 If you want to visualize your training progress, you need to install tensorflow first, since the projects uses tensorboard for visualizing.
 
-After installing the `tensorflow`, you can start a server by using the following command.
+After installing `tensorflow`, you can start a server by using the following command.
 
 ```
 tensorboard --logdir ./${log_dir} --port 6006
 ```
 
-And then you can watch your training progress on you browser.
+And then you can watch your training progress on your browser.
 
 #### 6.Do testing
 To perform testing, just run `python JunNMT/translate.py`.
