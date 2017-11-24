@@ -32,7 +32,7 @@ cp JunNMT/scripts/train.sh ./
 cp JunNMT/scripts/traslate.sh ./
 cp JunNMT/config.yml ./
 ```
-#### 3.Do preprocess
+#### 3.Do preprocessing
 
 Edit the script file `preprocess.sh`.
 
