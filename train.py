@@ -78,7 +78,7 @@ def make_valid_data_iter(valid_data, opt):
 
 def load_fields(train, valid):
     fields = nmt.IO.load_fields(
-                torch.load(args.data + '.vocab.pt'))
+                torch.load(args.data + '.vocab.pkl'))
     fields = dict([(k, f) for (k, f) in fields.items()
                   if k in train.examples[0].__dict__])
     train.fields = fields
@@ -177,9 +177,9 @@ def train_model(model, train_data, valid_data, fields, optim):
         # 2. Validate on the validation set.
         valid_stats = trainer.validate()
         print('Validation perplexity: %g' % valid_stats.ppl())
-        trainer.epoch_step(valid_stats.ppl(),step_epoch)
-        
-        valid_bleu = test_bleu()
+        trainer.epoch_step(valid_stats.ppl(), step_epoch, out_dir=opt.out_dir)
+        if opt.test_bleu:
+            valid_bleu = test_bleu()
         train_stats.log("train", summery_writer, step_epoch, 
                         ppl=train_stats.ppl(),
                         learning_rate=optim.lr, 
@@ -195,8 +195,8 @@ def main():
 
     # Load train and validate data.
     print("Loading train and validate data from '%s'" % args.data)
-    train = torch.load(args.data + '.train.pt')
-    valid = torch.load(args.data + '.valid.pt')
+    train = torch.load(args.data + '.train.pkl')
+    valid = torch.load(args.data + '.valid.pkl')
     
     # Load fields generated from preprocess phase.
     fields = load_fields(train, valid)

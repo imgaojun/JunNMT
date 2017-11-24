@@ -51,8 +51,7 @@ class Statistics(object):
             summary_writer.add_scalar(prefix + '/' + key, kwargs[key],step)
 
 class Trainer(object):
-    def __init__(self, opt,
-                 model, train_iter, valid_iter,
+    def __init__(self, model, train_iter, valid_iter,
                  train_loss, valid_loss, optim,):
 
         self.model = model
@@ -61,8 +60,6 @@ class Trainer(object):
         self.train_loss = train_loss
         self.valid_loss = valid_loss
         self.optim = optim
-
-        self.out_dir = opt.out_dir
 
         # Set model in training mode.
         self.model.train()       
@@ -123,12 +120,12 @@ class Trainer(object):
         self.model.train()
         return valid_stats
 
-    def save_per_epoch(self, epoch):
-        f = open(os.path.join(self.out_dir,'checkpoint'),'w')
+    def save_per_epoch(self, epoch, out_dir):
+        f = open(os.path.join(out_dir,'checkpoint'),'w')
         f.write('latest_checkpoint:checkpoint_epoch%d.pkl'%(epoch))
         f.close()
         self.model.save_checkpoint(epoch, 
-                    os.path.join(self.out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
+                    os.path.join(out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
         
         
 
@@ -137,7 +134,7 @@ class Trainer(object):
         self.model.load_checkpoint(filenmae)
         
 
-    def epoch_step(self, ppl, epoch):
+    def epoch_step(self, ppl, epoch, out_dir):
         """ Called for each epoch to update learning rate. """
         self.optim.updateLearningRate(ppl, epoch) 
-        self.save_per_epoch(epoch)
+        self.save_per_epoch(epoch, out_dir)

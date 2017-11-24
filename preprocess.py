@@ -31,8 +31,8 @@ valid = nmt.IO.NMTDataset(
     fields=[('src', fields["src"]),
             ('tgt', fields["tgt"])])
 print("Saving train/valid/fields")
-torch.save(nmt.IO.save_vocab(fields),open(args.save_data+'.vocab.pt', 'wb'))
+torch.save(nmt.IO.save_vocab(fields),open(args.save_data+'.vocab.pkl', 'wb'))
 train.fields = []
 valid.fields = []
-torch.save(train, open(args.save_data+'.train.pt', 'wb'))
-torch.save(valid, open(args.save_data+'.valid.pt', 'wb'))
+torch.save(train, open(args.save_data+'.train.pkl', 'wb'))
+torch.save(valid, open(args.save_data+'.valid.pkl', 'wb'))

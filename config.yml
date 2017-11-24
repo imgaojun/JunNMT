@@ -16,7 +16,7 @@ tgt_max_len: 50
 src_vocab_size: 30000
 tgt_vocab_size: 30000
 
-
+test_bleu: True
 multi_bleu_src: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
 multi_bleu_refs: # Multiple reference
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
@@ -48,5 +48,5 @@ replace_unk: true
 decode_max_length: 100
 beam_size: 3
 
-out_dir: ./out_dir
-log_dir: ./log_dir
+out_dir: ./out_dir # path to save model
+log_dir: ./log_dir # for tensorboard logdir
