@@ -1,5 +1,6 @@
 export CUDA_VISIBLE_DEVICES=0
-python3 ../../../JunNMT/translate.py \
+NMT_DIR=
+python3 ${NMT_DIR}/JunNMT/translate.py \
     --config ./config.yml \
     --src_in /home/xiapeng/gaojun/trans/test/nist02.cn \
     --tgt_out ./test0_out1 \

@@ -1,4 +1,4 @@
-NMT_DIR = 
+NMT_DIR= 
 python3 ${NMT_DIR}/preprocess.py \
     -train_src /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn \
     -train_tgt /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0 \

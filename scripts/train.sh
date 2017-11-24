@@ -1,6 +1,7 @@
 export CUDA_VISIBLE_DEVICES=0
-python3 ../train.py \
+NMT_DIR=
+python3 ${NMT_DIR}/train.py \
     -gpuid 0 \
-    -config ../config.yml \
-    -nmt_dir /home/gaojun4ever/Documents/Projects/JunNMT \
+    -config ./config.yml \
+    -nmt_dir ${NMT_DIR} \
     -data demo
