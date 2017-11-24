@@ -122,11 +122,11 @@ def check_save_model_path(opt):
 def test_bleu():
     # os.system('export CUDA_VISIBLE_DEVICES=0')
     os.system('python3 %s/translate.py \
-                --config %s \
-                --src_in %s \
-                --tgt_out %s \
-                --model %s \
-                --data %s' %(args.nmt_dir,
+                -config %s \
+                -src_in %s \
+                -tgt_out %s \
+                -model %s \
+                -data %s' %(args.nmt_dir,
                              os.path.join(opt.out_dir,'config.yml'),
                              opt.multi_bleu_src,
                              os.path.join(opt.out_dir,'translate.tmp'),

@@ -3,11 +3,11 @@ import argparse
 import codecs
 import nmt
 parser = argparse.ArgumentParser()
-parser.add_argument("--config", type=str, default="./config.yml")
-parser.add_argument("--src_in", type=str)
-parser.add_argument("--tgt_out", type=str)
-parser.add_argument("--model", type=str)
-parser.add_argument("--data", type=str)
+parser.add_argument("-config", type=str, default="./config.yml")
+parser.add_argument("-src_in", type=str)
+parser.add_argument("-tgt_out", type=str)
+parser.add_argument("-model", type=str)
+parser.add_argument("-data", type=str)
 args = parser.parse_args()
 hparams = nmt.misc_utils.load_hparams(args.config)
 

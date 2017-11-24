@@ -103,6 +103,7 @@ To perform testing, just run `python JunNMT/translate.py`.
 
 | parameter     | description |
 |---            |--- |
-| --config PATH |  model configuration (e.g config.yml) |
-| --src_in PATH |  test file |
-| --model PATH  |  load existing model |
+| -config FILE |  model configuration (e.g config.yml) |
+| -src_in FILE |  test file |
+| -model FILE  |  load existing model |
+| -data STR    |  the Prefix of Data File Name |
