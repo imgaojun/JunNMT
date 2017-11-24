@@ -8,7 +8,7 @@ Neural Machine Translation in Pytorch
 - Python >= 3.5
 - Pytorch >= 0.20
 - torchtext
-- tensorboardx
+- tensorboardX
 
 
 ### Configuration
@@ -88,7 +88,7 @@ sh train.sh
 ```
 
 #### 5.Visualize training progress
-If you want to visualize your training progress, you need to install tensorflow first, since the projects uses tensorboard for visualizing.
+If you want to visualize your training progress, you need to install tensorflow(for tensorboard web server) first, since the projects uses tensorboard for visualizing.
 
 After installing `tensorflow`, you can start a server by using the following command.
 
