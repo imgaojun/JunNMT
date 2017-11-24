@@ -12,7 +12,7 @@ args = parser.parse_args()
 hparams = nmt.misc_utils.load_hparams(args.config)
 
 fields = nmt.IO.load_fields(
-            torch.load(args.data + '.vocab.pt'))
+            torch.load(args.data + '.vocab.pkl'))
 
 model = nmt.model_helper.create_base_model(hparams,len(fields['src'].vocab), 
                                            len(fields['tgt'].vocab), 
