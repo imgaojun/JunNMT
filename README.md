@@ -37,14 +37,14 @@ cp JunNMT/config.yml ./
 Edit the script file `preprocess.sh`.
 
 ```
-NMT_DIR = PATH_TO_JunNMT
+NMT_DIR= 
 python3 ${NMT_DIR}/preprocess.py \
     -train_src /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn \
     -train_tgt /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0 \
     -valid_src /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn \
     -valid_tgt /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0 \
     -save_data demo \
-    -config ./config.yml \
+    -config ./config.yml
 ```
 
 | parameter     | description |
@@ -67,10 +67,11 @@ sh preprocess.sh
 Edit the script `train.sh`.
 
 ```
-python3 ../train.py \
+NMT_DIR=
+python3 ${NMT_DIR}/train.py \
     -gpuid 0 \
-    -config ../config.yml \
-    -nmt_dir /home/gaojun4ever/Documents/Projects/JunNMT \
+    -config ./config.yml \
+    -nmt_dir ${NMT_DIR} \
     -data demo
 ```
 
@@ -99,7 +100,7 @@ tensorboard --logdir ./${log_dir} --port 6006
 And then you can watch your training progress on your browser.
 
 #### 6.Do testing
-To perform testing, just run `python JunNMT/translate.py`.
+To perform testing, just run `python3 JunNMT/translate.py`.
 
 | parameter     | description |
 |---            |--- |
