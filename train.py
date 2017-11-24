@@ -158,8 +158,7 @@ def train_model(model, train_data, valid_data, fields, optim):
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
 
-    trainer = nmt.Trainer(opt,
-                        model,
+    trainer = nmt.Trainer(model,
                         train_iter,
                         valid_iter,
                         train_loss,
