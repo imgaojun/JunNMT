@@ -74,9 +74,10 @@ def create_generator(input_size, output_size):
     return generator
 
 def weights_init(m):
-    if isinstance(m, nn.LSTM): 
-        for p in m.parameters():
-            nn.init.orthogonal(p.data)
+    pass
+    # if isinstance(m, nn.LSTM): 
+    #     for p in m.parameters():
+    #         nn.init.orthogonal(p.data)
 
 def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
     embedding_encoder, embedding_decoder = \
@@ -98,8 +99,9 @@ def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
         
         
         for p in model.parameters():
-            p.data.uniform_(-hparams.param_init, hparams.param_init)    
+            # p.data.uniform_(-hparams.param_init, hparams.param_init)    
+            nn.init.xavier_uniform(p.data)
 
-        model.apply(weights_init)
+        # model.apply(weights_init)
     return model
 
