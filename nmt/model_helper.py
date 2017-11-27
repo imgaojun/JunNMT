@@ -75,7 +75,10 @@ def create_generator(input_size, output_size):
 
 def weights_init(m):
     if isinstance(m, nn.LSTM): 
-        print(m)
+        print(m.weight_ih_l)
+        print(m.weight_hh_l)
+        print(m.bias_ih_l)
+        print(m.bias_hh_l)
 
 def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
     embedding_encoder, embedding_decoder = \
