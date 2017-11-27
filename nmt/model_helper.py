@@ -77,7 +77,6 @@ def weights_init(m):
     if isinstance(m, nn.LSTM): 
         for p in m.parameters():
             nn.init.orthogonal(p.data)
-            print(p)
 
 def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
     embedding_encoder, embedding_decoder = \
@@ -96,9 +95,11 @@ def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
                      generator)
     if hparams.param_init != 0.0:
         print('Intializing model parameters.')
-        model.apply(weights_init)
+        
         
         for p in model.parameters():
             p.data.uniform_(-hparams.param_init, hparams.param_init)    
+
+        model.apply(weights_init)
     return model
 
