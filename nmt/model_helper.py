@@ -75,11 +75,8 @@ def create_generator(input_size, output_size):
 
 def weights_init(m):
     if isinstance(m, nn.LSTM): 
-        # print(m.weight_ih_l0)
-        # print(m.weight_hh_l0)
-        # print(m.bias_ih_l0)
-        # print(m.bias_hh_l0)
         for p in m.parameters():
+            nn.init.orthogonal(p.data)
             print(p)
 
 def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
