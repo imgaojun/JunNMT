@@ -79,8 +79,6 @@ def weights_init(m):
     #         nn.init.orthogonal(p.data)
 
     if isinstance(m, nn.Linear): 
-        # for p in m.parameters():
-        print(m)
         nn.init.xavier_uniform(m.weight.data)
 
 def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
