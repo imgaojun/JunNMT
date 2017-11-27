@@ -73,8 +73,12 @@ def create_generator(input_size, output_size):
         nn.LogSoftmax())
     return generator
 
+# def weights_init(m):
+#     if isinstance(m, nn.Conv2d):
+#         xavier(m.weight.data)
+#         xavier(m.bias.data)
 
-def create_base_model(hparams,src_vocab_size, tgt_vocab_size, padding_idx):
+def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
     embedding_encoder, embedding_decoder = \
             create_emb_for_encoder_and_decoder(src_vocab_size,
                                                 tgt_vocab_size,
@@ -91,7 +95,10 @@ def create_base_model(hparams,src_vocab_size, tgt_vocab_size, padding_idx):
                      generator)
     if hparams.param_init != 0.0:
         print('Intializing model parameters.')
+        # model.apply(weights_init)
+        
         for p in model.parameters():
+            print(p)
             p.data.uniform_(-hparams.param_init, hparams.param_init)    
     return model
 
