@@ -74,10 +74,6 @@ def create_generator(input_size, output_size):
     return generator
 
 def weights_init(m):
-    # if isinstance(m, nn.LSTM): 
-    #     for p in m.parameters():
-    #         nn.init.orthogonal(p.data)
-
     if isinstance(m, nn.Linear): 
         nn.init.xavier_uniform(m.weight.data)
 

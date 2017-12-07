@@ -3,9 +3,9 @@ encoder_type:
 decoder_type: AttnDecoderRNN #InputFeedDecoder, AttnDecoderRNN
 rnn_type: GRU #RNN, LSTM, GRU, SRU
 bidirectional: false
-embedding_size: 100
-hidden_size: 100
-num_layers: 1
+embedding_size: 500
+hidden_size: 500
+num_layers: 2
 dropout: 0.3
 atten_model: general #general, dot, none
 param_init: 0.1
@@ -38,7 +38,7 @@ weight_decay: 0 #  weight decay(L2 penalty)
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
-batch_size: 20
+batch_size: 64
 
 checkpoint: 
 
