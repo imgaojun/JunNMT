@@ -100,11 +100,12 @@ tensorboard --logdir ./${log_dir} --port 6006
 And then you can watch your training progress on your browser.
 
 #### 6.Do testing
-To perform testing, just run `python3 JunNMT/translate.py`.
+To perform testing, just run `sh traslate.sh`.
 
 | parameter     | description |
 |---            |--- |
 | -config FILE |  model configuration (e.g config.yml) |
 | -src_in FILE |  test file |
+| -tgt_out FILE | output file    |
 | -model FILE  |  load existing model |
 | -data STR    |  the Prefix of Data File Name |
