@@ -9,7 +9,7 @@ Neural Machine Translation in Pytorch
 - Pytorch >= 0.20
 - torchtext
 - tensorboardX
-
+- cupy
 
 ### Configuration
 `JunNMT/config.yml` is a configuration file, which contains configurations of model, training, and tesing.
