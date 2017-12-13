@@ -47,6 +47,7 @@ class Optim(object):
 
         if self.max_grad_norm:
             clip_grad_norm(self.params, self.max_grad_norm)
+        self.lr = self.optimizer.param_groups[0]['lr']
         self.optimizer.step()
 
     def updateLearningRate(self, ppl, epoch):
