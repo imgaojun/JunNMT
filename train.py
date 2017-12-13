@@ -221,6 +221,7 @@ def main():
         model = model.cuda()
 
     # Do training.
+    print('start training...')
     train_model(model, train, valid, fields, optim, lr_scheduler)
 
 if __name__ == '__main__':
