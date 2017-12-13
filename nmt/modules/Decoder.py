@@ -213,6 +213,7 @@ class ScheduledDecoder(DecoderBase):
 
             for i, emb_t in enumerate(emb.split(1)):
                 emb_t = emb_t.squeeze(0)
+                print(emb_t)
                 
                 if i == 0:
                     # emb_t = emb_t
