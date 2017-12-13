@@ -70,10 +70,11 @@ class Trainer(object):
 
     def update(self, batch, shard_size):
         self.model.zero_grad()
+        print('73')
         src_inputs = batch.src[0]
         src_lengths = batch.src[1].tolist()
         tgt_inputs = batch.tgt[:-1]
-
+        print('76')
         outputs = self.model(src_inputs,tgt_inputs,src_lengths)
 
         stats = self.train_loss.sharded_compute_loss(batch, outputs, shard_size)
@@ -91,7 +92,7 @@ class Trainer(object):
             self.global_step += 1
 
             stats = self.update(batch, 32)
-            print('94')
+            
             report_stats.update(stats)
             total_stats.update(stats)
 
