@@ -87,11 +87,11 @@ class Trainer(object):
         report_stats = Statistics()
          
         for step_batch, batch in enumerate(self.train_iter):
-
+            print('90')
             self.global_step += 1
 
             stats = self.update(batch, 32)
-
+            print('94')
             report_stats.update(stats)
             total_stats.update(stats)
 
