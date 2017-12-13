@@ -214,7 +214,7 @@ def main():
 
     # Build optimizer.
     optim = build_optim(model, opt)
-    lr_scheduler = build_lr_scheduler(optim)
+    lr_scheduler = build_lr_scheduler(optim.optimizer)
 
     if opt.USE_CUDA:
         model = model.cuda()
