@@ -188,23 +188,26 @@ class ScheduledDecoder(DecoderBase):
 
     def forward(self, input, context, state):
         if not self.training:
-            emb = input
-            rnn_outputs, hidden = self.rnn(emb, state)
-            
-            if self.attn_type != 'none':
-                # Calculate the attention.
-                attn_outputs, attn_scores = self.attn(
-                    rnn_outputs.transpose(0, 1).contiguous(),  # (output_len, batch, d)
-                    context.transpose(0, 1)                   # (contxt_len, batch, d)
-                )
+            outputs = []
+            # output = self.init_input_feed(context).squeeze(0)
+            emb  = input
+            hidden = state
 
-                outputs  = self.dropout(attn_outputs)    # (input_len, batch, d)
+            for i, emb_t in enumerate(emb.split(1)):
+                emb_t = emb_t.squeeze(0)      
+                # emb_t = torch.cat([emb_t, output], 1)  
 
-            else:
-                outputs  = self.dropout(rnn_outputs)
+                rnn_output, hidden = self.rnn(emb_t, hidden)
+                attn_output, attn = self.attn(
+                                    rnn_output.contiguous(),  # (output_len, batch, d)
+                                    context.transpose(0, 1)                   # (contxt_len, batch, d)
+                                )    
 
-
-            return outputs , hidden
+                output = self.dropout(attn_output)
+                outputs += [output]
+            outputs = torch.stack(outputs)
+            # print(outputs)
+            return outputs, hidden        
         else:
             outputs = []
             # output = self.init_input_feed(context).squeeze(0)
