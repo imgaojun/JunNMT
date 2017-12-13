@@ -76,7 +76,7 @@ class Trainer(object):
         tgt_inputs = batch.tgt[:-1]
         print('76')
         outputs = self.model(src_inputs,tgt_inputs,src_lengths)
-
+        print('79')
         stats = self.train_loss.sharded_compute_loss(batch, outputs, shard_size)
 
         self.optim.step()
