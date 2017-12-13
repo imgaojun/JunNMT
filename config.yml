@@ -1,7 +1,7 @@
 # Network
 encoder_type:
-decoder_type: AttnDecoderRNN #InputFeedDecoder, AttnDecoderRNN
-rnn_type: GRU #RNN, LSTM, GRU, SRU
+decoder_type: ScheduledDecoder #InputFeedDecoder, AttnDecoderRNN, ScheduledDecoder
+rnn_type: LSTM #RNN, LSTM, GRU, SRU
 bidirectional: false
 embedding_size: 500
 hidden_size: 500
@@ -32,7 +32,7 @@ USE_CUDA: true
 optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
 learning_rate: 0.001
-learning_rate_decay: 0.5
+learning_rate_decay: 1
 start_decay_at: 8
 weight_decay: 0 #  weight decay(L2 penalty)
 num_train_epochs: 100
@@ -40,8 +40,12 @@ steps_per_stats: 100
 steps_per_eval: 1000
 batch_size: 64
 
-checkpoint: 
+start_checkpoint_at: 
 
+
+# training_method:  scheduled_samping # teacher_forcing, scheduled_samping
+ratio_scheduler_type: Linear # Linear, Exponential, InverseSigmoid
+teacher_forcing_ratio: 0.5
 
 # Test
 replace_unk: true
