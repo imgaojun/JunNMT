@@ -138,5 +138,5 @@ class Trainer(object):
     def epoch_step(self, ppl, epoch, out_dir):
         """ Called for each epoch to update learning rate. """
         # self.optim.updateLearningRate(ppl, epoch) 
-        self.lr_scheduler.step()
+        # self.lr_scheduler.step()
         self.save_per_epoch(epoch, out_dir)

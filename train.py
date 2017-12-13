@@ -115,7 +115,7 @@ def build_lr_scheduler(optimizer):
     lambda1 = lambda epoch: epoch // 30
     lambda2 = lambda epoch: 0.95 ** epoch
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer=optimizer, 
-                                                  lr_lambda=[lambda1, lambda2])
+                                                  lr_lambda=[lambda2])
     return scheduler    
 
 def check_save_model_path(opt):
@@ -175,6 +175,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler):
 
     num_train_epochs = opt.num_train_epochs
     for step_epoch in  range(num_train_epochs):
+        trainer.lr_scheduler.step()
         # 1. Train for one epoch on the training set.
         train_stats = trainer.train(step_epoch, report_func)
         print('Train perplexity: %g' % train_stats.ppl())
