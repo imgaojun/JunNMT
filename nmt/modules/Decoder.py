@@ -262,7 +262,7 @@ class ScheduledDecoder(DecoderBase):
             h = enc_hidden
         return h                      
 
-    def build_scheduled_ratio(self, scheduler_type):
+    def build_ratio_scheduler(self, scheduler_type):
         if scheduler_type == 'Linear':
             scheduler = lambda i: max(0.3,1-0.01*float(i))
         elif scheduler_type == 'Exponential': 
