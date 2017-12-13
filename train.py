@@ -174,6 +174,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler):
                         lr_scheduler)
 
     num_train_epochs = opt.num_train_epochs
+    print('start training...')
     for step_epoch in  range(num_train_epochs):
         trainer.lr_scheduler.step()
         # 1. Train for one epoch on the training set.
@@ -221,7 +222,7 @@ def main():
         model = model.cuda()
 
     # Do training.
-    print('start training...')
+    
     train_model(model, train, valid, fields, optim, lr_scheduler)
 
 if __name__ == '__main__':
