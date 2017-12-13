@@ -220,7 +220,7 @@ class ScheduledDecoder(DecoderBase):
                 else:
                     self.teacher_forcing_ratio=self.ratio_scheduler(i)
                     # Choose whether to use teacher forcing                    
-                    use_teacher_forcing = random.random() < self.teacher_forcing_ratio:
+                    use_teacher_forcing = random.random() < self.teacher_forcing_ratio
                     if use_teacher_forcing:
                         # emb_t = emb_t
                         pass
