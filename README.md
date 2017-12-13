@@ -6,7 +6,7 @@ Neural Machine Translation in Pytorch
 
 ### Requirements
 - Python >= 3.5
-- Pytorch >= 0.20
+- Pytorch == 0.30
 - torchtext
 - tensorboardX
 - cupy

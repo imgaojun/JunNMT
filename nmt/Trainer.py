@@ -52,7 +52,7 @@ class Statistics(object):
 
 class Trainer(object):
     def __init__(self, model, train_iter, valid_iter,
-                 train_loss, valid_loss, optim,):
+                 train_loss, valid_loss, optim, lr_scheduler):
 
         self.model = model
         self.train_iter = train_iter
@@ -60,6 +60,7 @@ class Trainer(object):
         self.train_loss = train_loss
         self.valid_loss = valid_loss
         self.optim = optim
+        self.lr_scheduler = lr_scheduler
 
         # Set model in training mode.
         self.model.train()       
@@ -136,5 +137,6 @@ class Trainer(object):
 
     def epoch_step(self, ppl, epoch, out_dir):
         """ Called for each epoch to update learning rate. """
-        self.optim.updateLearningRate(ppl, epoch) 
+        # self.optim.updateLearningRate(ppl, epoch) 
+        self.lr_scheduler.step()
         self.save_per_epoch(epoch, out_dir)

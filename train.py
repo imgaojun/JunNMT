@@ -108,8 +108,15 @@ def build_optim(model, optim_opt):
                   optim_opt.start_decay_at)
                   
     optim.set_parameters(model.parameters())
-
     return optim
+
+def build_lr_scheduler(optimizer):
+    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=8, gamma=0.5)
+    lambda1 = lambda epoch: epoch // 30
+    lambda2 = lambda epoch: 0.95 ** epoch
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer=optimizer, 
+                                                  lr_lambda=[lambda1, lambda2])
+    return scheduler    
 
 def check_save_model_path(opt):
     if not os.path.exists(opt.out_dir):
@@ -146,7 +153,7 @@ def test_bleu():
 
 
 
-def train_model(model, train_data, valid_data, fields, optim):
+def train_model(model, train_data, valid_data, fields, optim, lr_scheduler):
 
     train_iter = make_train_data_iter(train_data, opt)
     valid_iter = make_valid_data_iter(valid_data, opt)
@@ -163,7 +170,8 @@ def train_model(model, train_data, valid_data, fields, optim):
                         valid_iter,
                         train_loss,
                         valid_loss,
-                        optim)
+                        optim,
+                        lr_scheduler)
 
     num_train_epochs = opt.num_train_epochs
     for step_epoch in  range(num_train_epochs):
@@ -206,13 +214,13 @@ def main():
 
     # Build optimizer.
     optim = build_optim(model, opt)
-
+    lr_scheduler = build_lr_scheduler(optim)
 
     if opt.USE_CUDA:
         model = model.cuda()
 
     # Do training.
-    train_model(model, train, valid, fields, optim)
+    train_model(model, train, valid, fields, optim, lr_scheduler)
 
 if __name__ == '__main__':
     main()
