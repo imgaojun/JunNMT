@@ -2,7 +2,7 @@
 encoder_type:
 decoder_type: ScheduledDecoder #InputFeedDecoder, AttnDecoderRNN, ScheduledDecoder
 rnn_type: LSTM #RNN, LSTM, GRU, SRU
-bidirectional: false
+bidirectional: true
 embedding_size: 500
 hidden_size: 500
 num_layers: 2
@@ -16,7 +16,7 @@ tgt_max_len: 50
 src_vocab_size: 30000
 tgt_vocab_size: 30000
 
-test_bleu: True
+test_bleu: true
 multi_bleu_src: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
 multi_bleu_refs: # Multiple reference
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0

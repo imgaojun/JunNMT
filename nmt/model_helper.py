@@ -68,7 +68,7 @@ def create_decoder(hparams):
         scheduler_type = hparams.ratio_scheduler_type
         decoder = ScheduledDecoder(rnn_type,
                                 atten_model,
-                                scheduler_type
+                                scheduler_type,
                                 input_size,
                                 hidden_size,
                                 num_layers,
