@@ -187,7 +187,7 @@ class ScheduledDecoder(DecoderBase):
         self.teacher_forcing_ratio = 1.0
 
     def forward(self, input, context, state):
-        if self.training:
+        if not self.training:
             emb = input
             rnn_outputs, hidden = self.rnn(emb, state)
             
