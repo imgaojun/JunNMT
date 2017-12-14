@@ -51,6 +51,7 @@ class NMTModel(nn.Module):
                     'embedding_encoder_dict': self.embedding_encoder.state_dict(),
                     'embedding_decoder_dict': self.embedding_decoder.state_dict(),
                     'generator_dict': self.generator.state_dict(),
+                    'epoch': epoch,
                     },
                    filename)
 
@@ -61,9 +62,8 @@ class NMTModel(nn.Module):
         self.encoder.load_state_dict(cpnt['encoder_dict'])
         self.decoder.load_state_dict(cpnt['decoder_dict'])
         self.generator.load_state_dict(cpnt['generator_dict'])
-        # epoch = cpnt['epoch']
-        # global_step = cpnt['global_step']
-        # return epoch, global_step
+        epoch = cpnt['epoch']
+        return epoch
     def init_weights(self):
         """Initialize weights."""
         # initrange = 0.1
