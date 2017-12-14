@@ -80,7 +80,7 @@ def create_decoder(hparams):
 def create_generator(input_size, output_size):
     generator = nn.Sequential(
         nn.Linear(input_size, output_size),
-        nn.LogSoftmax())
+        nn.LogSoftmax(dim=-1))
     return generator
 
 def weights_init(m):
