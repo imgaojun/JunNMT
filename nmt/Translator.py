@@ -10,7 +10,7 @@ class Translator(object):
         self.max_length = max_length
         self.vocab=vocab
         self.model.eval()
-    def translate(self, src_input, src_input_lengths=None):
+    def translate(self, src_input, src_input_lengths=None, use_cuda=True):
         beam_size = self.beam_size
         encoder_outputs, encoder_hidden = self.model.encode(src_input, src_input_lengths, None)
         decoder_init_hidden = self.model.decoder.init_decoder_state(encoder_hidden)
@@ -30,7 +30,7 @@ class Translator(object):
             )    
 
         beam = [
-            nmt.Beam(beam_size, self.vocab, cuda=True)
+            nmt.Beam(beam_size, self.vocab, cuda=use_cuda)
             for k in range(batch_size)
         ]                
 
@@ -64,7 +64,7 @@ class Translator(object):
 
             dec_out = decoder_output.squeeze(0)
 
-            out = F.softmax(self.model.generator(dec_out)).unsqueeze(0)
+            out = F.softmax(self.model.generator(dec_out),dim=-1).unsqueeze(0)
 
 
             word_lk = out.view(
@@ -99,7 +99,9 @@ class Translator(object):
 
             # in this section, the sentences that are still active are
             # compacted so that the decoder is not run on completed sentences
-            active_idx = torch.cuda.LongTensor([batch_idx[k] for k in active])
+            active_idx = torch.LongTensor([batch_idx[k] for k in active])
+            if use_cuda:
+                active_idx = active_idx.cuda()
             batch_idx = {beam: idx for idx, beam in enumerate(active)}                   
 
 

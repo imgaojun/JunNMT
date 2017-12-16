@@ -16,7 +16,7 @@ opt = nmt.misc_utils.load_hparams(args.config)
 if args.gpuid:
     cuda.set_device(args.gpuid[0])
 
-    
+
 fields = nmt.IO.load_fields(
             torch.load(args.data + '.vocab.pkl'))
 
@@ -52,7 +52,7 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
                                         fields['src'].vocab.stoi,
                                         opt.use_cuda)
 
-        hypotheses, scores = translator.translate(src_input_var,src_input_lengths)
+        hypotheses, scores = translator.translate(src_input_var,src_input_lengths,opt.use_cuda)
         all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
         
         all_hyp_words = [nmt.data_utils.indices2words(idxs,fields['tgt'].vocab.itos) for idxs in all_hyp_inds]

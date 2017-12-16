@@ -108,7 +108,7 @@ def build_or_load_model(model_opt, fields):
     latest_ckpt = nmt.misc_utils.latest_checkpoint(model_opt.out_dir)
     start_epoch_at = 0
     if model_opt.start_epoch_at is not None:
-        ckpt = 'checkpoint_epoch%d'%(model_opt.start_epoch_at)
+        ckpt = 'checkpoint_epoch%d.pkl'%(model_opt.start_epoch_at)
         ckpt = os.path.join(model_opt.out_dir,ckpt)
     else:
         ckpt = latest_ckpt
@@ -152,19 +152,38 @@ def check_save_model_path(opt):
 
 def test_bleu():
     # os.system('export CUDA_VISIBLE_DEVICES=0')
-    os.system('python3 %s/translate.py \
-                -config %s \
-                -src_in %s \
-                -tgt_out %s \
-                -model %s \
-                -data %s' %(args.nmt_dir,
-                             os.path.join(opt.out_dir,'config.yml'),
-                             opt.multi_bleu_src,
-                             os.path.join(opt.out_dir,'translate.tmp'),
-                             utils.latest_checkpoint(opt.out_dir),
-                             args.data,
-                            )
-            )
+    if opt.use_cuda:
+        os.system('python3 %s/translate.py \
+                    -gpuid %s \
+                    -config %s \
+                    -src_in %s \
+                    -tgt_out %s \
+                    -model %s \
+                    -data %s' %(args.nmt_dir,
+                                args.gpuid[0],
+                                os.path.join(opt.out_dir,'config.yml'),
+                                opt.multi_bleu_src,
+                                os.path.join(opt.out_dir,'translate.tmp'),
+                                utils.latest_checkpoint(opt.out_dir),
+                                args.data,
+                                )
+                )        
+
+
+    else:
+        os.system('python3 %s/translate.py \
+                    -config %s \
+                    -src_in %s \
+                    -tgt_out %s \
+                    -model %s \
+                    -data %s' %(args.nmt_dir,
+                                os.path.join(opt.out_dir,'config.yml'),
+                                opt.multi_bleu_src,
+                                os.path.join(opt.out_dir,'translate.tmp'),
+                                utils.latest_checkpoint(opt.out_dir),
+                                args.data,
+                                )
+                )
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(opt.multi_bleu_refs),
                                                              os.path.join(opt.out_dir,'translate.tmp')
@@ -199,7 +218,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
 
     num_train_epochs = opt.num_train_epochs
     print('start training...')
-    for step_epoch in  range(start_epoch_at, num_train_epochs):
+    for step_epoch in  range(start_epoch_at+1, num_train_epochs):
         trainer.lr_scheduler.step()
         # 1. Train for one epoch on the training set.
         train_stats = trainer.train(step_epoch, report_func)
