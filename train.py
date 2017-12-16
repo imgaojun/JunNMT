@@ -239,7 +239,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         valid_stats.log("valid", summery_writer, step_epoch, 
                         ppl=valid_stats.ppl(),
                         learning_rate=optim.lr, 
-                        bleu=valid_bleu,
+                        bleu=valid_bleu if opt.test_bleu else 0.0,
                         accuracy=valid_stats.accuracy())
 
         

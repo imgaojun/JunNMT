@@ -104,8 +104,9 @@ To perform testing, just run `sh traslate.sh`.
 
 | parameter     | description |
 |---            |--- |
-| -config FILE |  model configuration (e.g config.yml) |
-| -src_in FILE |  test file |
-| -tgt_out FILE | output file    |
-| -model FILE  |  load existing model |
-| -data STR    |  the Prefix of Data File Name |
+| -gpuid INT    |  Choose Which GPU A Program Uses |
+| -config FILE  |  model configuration (e.g config.yml) |
+| -src_in FILE  |  test file |
+| -tgt_out FILE |  output file    |
+| -model FILE   |  load existing model |
+| -data STR     |  the Prefix of Data File Name |
