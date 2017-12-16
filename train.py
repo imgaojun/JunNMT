@@ -107,8 +107,8 @@ def build_or_load_model(model_opt, fields):
                                         fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
     latest_ckpt = nmt.misc_utils.latest_checkpoint(model_opt.out_dir)
     start_epoch_at = 0
-    if model_opt.start_at_epoch is not None:
-        ckpt = 'checkpoint_epoch%d'%(model_opt.start_at_epoch)
+    if model_opt.start_epoch_at is not None:
+        ckpt = 'checkpoint_epoch%d'%(model_opt.start_epoch_at)
         ckpt = os.path.join(model_opt.out_dir,ckpt)
     else:
         ckpt = latest_ckpt
