@@ -1,7 +1,7 @@
 # Network
 encoder_type:
 decoder_type: AttnDecoderRNN #InputFeedDecoder, AttnDecoderRNN, ScheduledDecoder
-rnn_type: LSTM #RNN, LSTM, GRU, SRU
+rnn_type: LSTM #RNN, LSTM, GRU
 bidirectional: true
 embedding_size: 500
 hidden_size: 500

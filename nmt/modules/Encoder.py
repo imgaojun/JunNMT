@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
 from torch.nn.utils.rnn import pack_padded_sequence as pack
 from torch.nn.utils.rnn import pad_packed_sequence as unpack
-from nmt.modules.SRU import SRU
+# from nmt.modules.SRU import SRU
 
 
 class EncoderBase(nn.Module):
@@ -46,13 +46,14 @@ class EncoderRNN(EncoderBase):
 
         if rnn_type == "SRU":
             # SRU doesn't support PackedSequence.
-            self.no_pack_padded_seq = True
-            self.rnn = SRU(
-                    input_size=input_size,
-                    hidden_size=hidden_size,
-                    num_layers=num_layers,
-                    dropout=dropout,
-                    bidirectional=bidirectional)
+            # self.no_pack_padded_seq = True
+            # self.rnn = SRU(
+            #         input_size=input_size,
+            #         hidden_size=hidden_size,
+            #         num_layers=num_layers,
+            #         dropout=dropout,
+            #         bidirectional=bidirectional)
+            pass
         else:
             self.rnn = getattr(nn, rnn_type)(
                     input_size=input_size,

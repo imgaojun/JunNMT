@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from nmt.modules.Attention import GlobalAttention
-from nmt.modules.SRU import SRU
+# from nmt.modules.SRU import SRU
 from nmt.modules.StackedRNN import StackedGRU, StackedLSTM
 import torch.nn.functional as F
 from torch.autograd import Variable
@@ -48,11 +48,12 @@ class AttnDecoderRNN(DecoderBase):
         #                     nn.Tanh()
         #                 )
         if rnn_type == "SRU":
-            self.rnn = SRU(
-                    input_size=input_size,
-                    hidden_size=hidden_size,
-                    num_layers=num_layers,
-                    dropout=dropout)
+            # self.rnn = SRU(
+            #         input_size=input_size,
+            #         hidden_size=hidden_size,
+            #         num_layers=num_layers,
+            #         dropout=dropout)
+            pass
         else:
             self.rnn = getattr(nn, rnn_type)(
                     input_size=input_size,
