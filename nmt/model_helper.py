@@ -21,14 +21,14 @@ def create_emb_for_encoder_and_decoder(src_vocab_size,
     return embedding_encoder, embedding_decoder
 
 
-def create_encoder(hparams):
+def create_encoder(opt):
     
-    rnn_type = hparams.rnn_type
-    input_size = hparams.embedding_size
-    hidden_size = hparams.hidden_size
-    num_layers = hparams.num_layers
-    dropout = hparams.dropout
-    bidirectional = hparams.bidirectional
+    rnn_type = opt.rnn_type
+    input_size = opt.embedding_size
+    hidden_size = opt.hidden_size
+    num_layers = opt.num_layers
+    dropout = opt.dropout
+    bidirectional = opt.bidirectional
 
     encoder = EncoderRNN(rnn_type,
                         input_size,
@@ -39,15 +39,15 @@ def create_encoder(hparams):
 
     return encoder
 
-def create_decoder(hparams):
+def create_decoder(opt):
 
-    decoder_type = hparams.decoder_type
-    rnn_type = hparams.rnn_type  
-    atten_model = hparams.atten_model
-    input_size = hparams.embedding_size
-    hidden_size = hparams.hidden_size
-    num_layers = hparams.num_layers
-    dropout = hparams.dropout 
+    decoder_type = opt.decoder_type
+    rnn_type = opt.rnn_type  
+    atten_model = opt.atten_model
+    input_size = opt.embedding_size
+    hidden_size = opt.hidden_size
+    num_layers = opt.num_layers
+    dropout = opt.dropout 
 
     if decoder_type == 'AttnDecoderRNN':
         decoder = AttnDecoderRNN(rnn_type,
@@ -65,7 +65,7 @@ def create_decoder(hparams):
                                 dropout)    
 
     elif decoder_type == 'ScheduledDecoder':
-        scheduler_type = hparams.ratio_scheduler_type
+        scheduler_type = opt.ratio_scheduler_type
         decoder = ScheduledDecoder(rnn_type,
                                 atten_model,
                                 scheduler_type,
@@ -87,27 +87,27 @@ def weights_init(m):
     if isinstance(m, nn.Linear): 
         nn.init.xavier_uniform(m.weight.data)
 
-def create_base_model(hparams, src_vocab_size, tgt_vocab_size, padding_idx):
+def create_base_model(opt, src_vocab_size, tgt_vocab_size, padding_idx):
     embedding_encoder, embedding_decoder = \
             create_emb_for_encoder_and_decoder(src_vocab_size,
                                                 tgt_vocab_size,
-                                                hparams.embedding_size,
-                                                hparams.embedding_size,
+                                                opt.embedding_size,
+                                                opt.embedding_size,
                                                 padding_idx)
-    encoder = create_encoder(hparams)
-    decoder = create_decoder(hparams)
-    generator = create_generator(hparams.hidden_size, tgt_vocab_size)
+    encoder = create_encoder(opt)
+    decoder = create_decoder(opt)
+    generator = create_generator(opt.hidden_size, tgt_vocab_size)
     model = NMTModel(embedding_encoder, 
                      embedding_decoder, 
                      encoder, 
                      decoder, 
                      generator)
-    if hparams.param_init != 0.0:
+    if opt.param_init != 0.0:
         print('Intializing model parameters.')
         
         
         for p in model.parameters():
-            p.data.uniform_(-hparams.param_init, hparams.param_init)    
+            p.data.uniform_(-opt.param_init, opt.param_init)    
             # nn.init.xavier_uniform(p.data)
 
         model.apply(weights_init)

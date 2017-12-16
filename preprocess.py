@@ -13,7 +13,7 @@ parser.add_argument('-save_data', type=str)
 parser.add_argument('-config', type=str)
 args = parser.parse_args()
 
-hparams = utils.load_hparams(args.config)
+opt = utils.load_hparams(args.config)
 
 fields = nmt.IO.get_fields()
 print("Building Training...")
@@ -23,7 +23,7 @@ train = nmt.IO.NMTDataset(
     fields=[('src', fields["src"]),
             ('tgt', fields["tgt"])])    
 print("Building Vocab...")   
-nmt.IO.build_vocab(train, hparams)
+nmt.IO.build_vocab(train, opt)
 print("Building Valid...")
 valid = nmt.IO.NMTDataset(
     src_path=args.valid_src,

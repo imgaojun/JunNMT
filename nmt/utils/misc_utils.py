@@ -4,7 +4,7 @@ import codecs
 import math
 import os
 import sys, time
-
+import nmt
 class HParams(object):
     def __init__(self, **entries): 
         self.__dict__.update(entries)   
@@ -27,12 +27,17 @@ def safe_exp(value):
 
 
 def latest_checkpoint(model_dir):
+    
     cnpt_file = os.path.join(model_dir,'checkpoint')
-    cnpt = open(cnpt_file,'r').readline().strip().split(':')[-1]
+    try:
+        cnpt = open(cnpt_file,'r').readline().strip().split(':')[-1]
+    except:
+        return None
     cnpt = os.path.join(model_dir,cnpt)
     return cnpt
 
- 
+
+
 class ShowProcess():
     """
     显示处理进度的类

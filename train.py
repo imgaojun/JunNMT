@@ -90,13 +90,37 @@ def load_fields(train, valid):
     return fields
 
 
-def build_model(model_opt, fields):
-    print('Building model...')
-    model = nmt.model_helper.create_base_model(model_opt, len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
+# def build_model(model_opt, fields):
+#     print('Building model...')
+#     model = nmt.model_helper.create_base_model(model_opt, len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
 
+#     print(model)
+
+#     return model
+
+
+def build_or_load_model(model_opt, fields):
+    # model = build_model(model_opt, fields)
+    model = nmt.model_helper.create_base_model(model_opt, 
+                                        len(fields['src'].vocab), 
+                                        len(fields['tgt'].vocab), 
+                                        fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
+    latest_ckpt = nmt.misc_utils.latest_checkpoint(model_opt.out_dir)
+    start_epoch_at = 0
+    if model_opt.start_at_epoch is not None:
+        ckpt = 'checkpoint_epoch%d'%(model_opt.start_at_epoch)
+        ckpt = os.path.join(model_opt.out_dir,ckpt)
+    else:
+        ckpt = latest_ckpt
+    # latest_ckpt = nmt.misc_utils.latest_checkpoint(model_dir)
+    if ckpt:
+        print('Loding model from %s...'%(ckpt))
+        start_epoch_at = model.load_checkpoint(ckpt)
+    else:
+        print('Building model...')
     print(model)
-
-    return model
+        
+    return model, start_epoch_at
 
 
 def build_optim(model, optim_opt):
@@ -153,7 +177,7 @@ def test_bleu():
 
 
 
-def train_model(model, train_data, valid_data, fields, optim, lr_scheduler):
+def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, start_epoch_at):
 
     train_iter = make_train_data_iter(train_data, opt)
     valid_iter = make_valid_data_iter(valid_data, opt)
@@ -161,7 +185,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler):
     train_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab)
     valid_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab) 
 
-    if opt.USE_CUDA:
+    if opt.use_cuda:
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
 
@@ -175,7 +199,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler):
 
     num_train_epochs = opt.num_train_epochs
     print('start training...')
-    for step_epoch in  range(num_train_epochs):
+    for step_epoch in  range(start_epoch_at, num_train_epochs):
         trainer.lr_scheduler.step()
         # 1. Train for one epoch on the training set.
         train_stats = trainer.train(step_epoch, report_func)
@@ -211,19 +235,19 @@ def main():
     fields = load_fields(train, valid)
 
     # Build model.
-    model = build_model(opt, fields)
+    model, start_epoch_at = build_or_load_model(opt, fields)
     check_save_model_path(opt)
 
     # Build optimizer.
     optim = build_optim(model, opt)
     lr_scheduler = build_lr_scheduler(optim.optimizer)
 
-    if opt.USE_CUDA:
+    if opt.use_cuda:
         model = model.cuda()
 
     # Do training.
     
-    train_model(model, train, valid, fields, optim, lr_scheduler)
+    train_model(model, train, valid, fields, optim, lr_scheduler, start_epoch_at)
 
 if __name__ == '__main__':
     main()
