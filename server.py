@@ -39,7 +39,7 @@ translator = nmt.Translator(model,
                         opt.replace_unk)
 
 def translate(src_seq):
-    src_seq = line.strip()
+    src_seq = src_seq.strip()
     src_input_var, src_input_lengths= \
         nmt.data_utils.batch_seq2var([src_seq],
                                     fields['src'].vocab.stoi,
