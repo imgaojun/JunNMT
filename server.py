@@ -3,6 +3,8 @@ import torch
 import argparse
 import codecs
 import nmt
+from torch import cuda
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str, default="./config.yml")
 parser.add_argument("-model", type=str)
@@ -49,8 +51,8 @@ def translate(src_seq):
     
     
     sentence_out = ' '.join(all_hyp_words[0])
-    sentence_out = sentence_out.replace(' <unk>','')
-    sentence_out = sentence_out.replace(' </s>','')
+    # sentence_out = sentence_out.replace(' <unk>','')
+    # sentence_out = sentence_out.replace(' </s>','')
     return sentence_out
 
 
@@ -69,5 +71,5 @@ def text_reply(msg):
 
 
 
-itchat.auto_login(enableCmdQR=2,hotReload=True)
+itchat.auto_login(enableCmdQR=2)
 itchat.run()

@@ -2,6 +2,8 @@ import torch
 import argparse
 import codecs
 import nmt
+from torch import cuda
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str, default="./config.yml")
 parser.add_argument("-src_in", type=str)
