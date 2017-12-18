@@ -56,7 +56,7 @@ def translate(src_seq):
     return sentence_out
 
 
-@itchat.msg_register(TEXT, isGroupChat=True)
+@itchat.msg_register(itchat.content.TEXT, isGroupChat=True)
 def text_reply(msg):
     if msg['isAt']:
         # itchat.send(u'@%s\u2005I received: %s' % (msg['ActualNickName'], msg['Content']), msg['FromUserName'])
