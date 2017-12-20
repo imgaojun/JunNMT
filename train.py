@@ -156,11 +156,13 @@ def test_bleu():
     # os.system('export CUDA_VISIBLE_DEVICES=0')
     if use_cuda:
         os.system('python3 %s/translate.py \
+                    -gpuid %s \
                     -config %s \
                     -src_in %s \
                     -tgt_out %s \
                     -model %s \
                     -data %s' %(args.nmt_dir,
+                                args.gpuid[0],
                                 os.path.join(opt.out_dir,'config.yml'),
                                 opt.multi_bleu_src,
                                 os.path.join(opt.out_dir,'translate.tmp'),
