@@ -26,7 +26,7 @@ def batch_seq2var(batch_src_seqs, word2index, use_cuda=True):
     src_inputs = [get_src_input_seq(s) for s in src_seqs]
     src_input_lengths = [len(s) for s in src_inputs]
     paded_src_inputs = [pad_seq(s, max(src_input_lengths), word2index[nmt.IO.PAD_WORD]) for s in src_seqs]    
-    src_input_var = Variable(torch.LongTensor(paded_src_inputs)).transpose(0, 1)
+    src_input_var = Variable(torch.LongTensor(paded_src_inputs), volatile=True).transpose(0, 1)
     if use_cuda:
         src_input_var = src_input_var.cuda() 
     return src_input_var, src_input_lengths
