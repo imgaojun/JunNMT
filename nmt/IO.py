@@ -53,6 +53,7 @@ def build_vocab(train, opt):
     fields["tgt_out"].build_vocab(train, max_size=opt.tgt_vocab_size)
     fields["tgt"].vocab = merge_vocabs([fields["tgt"].vocab,fields["tgt_out"].vocab],[UNK_WORD, PAD_WORD, BOS_WORD, EOS_WORD],opt.tgt_vocab_size)
     fields["tgt_out"].vocab = fields["tgt"].vocab
+    print(fields["tgt"].vocab.itos[0])
 
 
 
