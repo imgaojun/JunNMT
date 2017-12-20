@@ -49,6 +49,26 @@ def build_vocab(train, opt):
     fields = train.fields
     fields["src"].build_vocab(train, max_size=opt.src_vocab_size)    
     fields["tgt"].build_vocab(train, max_size=opt.tgt_vocab_size)
+    fields["tgt_out"].build_vocab(train, max_size=opt.tgt_vocab_size)
+    fields["tgt"].vocab = merge_vocabs([fields["tgt"].vocab,fields["tgt_out"].vocab],opt.tgt_vocab_size)
+    fields["tgt_out"].vocab = fields["tgt"].vocab
+
+
+
+def merge_vocabs(vocabs, vocab_size=None):
+    """
+    Merge individual vocabularies (assumed to be generated from disjoint
+    documents) into a larger vocabulary.
+    Args:
+        vocabs: `torchtext.vocab.Vocab` vocabularies to be merged
+        vocab_size: `int` the final vocabulary size. `None` for no limit.
+    Return:
+        `torchtext.vocab.Vocab`
+    """
+    merged = sum([vocab.freqs for vocab in vocabs], Counter())
+    return torchtext.vocab.Vocab(merged,
+                                 specials=[PAD_WORD, BOS_WORD, EOS_WORD],
+                                 max_size=vocab_size)
 
 class NMTDataset(torchtext.data.Dataset):
     
