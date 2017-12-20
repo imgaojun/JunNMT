@@ -23,7 +23,7 @@ class NMTLossCompute(nn.Module):
         """ See base class for args description. """
         return {
             "output": output,
-            "target": batch.tgt[1:],
+            "target": batch.tgt_out,
             }   
 
     def compute_loss(self, batch, output, target):

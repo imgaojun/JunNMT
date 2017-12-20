@@ -25,7 +25,8 @@ def get_fields():
 
     fields = {}
     fields["src"] = torchtext.data.Field(pad_token=PAD_WORD,include_lengths=True)
-    fields["tgt"] = torchtext.data.Field(init_token=BOS_WORD, eos_token=EOS_WORD,pad_token=PAD_WORD)
+    fields["tgt"] = torchtext.data.Field(init_token=BOS_WORD, pad_token=PAD_WORD)
+    fields["tgt_out"] = torchtext.data.Field(eos_token=EOS_WORD,pad_token=PAD_WORD)
     return fields
 
 def load_fields(vocab):
@@ -56,7 +57,7 @@ class NMTDataset(torchtext.data.Dataset):
 
         make_example = torchtext.data.Example.fromlist
         with io.open(src_path, encoding="utf8",errors='replace') as src_f,io.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
-            examples = [make_example(list(line), fields) for line in zip(src_f,tgt_f)]
+            examples = [make_example(list(src,tgt,tgt), fields) for src,tgt in zip(src_f,tgt_f)]
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
     @staticmethod
