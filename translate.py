@@ -14,9 +14,10 @@ parser.add_argument('-gpuid', default=[], nargs='+', type=int)
 args = parser.parse_args()
 opt = nmt.misc_utils.load_hparams(args.config)
 
-
+use_cuda = False
 if args.gpuid:
     cuda.set_device(args.gpuid[0])
+    use_cuda = True
 
 
 fields = nmt.IO.load_fields(
@@ -31,7 +32,7 @@ print('Loading parameters ...')
 
 model.load_checkpoint(args.model)
 
-if opt.use_cuda:
+if args.gpuid:
     model = model.cuda()
 
 translator = nmt.Translator(model, 
@@ -52,9 +53,9 @@ with codecs.open(args.src_in, 'r', encoding='utf8', errors='ignore') as src_file
         src_input_var, src_input_lengths= \
             nmt.data_utils.batch_seq2var([src_seq],
                                         fields['src'].vocab.stoi,
-                                        opt.use_cuda)
+                                        use_cuda)
 
-        hypotheses, scores = translator.translate(src_input_var,src_input_lengths,opt.use_cuda)
+        hypotheses, scores = translator.translate(src_input_var,src_input_lengths,use_cuda)
         all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
         
         all_hyp_words = [nmt.data_utils.indices2words(idxs,fields['tgt'].vocab.itos) for idxs in all_hyp_inds]

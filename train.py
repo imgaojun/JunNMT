@@ -20,9 +20,11 @@ opt = utils.load_hparams(args.config)
 
 summery_writer = SummaryWriter(opt.log_dir)
 
-
+use_cuda = False
 if args.gpuid:
     cuda.set_device(args.gpuid[0])
+    use_cuda = True
+    
        
 def report_func(global_step, epoch, batch, num_batches,
                 start_time, lr, report_stats):
@@ -152,15 +154,13 @@ def check_save_model_path(opt):
 
 def test_bleu():
     # os.system('export CUDA_VISIBLE_DEVICES=0')
-    if opt.use_cuda:
+    if use_cuda:
         os.system('python3 %s/translate.py \
-                    -gpuid %s \
                     -config %s \
                     -src_in %s \
                     -tgt_out %s \
                     -model %s \
                     -data %s' %(args.nmt_dir,
-                                args.gpuid[0],
                                 os.path.join(opt.out_dir,'config.yml'),
                                 opt.multi_bleu_src,
                                 os.path.join(opt.out_dir,'translate.tmp'),
@@ -204,7 +204,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
     train_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab)
     valid_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab) 
 
-    if opt.use_cuda:
+    if use_cuda:
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
 
@@ -261,7 +261,7 @@ def main():
     optim = build_optim(model, opt)
     lr_scheduler = build_lr_scheduler(optim.optimizer)
 
-    if opt.use_cuda:
+    if use_cuda:
         model = model.cuda()
 
     # Do training.
