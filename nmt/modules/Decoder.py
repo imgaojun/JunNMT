@@ -275,3 +275,60 @@ class ScheduledDecoder(DecoderBase):
             scheduler = lambda i: 1.0/(1.0+math.exp(float(i)/1.0)) 
 
         return scheduler
+
+
+class LayerNormDecoder(DecoderBase):
+    def __init__(self, rnn_type, attn_type, input_size, 
+                hidden_size, num_layers=1, dropout=0.1):
+        super(InputFeedDecoder, self).__init__()    
+        # Basic attributes.
+        self.rnn_type = rnn_type
+        self.attn_type = attn_type
+        self.num_layers = num_layers
+        self.hidden_size = hidden_size
+        self.dropout = nn.Dropout(dropout)  
+
+        self.rnn = self._build_rnn(rnn_type, input_size, hidden_size,
+                                   num_layers, dropout)
+
+        self.attn = GlobalAttention(hidden_size, attn_type)
+
+    def forward(self, input, context, state):
+        emb = input
+        rnn_outputs, hidden = self.rnn(emb, state)
+        
+        if self.attn_type != 'none':
+            # Calculate the attention.
+            attn_outputs, attn_scores = self.attn(
+                rnn_outputs.transpose(0, 1).contiguous(),  # (output_len, batch, d)
+                context.transpose(0, 1)                   # (contxt_len, batch, d)
+            )
+
+            outputs  = self.dropout(attn_outputs)    # (input_len, batch, d)
+
+        else:
+            outputs  = self.dropout(rnn_outputs)
+
+
+        return outputs , hidden
+
+    def init_decoder_state(self, enc_hidden):
+        if not isinstance(enc_hidden, tuple):  # GRU
+            # h = self.hidden_init_net(enc_hidden)
+            h = enc_hidden
+            
+        else:  # LSTM
+            h = enc_hidden
+        return h
+
+
+    def _build_rnn(self, rnn_type, input_size,
+                   hidden_size, num_layers, dropout):
+
+        if rnn_type == "LSTM":
+            # stacked_cell = StackedLSTM
+            raise "Only support GRU"
+        else:
+            stacked_cell = StackedGRU
+        return stacked_cell(num_layers, input_size,
+                            hidden_size, dropout, layer_norm=True)    

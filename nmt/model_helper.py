@@ -72,7 +72,15 @@ def create_decoder(opt):
                                 input_size,
                                 hidden_size,
                                 num_layers,
-                                dropout)            
+                                dropout)     
+
+    elif decoder_type == 'LayerNormDecoder':
+        decoder = AttnDecoderRNN(rnn_type,
+                                atten_model,
+                                input_size,
+                                hidden_size,
+                                num_layers,
+                                dropout)                                       
    
 
     return decoder
