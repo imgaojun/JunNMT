@@ -110,6 +110,6 @@ def create_base_model(opt, src_vocab_size, tgt_vocab_size, padding_idx):
     #         p.data.uniform_(-opt.param_init, opt.param_init)    
     #         # nn.init.xavier_uniform(p.data)
 
-    #     model.apply(weights_init)
+    model.apply(weights_init)
     return model
 
