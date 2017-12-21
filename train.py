@@ -25,7 +25,9 @@ if args.gpuid:
     cuda.set_device(args.gpuid[0])
     use_cuda = True
     
-       
+if opt.seed > 0:
+    random.seed(opt.seed)
+    torch.manual_seed(opt.seed)
 def report_func(global_step, epoch, batch, num_batches,
                 start_time, lr, report_stats):
     """
