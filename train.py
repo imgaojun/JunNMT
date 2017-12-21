@@ -94,15 +94,6 @@ def load_fields(train, valid):
     return fields
 
 
-# def build_model(model_opt, fields):
-#     print('Building model...')
-#     model = nmt.model_helper.create_base_model(model_opt, len(fields['src'].vocab), len(fields['tgt'].vocab), fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
-
-#     print(model)
-
-#     return model
-
-
 def build_or_load_model(model_opt, fields):
     # model = build_model(model_opt, fields)
     model = nmt.model_helper.create_base_model(model_opt, 
