@@ -43,7 +43,7 @@ if args.gpuid:
 
 
 
-def translate_sentence(translator, sent):
+def translate_sentence(translator, sent, use_cuda):
     src_input_var, src_input_lengths= \
         nmt.data_utils.batch_seq2var([sent],
                                     fields['src'].vocab.stoi,
@@ -60,7 +60,7 @@ def translate_sentence(translator, sent):
     sentence_out = sentence_out.replace(' </s>','')
     return sentence_out
 
-def translate_file(translator, src_fin, tgt_fout):
+def translate_file(translator, src_fin, tgt_fout, use_cuda):
 
     print('start translating ...')
     with codecs.open(src_fin, 'r', encoding='utf8', errors='ignore') as src_file,\
@@ -69,7 +69,7 @@ def translate_file(translator, src_fin, tgt_fout):
         process_bar = nmt.misc_utils.ShowProcess(len(src_lines))
         for line in src_lines:
             src_seq = line.strip()
-            sentence_out = translate_sentence(translator, src_seq)
+            sentence_out = translate_sentence(translator, src_seq, use_cuda)
 
             # src_input_var, src_input_lengths= \
             #     nmt.data_utils.batch_seq2var([src_seq],
@@ -111,7 +111,7 @@ def main():
                         opt.decode_max_length,
                         opt.replace_unk)
 
-    translate_file(translator, args.src_in, args.tgt_out)
+    translate_file(translator, args.src_in, args.tgt_out, use_cuda)
     
 
 if __name__ == '__main__':

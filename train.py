@@ -9,6 +9,7 @@ import torch
 import torch.nn as nn
 from torch import cuda
 import nmt
+from translate import translate_file
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
@@ -145,44 +146,51 @@ def check_save_model_path(opt):
         shutil.copy(args.config, os.path.join(opt.out_dir,'config.yml'))
 
 
-def test_bleu():
-    # os.system('export CUDA_VISIBLE_DEVICES=0')
-    if use_cuda:
-        os.system('python3 %s/translate.py \
-                    -gpuid %s \
-                    -config %s \
-                    -src_in %s \
-                    -tgt_out %s \
-                    -model %s \
-                    -data %s' %(args.nmt_dir,
-                                args.gpuid[0],
-                                os.path.join(opt.out_dir,'config.yml'),
-                                opt.multi_bleu_src,
-                                os.path.join(opt.out_dir,'translate.tmp'),
-                                utils.latest_checkpoint(opt.out_dir),
-                                args.data,
-                                )
-                )        
+def test_bleu(model, fields, epoch):
+    translator = nmt.Translator(model, 
+                            fields['tgt'].vocab,
+                            opt.beam_size, 
+                            opt.decode_max_length,
+                            opt.replace_unk)
+    src_fin = opt.multi_bleu_src
+    tgt_fout = os.path.join(opt.out_dir,'translate.epoch%d'%(epoch))
+    translate_file(translator, src_fin, tgt_fout)
+    # if use_cuda:
+    #     os.system('python3 %s/translate.py \
+    #                 -gpuid %s \
+    #                 -config %s \
+    #                 -src_in %s \
+    #                 -tgt_out %s \
+    #                 -model %s \
+    #                 -data %s' %(args.nmt_dir,
+    #                             args.gpuid[0],
+    #                             os.path.join(opt.out_dir,'config.yml'),
+    #                             opt.multi_bleu_src,
+    #                             os.path.join(opt.out_dir,'translate.tmp'),
+    #                             utils.latest_checkpoint(opt.out_dir),
+    #                             args.data,
+    #                             )
+    #             )        
 
 
-    else:
-        os.system('python3 %s/translate.py \
-                    -config %s \
-                    -src_in %s \
-                    -tgt_out %s \
-                    -model %s \
-                    -data %s' %(args.nmt_dir,
-                                os.path.join(opt.out_dir,'config.yml'),
-                                opt.multi_bleu_src,
-                                os.path.join(opt.out_dir,'translate.tmp'),
-                                utils.latest_checkpoint(opt.out_dir),
-                                args.data,
-                                )
-                )
+    # else:
+    #     os.system('python3 %s/translate.py \
+    #                 -config %s \
+    #                 -src_in %s \
+    #                 -tgt_out %s \
+    #                 -model %s \
+    #                 -data %s' %(args.nmt_dir,
+    #                             os.path.join(opt.out_dir,'config.yml'),
+    #                             opt.multi_bleu_src,
+    #                             os.path.join(opt.out_dir,'translate.tmp'),
+    #                             utils.latest_checkpoint(opt.out_dir),
+    #                             args.data,
+    #                             )
+    #             )
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(opt.multi_bleu_refs),
-                                                             os.path.join(opt.out_dir,'translate.tmp')
-                                                             ))
+                                                             tgt_fout)
+                                                             )
     output = output.read()
     # Get bleu value
     bleu_val = re.findall('BLEU = (.*?),',output,re.S)[0]
@@ -226,7 +234,9 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         print('Validation perplexity: %g' % valid_stats.ppl())
         trainer.epoch_step(valid_stats.ppl(), step_epoch, out_dir=opt.out_dir)
         if opt.test_bleu:
-            valid_bleu = test_bleu()
+            valid_bleu = test_bleu(model.eval(), fields, step_epoch)
+            model.train()
+
         train_stats.log("train", summery_writer, step_epoch, 
                         ppl=train_stats.ppl(),
                         learning_rate=optim.lr, 
