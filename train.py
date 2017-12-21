@@ -172,21 +172,6 @@ def test_bleu(model, fields, epoch):
     #                             )
     #             )        
 
-
-    # else:
-    #     os.system('python3 %s/translate.py \
-    #                 -config %s \
-    #                 -src_in %s \
-    #                 -tgt_out %s \
-    #                 -model %s \
-    #                 -data %s' %(args.nmt_dir,
-    #                             os.path.join(opt.out_dir,'config.yml'),
-    #                             opt.multi_bleu_src,
-    #                             os.path.join(opt.out_dir,'translate.tmp'),
-    #                             utils.latest_checkpoint(opt.out_dir),
-    #                             args.data,
-    #                             )
-    #             )
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(opt.multi_bleu_refs),
                                                              tgt_fout)
