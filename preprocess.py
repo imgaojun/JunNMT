@@ -15,8 +15,8 @@ args = parser.parse_args()
 
 opt = utils.load_hparams(args.config)
 
-if opt.seed > 0:
-    torch.manual_seed(opt.seed)
+if opt.random_seed > 0:
+    torch.manual_seed(opt.random_seed)
 
 fields = nmt.IO.get_fields()
 print("Building Training...")
