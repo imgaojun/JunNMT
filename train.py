@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
 parser.add_argument("-data", type=str)
-parser.add_argument("-ext_metric", type=str)
+# parser.add_argument("-ext_metric", type=str)
 parser.add_argument('-gpuid', default=[], nargs='+', type=int)
 
 args = parser.parse_args()
@@ -158,8 +158,8 @@ def test_bleu(model, fields, epoch):
     translate_file(translator, src_fin, tgt_fout, fields, use_cuda)   
 
 
-    if args.ext_metric:
-        output = os.popen('python3 %s %s'%(args.ext_metric,tgt_fout))
+    if opt.ext_metric:
+        output = os.popen('python3 %s %s'%(opt.ext_metric,tgt_fout))
         bleu_val = float(output.read())
     else:
         output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
