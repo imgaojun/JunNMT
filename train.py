@@ -176,8 +176,8 @@ def test_bleu(model, fields, epoch):
 
 def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, start_epoch_at):
 
-    train_iter = make_train_data_iter(train_data, opt)
-    valid_iter = make_valid_data_iter(valid_data, opt)
+    # train_iter = make_train_data_iter(train_data, opt)
+    # valid_iter = make_valid_data_iter(valid_data, opt)
 
     train_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab)
     valid_loss = nmt.NMTLossCompute(model.generator,fields['tgt'].vocab) 
@@ -187,8 +187,6 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         valid_loss = valid_loss.cuda()    
 
     trainer = nmt.Trainer(model,
-                        train_iter,
-                        valid_iter,
                         train_loss,
                         valid_loss,
                         optim,
@@ -197,15 +195,22 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
     num_train_epochs = opt.num_train_epochs
     print('start training...')
     for step_epoch in  range(start_epoch_at+1, num_train_epochs):
+
+        train_iter = make_train_data_iter(train_data, opt)
+        valid_iter = make_valid_data_iter(valid_data, opt)
+
+
         trainer.lr_scheduler.step()
         # 1. Train for one epoch on the training set.
-        train_stats = trainer.train(step_epoch, report_func)
+        train_stats = trainer.train(step_epoch, train_iter, report_func)
+        del train_iter
         print('Train perplexity: %g' % train_stats.ppl())
 
         
 
         # 2. Validate on the validation set.
-        valid_stats = trainer.validate()
+        valid_stats = trainer.validate(valid_iter)
+        del valid_iter
         print('Validation perplexity: %g' % valid_stats.ppl())
         trainer.epoch_step(step_epoch, out_dir=opt.out_dir)
         if opt.test_bleu:

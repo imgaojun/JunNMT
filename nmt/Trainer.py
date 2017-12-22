@@ -51,12 +51,12 @@ class Statistics(object):
             summary_writer.add_scalar(prefix + '/' + key, kwargs[key],step)
 
 class Trainer(object):
-    def __init__(self, model, train_iter, valid_iter,
+    def __init__(self, model, 
                  train_loss, valid_loss, optim, lr_scheduler):
 
         self.model = model
-        self.train_iter = train_iter
-        self.valid_iter = valid_iter
+        # self.train_iter = train_iter
+        # self.valid_iter = valid_iter
         self.train_loss = train_loss
         self.valid_loss = valid_loss
         self.optim = optim
@@ -79,12 +79,12 @@ class Trainer(object):
         self.optim.step()
         return stats
 
-    def train(self, epoch, report_func=None):
+    def train(self, epoch, train_iter, report_func=None):
         """ Called for each epoch to train. """
         total_stats = Statistics()
         report_stats = Statistics()
          
-        for step_batch, batch in enumerate(self.train_iter):
+        for step_batch, batch in enumerate(train_iter):
             self.global_step += 1
 
             stats = self.update(batch, 32)
@@ -94,17 +94,17 @@ class Trainer(object):
 
             if report_func is not None:
                 report_stats = report_func(self.global_step,
-                        epoch, step_batch, len(self.train_iter),
+                        epoch, step_batch, len(train_iter),
                         total_stats.start_time, self.optim.lr, report_stats) 
 
 
         return total_stats           
 
-    def validate(self):
+    def validate(self, valid_iter):
         self.model.eval()
         valid_stats = Statistics()
 
-        for step_batch, batch in enumerate(self.valid_iter):
+        for step_batch, batch in enumerate(valid_iter):
 
             src_inputs = batch.src[0]
             src_lengths = batch.src[1].tolist()
