@@ -11,6 +11,7 @@ from torch import cuda
 import nmt
 from translate import translate_file
 import random
+import gc
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
@@ -223,7 +224,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
                         bleu=valid_bleu if opt.test_bleu else 0.0,
                         accuracy=valid_stats.accuracy())
 
-        del valid_bleu
+        gc.collect()
 
         
 def main():
