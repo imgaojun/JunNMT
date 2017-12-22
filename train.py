@@ -205,8 +205,8 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         
 
         # 2. Validate on the validation set.
-        # valid_stats = trainer.validate()
-        # print('Validation perplexity: %g' % valid_stats.ppl())
+        valid_stats = trainer.validate()
+        print('Validation perplexity: %g' % valid_stats.ppl())
         trainer.epoch_step(step_epoch, out_dir=opt.out_dir)
         if opt.test_bleu:
             model.eval()
@@ -217,11 +217,11 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
                         ppl=train_stats.ppl(),
                         learning_rate=optim.lr, 
                         accuracy=train_stats.accuracy())
-        # valid_stats.log("valid", summery_writer, step_epoch, 
-        #                 ppl=valid_stats.ppl(),
-        #                 learning_rate=optim.lr, 
-        #                 bleu=valid_bleu if opt.test_bleu else 0.0,
-        #                 accuracy=valid_stats.accuracy())
+        valid_stats.log("valid", summery_writer, step_epoch, 
+                        ppl=valid_stats.ppl(),
+                        learning_rate=optim.lr, 
+                        bleu=valid_bleu if opt.test_bleu else 0.0,
+                        accuracy=valid_stats.accuracy())
         
 def main():
 
