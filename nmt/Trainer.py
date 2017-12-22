@@ -86,7 +86,7 @@ class Trainer(object):
          
         for batch in self.train_iter:
             self.global_step += 1
-            step_batch = batch.iterations
+            step_batch = self.train_iter.iterations
             stats = self.update(batch, 32)
             
             report_stats.update(stats)
