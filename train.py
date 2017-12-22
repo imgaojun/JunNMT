@@ -15,7 +15,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
 parser.add_argument("-data", type=str)
-# parser.add_argument("-ext_metric", type=str)
 parser.add_argument('-gpuid', default=[], nargs='+', type=int)
 
 args = parser.parse_args()
@@ -197,10 +196,6 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
     num_train_epochs = opt.num_train_epochs
     print('start training...')
     for step_epoch in  range(start_epoch_at+1, num_train_epochs):
-
-        train_iter = make_train_data_iter(train_data, opt)
-        valid_iter = make_valid_data_iter(valid_data, opt)
-
 
         trainer.lr_scheduler.step()
         # 1. Train for one epoch on the training set.
