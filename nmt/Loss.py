@@ -32,7 +32,9 @@ class NMTLossCompute(nn.Module):
         target = target.view(-1)
         loss = self.criterion(scores,target)
 
-        loss_data = loss.data.clone()
+        # loss_data = loss.data.clone()
+        loss_data = loss.data[0]
+
         stats = self.stats(loss_data, scores.data, target.data)
         return  loss, stats
 
