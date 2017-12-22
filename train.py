@@ -10,6 +10,7 @@ import torch.nn as nn
 from torch import cuda
 import nmt
 from translate import translate_file
+import random
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
