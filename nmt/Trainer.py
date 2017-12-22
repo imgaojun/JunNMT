@@ -104,7 +104,7 @@ class Trainer(object):
         self.model.eval()
         valid_stats = Statistics()
 
-        for step_batch, batch in enumerate(self.valid_iter):
+        for step_batch, batch in enumerate(iter(self.valid_iter)):
 
             src_inputs = batch.src[0]
             src_lengths = batch.src[1].tolist()
