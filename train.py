@@ -155,23 +155,7 @@ def test_bleu(model, fields, epoch):
                             opt.replace_unk)
     src_fin = opt.multi_bleu_src
     tgt_fout = os.path.join(opt.out_dir,'translate.epoch%d'%(epoch))
-    translate_file(translator, src_fin, tgt_fout)
-    # if use_cuda:
-    #     os.system('python3 %s/translate.py \
-    #                 -gpuid %s \
-    #                 -config %s \
-    #                 -src_in %s \
-    #                 -tgt_out %s \
-    #                 -model %s \
-    #                 -data %s' %(args.nmt_dir,
-    #                             args.gpuid[0],
-    #                             os.path.join(opt.out_dir,'config.yml'),
-    #                             opt.multi_bleu_src,
-    #                             os.path.join(opt.out_dir,'translate.tmp'),
-    #                             utils.latest_checkpoint(opt.out_dir),
-    #                             args.data,
-    #                             )
-    #             )        
+    translate_file(translator, src_fin, tgt_fout)   
 
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(opt.multi_bleu_refs),
