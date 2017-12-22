@@ -155,7 +155,7 @@ def test_bleu(model, fields, epoch):
                             opt.replace_unk)
     src_fin = opt.multi_bleu_src
     tgt_fout = os.path.join(opt.out_dir,'translate.epoch%d'%(epoch))
-    translate_file(translator, src_fin, tgt_fout)   
+    translate_file(translator, src_fin, tgt_fout, use_cuda)   
 
     output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
                                                              ' '.join(opt.multi_bleu_refs),
