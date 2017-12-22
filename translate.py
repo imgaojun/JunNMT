@@ -126,7 +126,7 @@ def main():
                         opt.decode_max_length,
                         opt.replace_unk)
 
-    translate_file(translator, args.src_in, args.tgt_out, use_cuda)
+    translate_file(translator, args.src_in, args.tgt_out, fields, use_cuda)
     
 
 if __name__ == '__main__':
