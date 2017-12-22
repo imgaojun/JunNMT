@@ -133,7 +133,6 @@ def build_optim(model, optim_opt):
     return optim
 
 def build_lr_scheduler(optimizer):
-    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=8, gamma=0.5)
     lambda1 = lambda epoch: epoch // 30
     lambda2 = lambda epoch: 0.95 ** epoch
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer=optimizer, 
@@ -158,16 +157,19 @@ def test_bleu(model, fields, epoch):
     tgt_fout = os.path.join(opt.out_dir,'translate.epoch%d'%(epoch))
     translate_file(translator, src_fin, tgt_fout, fields, use_cuda)   
 
-    # output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
-    #                                                          ' '.join(opt.multi_bleu_refs),
-    #                                                          tgt_fout)
-    #                                                          )
-    # output = output.read()
-    # # Get bleu value
-    # bleu_val = re.findall('BLEU = (.*?),',output,re.S)[0]
-    # bleu_val = float(bleu_val)
-    output = os.popen('python3 %s %s'%(args.ext_metric,tgt_fout))
-    bleu_val = float(output.read())
+
+    if args.ext_metric:
+        output = os.popen('python3 %s %s'%(args.ext_metric,tgt_fout))
+        bleu_val = float(output.read())
+    else:
+        output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
+                                                                 ' '.join(opt.multi_bleu_refs),
+                                                                 tgt_fout)
+                                                                 )
+        output = output.read()
+        # Get bleu value
+        bleu_val = re.findall('BLEU = (.*?),',output,re.S)[0]
+        bleu_val = float(bleu_val)
     return bleu_val
 
 

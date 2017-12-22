@@ -9,7 +9,6 @@ class NMTModel(nn.Module):
         self.encoder = encoder
         self.decoder = decoder
         self.generator = generator
-        self.init_weights()
 
     def forward(self, src_inputs, tgt_inputs, src_lengths):
 
@@ -64,9 +63,4 @@ class NMTModel(nn.Module):
         self.generator.load_state_dict(cpnt['generator_dict'])
         epoch = cpnt['epoch']
         return epoch
-    def init_weights(self):
-        """Initialize weights."""
-        # initrange = 0.1
-        # self.embedding_encoder.weight.data.uniform_(-initrange, initrange)
-        # self.embedding_decoder.weight.data.uniform_(-initrange, initrange)
-        pass
+
