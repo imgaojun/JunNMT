@@ -43,7 +43,7 @@ from torch import cuda
 
 
 
-def translate_sentence(translator, sent, use_cuda):
+def translate_sentence(translator, sent, fields, use_cuda):
     src_input_var, src_input_lengths= \
         nmt.data_utils.batch_seq2var([sent],
                                     fields['src'].vocab.stoi,
@@ -60,7 +60,7 @@ def translate_sentence(translator, sent, use_cuda):
     sentence_out = sentence_out.replace(' </s>','')
     return sentence_out
 
-def translate_file(translator, src_fin, tgt_fout, use_cuda):
+def translate_file(translator, src_fin, tgt_fout, fields, use_cuda):
 
     print('start translating ...')
     with codecs.open(src_fin, 'r', encoding='utf8', errors='ignore') as src_file,\
@@ -69,7 +69,7 @@ def translate_file(translator, src_fin, tgt_fout, use_cuda):
         process_bar = nmt.misc_utils.ShowProcess(len(src_lines))
         for line in src_lines:
             src_seq = line.strip()
-            sentence_out = translate_sentence(translator, src_seq, use_cuda)
+            sentence_out = translate_sentence(translator, src_seq, fields, use_cuda)
 
             # src_input_var, src_input_lengths= \
             #     nmt.data_utils.batch_seq2var([src_seq],
