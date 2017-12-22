@@ -32,21 +32,6 @@ def translate_file(translator, src_fin, tgt_fout, fields, use_cuda):
             src_seq = line.strip()
             sentence_out = translate_sentence(translator, src_seq, fields, use_cuda)
 
-            # src_input_var, src_input_lengths= \
-            #     nmt.data_utils.batch_seq2var([src_seq],
-            #                                 fields['src'].vocab.stoi,
-            #                                 use_cuda)
-
-            # hypotheses, scores = translator.translate(src_input_var,src_input_lengths,use_cuda)
-            # all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
-            
-            # all_hyp_words = [nmt.data_utils.indices2words(idxs,fields['tgt'].vocab.itos) for idxs in all_hyp_inds]
-            
-            
-            # sentence_out = ' '.join(all_hyp_words[0])
-            # sentence_out = sentence_out.replace(' <unk>','')
-            # sentence_out = sentence_out.replace(' </s>','')
-
             tgt_file.write(sentence_out+'\n')
 
             process_bar.show_process()

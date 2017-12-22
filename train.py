@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
 parser.add_argument("-data", type=str)
+parser.add_argument("-ext_metric", type=str)
 parser.add_argument('-gpuid', default=[], nargs='+', type=int)
 
 args = parser.parse_args()
@@ -144,7 +145,7 @@ def check_save_model_path(opt):
         os.makedirs(opt.out_dir)
         print('saving config file to %s ...'%(opt.out_dir))
         # save config.yml
-        shutil.copy(args.config, os.path.join(opt.out_dir,'config.yml'))
+        shutil.copy(args.config, os.path.join(opt.out_dir,'config.yml'))    
 
 
 def test_bleu(model, fields, epoch):
@@ -157,14 +158,16 @@ def test_bleu(model, fields, epoch):
     tgt_fout = os.path.join(opt.out_dir,'translate.epoch%d'%(epoch))
     translate_file(translator, src_fin, tgt_fout, fields, use_cuda)   
 
-    output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
-                                                             ' '.join(opt.multi_bleu_refs),
-                                                             tgt_fout)
-                                                             )
-    output = output.read()
-    # Get bleu value
-    bleu_val = re.findall('BLEU = (.*?),',output,re.S)[0]
-    bleu_val = float(bleu_val)
+    # output = os.popen('perl %s/tools/multi-bleu.pl %s < %s'%(args.nmt_dir,
+    #                                                          ' '.join(opt.multi_bleu_refs),
+    #                                                          tgt_fout)
+    #                                                          )
+    # output = output.read()
+    # # Get bleu value
+    # bleu_val = re.findall('BLEU = (.*?),',output,re.S)[0]
+    # bleu_val = float(bleu_val)
+    output = os.popen('python3 %s %s'%(args.ext_metric,tgt_fout))
+    bleu_val = float(output.read())
     return bleu_val
 
 
