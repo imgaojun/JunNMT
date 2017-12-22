@@ -84,9 +84,9 @@ class Trainer(object):
         total_stats = Statistics()
         report_stats = Statistics()
          
-        for step_batch, batch in enumerate(self.train_iter):
+        for batch in self.train_iter:
             self.global_step += 1
-
+            step_batch = batch.iterations
             stats = self.update(batch, 32)
             
             report_stats.update(stats)
@@ -104,7 +104,7 @@ class Trainer(object):
         self.model.eval()
         valid_stats = Statistics()
 
-        for step_batch, batch in enumerate(self.valid_iter):
+        for batch in self.valid_iter:
 
             src_inputs = batch.src[0]
             src_lengths = batch.src[1].tolist()
