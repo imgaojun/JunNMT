@@ -132,7 +132,7 @@ class Trainer(object):
         self.model.load_checkpoint(filenmae)
         
 
-    def epoch_step(self, ppl, epoch, out_dir):
+    def epoch_step(self, epoch, out_dir):
         """ Called for each epoch to update learning rate. """
         # self.optim.updateLearningRate(ppl, epoch) 
         # self.lr_scheduler.step()
