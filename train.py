@@ -209,7 +209,8 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         print('Validation perplexity: %g' % valid_stats.ppl())
         trainer.epoch_step(valid_stats.ppl(), step_epoch, out_dir=opt.out_dir)
         if opt.test_bleu:
-            valid_bleu = test_bleu(model.eval(), fields, step_epoch)
+            model.eval()
+            valid_bleu = test_bleu(model, fields, step_epoch)
             model.train()
 
         train_stats.log("train", summery_writer, step_epoch, 
@@ -221,6 +222,8 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
                         learning_rate=optim.lr, 
                         bleu=valid_bleu if opt.test_bleu else 0.0,
                         accuracy=valid_stats.accuracy())
+
+        del valid_bleu
 
         
 def main():

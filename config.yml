@@ -8,7 +8,6 @@ hidden_size: 500
 num_layers: 2
 dropout: 0.3
 atten_model: general #general, dot, none
-# param_init: 0.1
 
 src_max_len: 50
 tgt_max_len: 50
@@ -18,6 +17,8 @@ tgt_vocab_size: 30000
 
 test_bleu: true
 ext_metric: #external metric script
+
+# If ext_metric is not none, the following settings will not be used.
 multi_bleu_src: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
 multi_bleu_refs: # Multiple reference
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
