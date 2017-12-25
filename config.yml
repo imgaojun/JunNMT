@@ -34,9 +34,9 @@ random_seed: 3435
 optim_method: adam #adadelta, adam, sgd
 max_grad_norm: 5
 learning_rate: 0.001
-learning_rate_decay: 1
+learning_rate_decay: 0.9
 start_decay_at: 8
-weight_decay: 0 #  weight decay(L2 penalty)
+weight_decay: 0.000001 #  weight decay(L2 penalty)
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
