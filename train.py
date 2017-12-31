@@ -135,7 +135,7 @@ def build_lr_scheduler(optimizer):
     # lambda1 = lambda epoch: epoch // 30
     # lambda2 = lambda epoch: 0.90 ** epoch
 
-    lr_lambda = lambda epoch: opt.learning_rate_decay ** epoch
+    lr_lambda = lambda epoch: opt.learning_rate_decay
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer=optimizer, 
                                                   lr_lambda=[lr_lambda])
     return scheduler    
