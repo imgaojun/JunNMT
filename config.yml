@@ -31,19 +31,20 @@ multi_bleu_refs: # Multiple reference
 use_cuda: true
 random_seed: 3435
 # Train
-optim_method: adam #adadelta, adam, sgd
+optim_method: sgd #adadelta, adam, sgd
 max_grad_norm: 5
-learning_rate: 0.001
+learning_rate: 1
 learning_rate_decay: 0.9
 start_decay_at: 8
 weight_decay: 0.000001 #  weight decay(L2 penalty)
 num_train_epochs: 100
 steps_per_stats: 100
 steps_per_eval: 1000
-batch_size: 64
-
+train_batch_size: 64
+train_shard_size: 32
 start_epoch_at: 
 
+valid_batch_szie: 32
 
 # training_method:  scheduled_samping # teacher_forcing, scheduled_samping
 ratio_scheduler_type: Linear # Linear, Exponential, InverseSigmoid

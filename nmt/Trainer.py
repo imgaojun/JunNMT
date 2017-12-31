@@ -52,7 +52,8 @@ class Statistics(object):
 
 class Trainer(object):
     def __init__(self, model, train_iter, valid_iter,
-                 train_loss, valid_loss, optim, lr_scheduler):
+                 train_loss, valid_loss, optim, lr_scheduler,
+                 shard_size=32):
 
         self.model = model
         self.train_iter = train_iter
@@ -61,6 +62,8 @@ class Trainer(object):
         self.valid_loss = valid_loss
         self.optim = optim
         self.lr_scheduler = lr_scheduler
+
+        self.shard_size = shard_size
 
         # Set model in training mode.
         self.model.train()       
@@ -87,7 +90,7 @@ class Trainer(object):
         for batch in self.train_iter:
             self.global_step += 1
             step_batch = self.train_iter.iterations
-            stats = self.update(batch, 32)
+            stats = self.update(batch, self.shard_size)
             
             report_stats.update(stats)
             total_stats.update(stats)

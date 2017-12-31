@@ -65,7 +65,7 @@ def make_train_data_iter(train_data, opt):
     like curriculum learning is ok too.
     """
     return nmt.IO.OrderedIterator(
-                dataset=train_data, batch_size=opt.batch_size,
+                dataset=train_data, batch_size=opt.train_batch_size,
                 device=args.gpuid[0] if args.gpuid else -1,                
                 repeat=False)
 
@@ -78,7 +78,7 @@ def make_valid_data_iter(valid_data, opt):
     is ok too.
     """
     return nmt.IO.OrderedIterator(
-                dataset=valid_data, batch_size=opt.batch_size,
+                dataset=valid_data, batch_size=opt.valid_batch_size,
                 device=args.gpuid[0] if args.gpuid else -1,                                
                 train=False, sort=False)
 
@@ -187,13 +187,15 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         train_loss = train_loss.cuda()
         valid_loss = valid_loss.cuda()    
 
+    shard_size = opt.train_shard_size
     trainer = nmt.Trainer(model,
                         train_iter,
                         valid_iter,
                         train_loss,
                         valid_loss,
                         optim,
-                        lr_scheduler)
+                        lr_scheduler,
+                        shard_size)
 
     num_train_epochs = opt.num_train_epochs
     print('start training...')

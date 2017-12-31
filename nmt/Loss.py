@@ -48,16 +48,7 @@ class NMTLossCompute(nn.Module):
             loss.div(batch.batch_size).backward()
             batch_stats.update(stats)
 
-        return batch_stats
-
-    def compute_valid_loss(self, logits, target):
-
-        logits = self.bottle(logits)
-        target = target.view(-1)
-        loss = self.criterion(logits,target)
-        loss_data = loss.data.clone()
-        stats = self.stats(loss_data, logits.data, target.data)
-        return  stats        
+        return batch_stats       
         
     def monolithic_compute_loss(self, batch, output):
         """
