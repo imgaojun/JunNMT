@@ -73,7 +73,11 @@ class NMTDataset(torchtext.data.Dataset):
         make_example = torchtext.data.Example.fromlist
         with codecs.open(src_path, encoding="utf8",errors='replace') as src_f, \
                 codecs.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
-            examples = [make_example(list((src,tgt,tgt)), fields) for src,tgt in zip(src_f,tgt_f)]
+            examples = []
+            for src,tgt in zip(src_f,tgt_f):
+                examples.append(make_example([src,tgt],fields))
+
+            # examples = [make_example(list((src,tgt,tgt)), fields) for src,tgt in zip(src_f,tgt_f)]
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
     @staticmethod

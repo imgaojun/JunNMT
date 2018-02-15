@@ -1,7 +1,6 @@
 NMT_DIR=PATH_TO_JunNMT
 python3 ${NMT_DIR}/JunNMT/translate.py \
     -gpuid 0 \
-    -config ./config.yml \
     -src_in /home/xiapeng/gaojun/trans/test/nist02.cn \
     -tgt_out ./test_out \
     -model ./out_dir/checkpoint_epoch0.pkl \

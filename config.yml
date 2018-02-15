@@ -16,7 +16,6 @@ src_vocab_size: 30000
 tgt_vocab_size: 30000
 
 test_bleu: true
-ext_metric: #external metric script
 
 # If ext_metric is not none, the following settings will not be used.
 multi_bleu_src: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
