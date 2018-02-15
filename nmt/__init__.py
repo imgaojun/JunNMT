@@ -1,7 +1,7 @@
 import nmt.IO
 import nmt.model_helper
 from nmt.Loss import NMTLossCompute
-from nmt.NMTModel import NMTModel
+from nmt.Model import NMTModel
 from nmt.Trainer import Trainer, Statistics
 from nmt.Translator import Translator
 from nmt.Optim import Optim
