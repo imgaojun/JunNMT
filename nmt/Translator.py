@@ -111,8 +111,7 @@ class Translator(object):
             # inp = inp.unsqueeze(2)
 
             # Run one step.
-            dec_out, dec_states, attn = self.model.decode(
-                                                inp, context, dec_states)
+            dec_out, dec_states, attn = self.model.decode(inp, context, dec_states)
             if not isinstance(decoder_init_hidden, tuple): # GRU
                 dec_states = [ 
                     dec_states

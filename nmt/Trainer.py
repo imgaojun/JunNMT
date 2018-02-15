@@ -114,7 +114,7 @@ class Trainer(object):
             tgt_inputs = batch.tgt
 
 
-            outputs = self.model(src_inputs,tgt_inputs,src_lengths)
+            outputs, attn = self.model(src_inputs,tgt_inputs,src_lengths)
 
             stats = self.valid_loss.monolithic_compute_loss(batch, outputs)
             valid_stats.update(stats)        
