@@ -4,7 +4,7 @@ from nmt.modules.Embedding import Embedding
 from nmt.Model import NMTModel
 import torch
 import torch.nn as nn
-
+import nmt.IO as IO
 
 
 
