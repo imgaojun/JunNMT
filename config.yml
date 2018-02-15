@@ -51,7 +51,6 @@ ratio_scheduler_type: Linear # Linear, Exponential, InverseSigmoid
 teacher_forcing_ratio: 0.5
 
 # Test
-replace_unk: true
 decode_max_length: 100
 beam_size: 3
 

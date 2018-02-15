@@ -87,8 +87,11 @@ def weights_init(m):
     if isinstance(m, nn.Linear): 
         nn.init.xavier_uniform(m.weight.data)
 
-def create_base_model(opt, src_vocab_size, tgt_vocab_size, padding_idx):
-    embedding_encoder, embedding_decoder = \
+def create_base_model(opt, fields):
+    src_vocab_size = len(fields['src'].vocab)
+    tgt_vocab_size = len(fields['tgt'].vocab)
+    padding_idx = fields['src'].vocab.stoi[IO.PAD_WORD]
+    enc_embedding, dec_embedding = \
             create_emb_for_encoder_and_decoder(src_vocab_size,
                                                 tgt_vocab_size,
                                                 opt.embedding_size,
@@ -97,8 +100,8 @@ def create_base_model(opt, src_vocab_size, tgt_vocab_size, padding_idx):
     encoder = create_encoder(opt)
     decoder = create_decoder(opt)
     generator = create_generator(opt.hidden_size, tgt_vocab_size)
-    model = NMTModel(embedding_encoder, 
-                     embedding_decoder, 
+    model = NMTModel(enc_embedding, 
+                     dec_embedding, 
                      encoder, 
                      decoder, 
                      generator)

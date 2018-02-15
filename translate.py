@@ -10,14 +10,14 @@ def translate_sentence(translator, sent, fields, use_cuda):
                                     fields['src'].vocab.stoi,
                                     use_cuda)
 
-    hypotheses, scores = translator.translate(src_input_var,src_input_lengths,use_cuda)
+    hypotheses, scores = translator.translate_batch(src_input_var,src_input_lengths)
     all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
     
     all_hyp_words = [nmt.data_utils.indices2words(idxs,fields['tgt'].vocab.itos) for idxs in all_hyp_inds]
     
     
     sentence_out = ' '.join(all_hyp_words[0])
-    sentence_out = sentence_out.replace(' <unk>','')
+    # sentence_out = sentence_out.replace(' <unk>','')
     sentence_out = sentence_out.replace(' </s>','')
     return sentence_out
 
@@ -39,14 +39,13 @@ def translate_file(translator, src_fin, tgt_fout, fields, use_cuda):
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-config", type=str, default="./config.yml")
     parser.add_argument("-src_in", type=str)
     parser.add_argument("-tgt_out", type=str)
     parser.add_argument("-model", type=str)
     parser.add_argument("-data", type=str)
     parser.add_argument('-gpuid', default=[], nargs='+', type=int)
     args = parser.parse_args()
-    opt = nmt.misc_utils.load_hparams(args.config)
+    opt = torch.load(args.model)['opt']
 
     use_cuda = False
     if args.gpuid:
@@ -67,10 +66,12 @@ def main():
         model = model.cuda()    
 
     translator = nmt.Translator(model, 
-                        fields['tgt'].vocab,
-                        opt.beam_size, 
-                        opt.decode_max_length,
-                        opt.replace_unk)
+                                fields,
+                                opt.beam_size, 
+                                1,
+                                opt.decode_max_length,
+                                None,
+                                use_cuda)
 
     translate_file(translator, args.src_in, args.tgt_out, fields, use_cuda)
     

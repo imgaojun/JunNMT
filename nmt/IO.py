@@ -3,7 +3,6 @@ from torchtext import data, datasets
 import torchtext
 from collections import Counter, defaultdict
 import codecs
-import io
 PAD_WORD = '<blank>'
 UNK = 0
 BOS_WORD = '<s>'
@@ -24,9 +23,8 @@ torchtext.vocab.Vocab.__setstate__ = __setstate__
 def get_fields():
 
     fields = {}
-    fields["src"] = torchtext.data.Field(pad_token=PAD_WORD,include_lengths=True)
-    fields["tgt"] = torchtext.data.Field(init_token=BOS_WORD, pad_token=PAD_WORD)
-    fields["tgt_out"] = torchtext.data.Field(eos_token=EOS_WORD,pad_token=PAD_WORD)
+    fields["src"] = torchtext.data.Field(pad_token=PAD_WORD, include_lengths=True)
+    fields["tgt"] = torchtext.data.Field(init_token=BOS_WORD, eos_token=EOS_WORD, pad_token=PAD_WORD)
     return fields
 
 def load_fields(vocab):
@@ -48,11 +46,7 @@ def save_vocab(fields):
 def build_vocab(train, opt):
     fields = train.fields
     fields["src"].build_vocab(train, max_size=opt.src_vocab_size)  
-    UNK_WORD =  fields["src"].vocab.itos[UNK]
     fields["tgt"].build_vocab(train, max_size=opt.tgt_vocab_size)
-    fields["tgt_out"].build_vocab(train, max_size=opt.tgt_vocab_size)
-    fields["tgt"].vocab = merge_vocabs([fields["tgt"].vocab,fields["tgt_out"].vocab],[UNK_WORD, PAD_WORD, BOS_WORD, EOS_WORD],opt.tgt_vocab_size)
-    fields["tgt_out"].vocab = fields["tgt"].vocab
 
 
 
@@ -77,7 +71,8 @@ class NMTDataset(torchtext.data.Dataset):
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
         make_example = torchtext.data.Example.fromlist
-        with io.open(src_path, encoding="utf8",errors='replace') as src_f,io.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
+        with codecs.open(src_path, encoding="utf8",errors='replace') as src_f, \
+                codecs.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
             examples = [make_example(list((src,tgt,tgt)), fields) for src,tgt in zip(src_f,tgt_f)]
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     

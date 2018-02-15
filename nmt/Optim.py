@@ -1,6 +1,5 @@
 import torch.optim as optim
 from torch.nn.utils import clip_grad_norm
-from nmt.modules.adamw import AdamW
 
 class Optim(object):
 
@@ -34,10 +33,7 @@ class Optim(object):
         elif self.method == 'adam':
             self.optimizer = optim.Adam(self.params, lr=self.lr,
                                         betas=self.betas, eps=1e-9, 
-                                        weight_decay=self.weight_decay)
-
-        elif self.method == 'adamw':
-            self.optimizer = AdamW(self.params,weight_decay=self.weight_decay)                                        
+                                        weight_decay=self.weight_decay)                                     
         else:
             raise RuntimeError("Invalid optim method: " + self.method)
 

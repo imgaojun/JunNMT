@@ -43,23 +43,12 @@ class AttnDecoderRNN(DecoderBase):
         self.num_layers = num_layers
         self.hidden_size = hidden_size
         self.dropout = nn.Dropout(dropout)  
-        # self.hidden_init_net = nn.Sequential(
-        #                     nn.Linear(hidden_size, hidden_size),
-        #                     nn.Tanh()
-        #                 )
-        if rnn_type == "SRU":
-            # self.rnn = SRU(
-            #         input_size=input_size,
-            #         hidden_size=hidden_size,
-            #         num_layers=num_layers,
-            #         dropout=dropout)
-            pass
-        else:
-            self.rnn = getattr(nn, rnn_type)(
-                    input_size=input_size,
-                    hidden_size=hidden_size,
-                    num_layers=num_layers,
-                    dropout=dropout)              
+
+        self.rnn = getattr(nn, rnn_type)(
+                input_size=input_size,
+                hidden_size=hidden_size,
+                num_layers=num_layers,
+                dropout=dropout)              
 
         if self.attn_type != 'none':
             self.attn = GlobalAttention(hidden_size, attn_type)
@@ -68,6 +57,7 @@ class AttnDecoderRNN(DecoderBase):
         emb = input
         rnn_outputs, hidden = self.rnn(emb, state)
         
+
         if self.attn_type != 'none':
             # Calculate the attention.
             attn_outputs, attn_scores = self.attn(
@@ -76,22 +66,12 @@ class AttnDecoderRNN(DecoderBase):
             )
 
             outputs  = self.dropout(attn_outputs)    # (input_len, batch, d)
-
+            attn = attn_outputs
         else:
             outputs  = self.dropout(rnn_outputs)
+            attn = None
 
-
-        return outputs , hidden
-
-
-    def init_decoder_state(self, enc_hidden):
-        if not isinstance(enc_hidden, tuple):  # GRU
-            # h = self.hidden_init_net(enc_hidden)
-            h = enc_hidden
-            
-        else:  # LSTM
-            h = enc_hidden
-        return h
+        return outputs , hidden, attn
 
 
 class InputFeedDecoder(DecoderBase):

@@ -24,8 +24,7 @@ train = nmt.IO.NMTDataset(
     src_path=args.train_src,
     tgt_path=args.train_tgt,   
     fields=[('src', fields["src"]),
-            ('tgt', fields["tgt"]),
-            ('tgt_out', fields["tgt_out"])])    
+            ('tgt', fields["tgt"])])    
 print("Building Vocab...")   
 nmt.IO.build_vocab(train, opt)
 print("Building Valid...")
@@ -33,8 +32,7 @@ valid = nmt.IO.NMTDataset(
     src_path=args.valid_src,
     tgt_path=args.valid_tgt,
     fields=[('src', fields["src"]),
-            ('tgt', fields["tgt"]),
-            ('tgt_out', fields["tgt_out"])])
+            ('tgt', fields["tgt"])])
 print("Saving train/valid/fields")
 torch.save(nmt.IO.save_vocab(fields),open(args.save_data+'.vocab.pkl', 'wb'))
 train.fields = []
