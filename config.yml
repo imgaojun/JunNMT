@@ -17,7 +17,6 @@ tgt_vocab_size: 30000
 
 test_bleu: true
 
-# If ext_metric is not none, the following settings will not be used.
 multi_bleu_src: /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.cn
 multi_bleu_refs: # Multiple reference
   - /home/gaojun4ever/Documents/Projects/mt-exp/data/dev/nist02.en0
@@ -29,6 +28,7 @@ multi_bleu_refs: # Multiple reference
 # Misc
 use_cuda: true
 random_seed: 3435
+
 # Train
 optim_method: sgd #adadelta, adam, sgd
 max_grad_norm: 5
@@ -43,7 +43,7 @@ train_batch_size: 64
 train_shard_size: 32
 start_epoch_at: 
 
-valid_batch_szie: 32
+valid_batch_size: 32
 
 
 
