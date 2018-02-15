@@ -1,7 +1,6 @@
 import torch
 from torch.autograd import Variable
-
-from nmt.Beam
+import nmt.Beam
 import nmt.IO as IO
 
 
