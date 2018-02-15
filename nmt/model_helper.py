@@ -1,7 +1,7 @@
 from nmt.modules.Encoder import EncoderRNN
 from nmt.modules.Decoder import AttnDecoderRNN,InputFeedDecoder,ScheduledDecoder
 from nmt.modules.Embedding import Embedding
-from nmt.NMTModel import NMTModel
+from nmt.Model import NMTModel
 import torch
 import torch.nn as nn
 
