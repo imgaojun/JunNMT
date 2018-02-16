@@ -123,11 +123,11 @@ class Trainer(object):
         self.model.train()
         return valid_stats
 
-    def save_per_epoch(self, epoch, opt, out_dir):
+    def save_per_epoch(self, epoch, out_dir):
         f = open(os.path.join(out_dir,'checkpoint'),'w')
         f.write('latest_checkpoint:checkpoint_epoch%d.pkl'%(epoch))
         f.close()
-        self.model.save_checkpoint(epoch, 
+        self.model.save_checkpoint(epoch, self.opt
                     os.path.join(out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
         
         
