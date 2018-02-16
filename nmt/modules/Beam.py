@@ -92,9 +92,9 @@ class Beam(object):
         best_scores, best_scores_id = flat_beam_scores.topk(self.size, 0,
                                                             True, True)
 
-        self.all_scores.append(self.scores)
+        
         self.scores = best_scores
-
+        self.all_scores.append(self.scores)
         # best_scores_id is flattened beam x word array, so calculate which
         # word and beam each score came from
         prev_k = best_scores_id / num_words
