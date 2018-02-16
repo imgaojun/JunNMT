@@ -51,10 +51,11 @@ class Statistics(object):
             summary_writer.add_scalar(prefix + '/' + key, kwargs[key],step)
 
 class Trainer(object):
-    def __init__(self, model, train_iter, valid_iter,
+    def __init__(self, opt, model, train_iter, valid_iter,
                  train_loss, valid_loss, optim, lr_scheduler,
                  shard_size=32):
 
+        self.opt = opt
         self.model = model
         self.train_iter = train_iter
         self.valid_iter = valid_iter
@@ -122,7 +123,7 @@ class Trainer(object):
         self.model.train()
         return valid_stats
 
-    def save_per_epoch(self, epoch, out_dir):
+    def save_per_epoch(self, epoch, opt, out_dir):
         f = open(os.path.join(out_dir,'checkpoint'),'w')
         f.write('latest_checkpoint:checkpoint_epoch%d.pkl'%(epoch))
         f.close()

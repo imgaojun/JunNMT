@@ -178,7 +178,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
         valid_loss = valid_loss.cuda()    
 
     shard_size = opt.train_shard_size
-    trainer = nmt.Trainer(model,
+    trainer = nmt.Trainer(opt, model,
                         train_iter,
                         valid_iter,
                         train_loss,
