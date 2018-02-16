@@ -55,9 +55,7 @@ def main():
     fields = nmt.IO.load_fields(
                 torch.load(args.data + '.vocab.pkl'))
 
-    model = nmt.model_helper.create_base_model(opt,len(fields['src'].vocab), 
-                                            len(fields['tgt'].vocab), 
-                                            fields['tgt'].vocab.stoi[nmt.IO.PAD_WORD])
+    model = nmt.model_helper.create_base_model(opt,fields)
 
 
     print('Loading parameters ...')
