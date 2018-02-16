@@ -87,12 +87,12 @@ class Translator(object):
 
         context = rvar(context.data)
         src_lengths = Variable(torch.LongTensor(src_lengths)).cuda()
-        if not isinstance(decoder_init_hidden, tuple): # GRU
-            dec_states = Variable(decoder_init_hidden.data.repeat(1, beam_size, 1))
+        if not isinstance(dec_states, tuple): # GRU
+            dec_states = Variable(dec_states.data.repeat(1, beam_size, 1))
         else: # LSTM
             dec_states = (
-                Variable(decoder_init_hidden[0].data.repeat(1, beam_size, 1)),
-                Variable(decoder_init_hidden[1].data.repeat(1, beam_size, 1)),
+                Variable(dec_states[0].data.repeat(1, beam_size, 1)),
+                Variable(dec_states[1].data.repeat(1, beam_size, 1)),
                 )
 
         # (3) run the decoder to generate sentences, using beam search.
@@ -112,7 +112,7 @@ class Translator(object):
 
             # Run one step.
             dec_out, dec_states, attn = self.model.decode(inp, context, dec_states)
-            if not isinstance(decoder_init_hidden, tuple): # GRU
+            if not isinstance(dec_states, tuple): # GRU
                 dec_states = [ 
                     dec_states
                 ]   
@@ -138,7 +138,7 @@ class Translator(object):
                     unbottle(attn["std"]).data[:, j, :context_lengths[j]])
                 dec_states = self.beam_update(j, b.get_current_origin(), beam_size, dec_states)
 
-            if not isinstance(decoder_init_hidden, tuple): # GRU
+            if not isinstance(dec_states, tuple): # GRU
                 dec_states = dec_states[-1]
             else:
                 dec_states = ( 
