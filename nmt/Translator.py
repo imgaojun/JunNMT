@@ -141,8 +141,8 @@ class Translator(object):
                 dec_states = dec_states[-1]
             else:
                 dec_states = ( 
-                    decoder_hidden[0],
-                    decoder_hidden[1]
+                    dec_states[0],
+                    dec_states[1]
                 ) 
         # (4) Extract sentences from beam.
         ret = self._from_beam(beam)
