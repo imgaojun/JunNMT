@@ -2,6 +2,7 @@ import nmt.IO
 import argparse
 import nmt.utils.misc_utils as utils
 import torch
+import json
 parser = argparse.ArgumentParser()
 parser.add_argument('-train_src', type=str)
 parser.add_argument('-train_tgt', type=str)
@@ -34,6 +35,8 @@ valid = nmt.IO.NMTDataset(
     fields=[('src', fields["src"]),
             ('tgt', fields["tgt"])])
 print("Saving train/valid/fields")
+with open(args.save_data+'.tgt_vocab.json','w') as f:
+	json.dump(train.fields['tgt'].vocab.itos,f)
 torch.save(nmt.IO.save_vocab(fields),open(args.save_data+'.vocab.pkl', 'wb'))
 train.fields = []
 valid.fields = []
