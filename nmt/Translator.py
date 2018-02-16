@@ -164,10 +164,10 @@ class Translator(object):
                "scores": []}
         for b in beam:
             if self.beam_accum:
-                self.beam_accum['predicted_ids'].append(b.next_ys)
-                self.beam_accum['beam_parent_ids'].append(b.prev_ks)
-                self.beam_accum['log_probs'].append(b.all_scores)
-                self.beam_accum['scores'].append(b.all_scores)
+                self.beam_accum['predicted_ids'].append(torch.stack(b.next_ys).tolist())
+                self.beam_accum['beam_parent_ids'].append(torch.stack(b.prev_ks).tolist())
+                self.beam_accum['log_probs'].append(torch.stack(b.all_scores).tolist())
+                self.beam_accum['scores'].append(torch.stack(b.all_scores).tolist())
 
             n_best = self.n_best
             scores, ks = b.sort_finished(minimum=n_best)
