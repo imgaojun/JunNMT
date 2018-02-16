@@ -62,4 +62,6 @@ class NMTModel(nn.Module):
         self.encoder.load_state_dict(ckpt['encoder_dict'])
         self.decoder.load_state_dict(ckpt['decoder_dict'])
         self.generator.load_state_dict(ckpt['generator_dict'])
+        epoch = ckpt['epoch']
+        return epoch
 
