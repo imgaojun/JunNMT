@@ -54,6 +54,7 @@ def translate_file(translator, src_fin, tgt_fout, fields, use_cuda, dump_beam=No
         if dump_beam:
             print('dump beam ....')
             beam_trace = translator.beam_accum
+            print(len(beam_trace['predicted_ids']))
             with codecs.open(dump_beam,'w',encoding='utf8') as f:
                 f.write(json.dumps(beam_trace))
 
