@@ -9,7 +9,6 @@ Neural Machine Translation in Pytorch
 - Pytorch == 0.30
 - torchtext
 - tensorboardX
-- cupy
 
 ### Configuration
 `JunNMT/config.yml` is a configuration file, which contains configurations of model, training, and tesing.
@@ -49,14 +48,14 @@ python3 ${NMT_DIR}/preprocess.py \
 
 | parameter     | description |
 |---            |--- |
-| -train_src FILE |  Source Training Set |
-| -train_tgt FILE |  Target Training Set |
-| -valid_src FILE |  Source Validation Set |
-| -valid_tgt FILE |  Target Validation Set |
-| -save_data STR  |  the Prefix of Output File Name |
+| -train_src 'FILE' |  Source Training Set |
+| -train_tgt 'FILE' |  Target Training Set |
+| -valid_src 'FILE' |  Source Validation Set |
+| -valid_tgt 'FILE' |  Target Validation Set |
+| -save_data 'STR'  |  the Prefix of Output File Name |
 | -config FILE    |  Configuration File |
 
-Run the following command and This commad will prepare training set, validation set and vocab file for your project.
+Run the following command and This commad will prepare train data, valid data and vocab file for your project.
 
 ```
 sh preprocess.sh
@@ -77,10 +76,10 @@ python3 ${NMT_DIR}/train.py \
 
 | parameter     | description |
 |---            |---          |
-| -gpuid INT    |  Choose Which GPU A Program Uses |
-| -config FILE  |  Configuration File |
-| -nmt_dir PATH |  Path to JunNMT Directory |
-| -data STR     |  the Prefix of Data File Name |
+| -gpuid 'INT'    |  Choose Which GPU A Program Uses |
+| -config 'FILE'  |  Configuration File |
+| -nmt_dir 'PATH' |  Path to JunNMT Directory |
+| -data 'STR'     |  the Prefix of Data File Name |
 
 Run the command to train a model.
 
@@ -104,9 +103,8 @@ To perform testing, just run `sh traslate.sh`.
 
 | parameter     | description |
 |---            |--- |
-| -gpuid INT    |  Choose Which GPU A Program Uses |
-| -config FILE  |  model configuration (e.g config.yml) |
-| -src_in FILE  |  test file |
-| -tgt_out FILE |  output file    |
-| -model FILE   |  load existing model |
-| -data STR     |  the Prefix of Data File Name |
+| -gpuid 'INT'    |  Choose Which GPU A Program Uses |
+| -src_in 'FILE'  |  test file |
+| -tgt_out 'FILE' |  output file    |
+| -model 'FILE'   |  load existing model |
+| -data 'STR'     |  the Prefix of Data File Name |

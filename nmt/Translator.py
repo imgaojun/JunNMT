@@ -146,6 +146,7 @@ class Translator(object):
                 ) 
         # (4) Extract sentences from beam.
         ret = self._from_beam(beam)
+
         return ret
 
     def beam_update(self, idx, positions, beam_size,states):
@@ -162,6 +163,12 @@ class Translator(object):
         ret = {"predictions": [],
                "scores": []}
         for b in beam:
+            if self.beam_accum:
+                self.beam_accum['predicted_ids'].append(b.next_ys)
+                self.beam_accum['beam_parent_ids'].append(b.prev_ks)
+                self.beam_accum['log_probs'].append(b.all_scores)
+                self.beam_accum['scores'].append(b.all_scores)
+
             n_best = self.n_best
             scores, ks = b.sort_finished(minimum=n_best)
             hyps = []
