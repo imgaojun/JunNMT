@@ -87,8 +87,8 @@ Run the command to train a model.
 sh train.sh
 ```
 
-#### 5.Visualize training progress
-If you want to visualize your training progress, you need to install tensorflow(for tensorboard web server) first, since the projects uses tensorboard for visualizing.
+#### 5.Visualizing training phase
+If you want to visualize your training phase, you need to install tensorflow(for tensorboard web server) first, since the projects uses tensorboard for visualizing.
 
 After installing `tensorflow`, you can start a server by using the following command.
 
@@ -96,7 +96,7 @@ After installing `tensorflow`, you can start a server by using the following com
 tensorboard --logdir ./${log_dir} --port 6006
 ```
 
-And then you can watch your training progress on your browser.
+And then you can watch your training phase on your browser.
 
 #### 6.Do testing
 To perform testing, just run `sh traslate.sh`.
@@ -108,3 +108,10 @@ To perform testing, just run `sh traslate.sh`.
 | -tgt_out 'FILE' |  output file    |
 | -model 'FILE'   |  load existing model |
 | -data 'STR'     |  the Prefix of Data File Name |
+| -dump_beam 'FILE'|  Save  beam trace |
+### 7.Visualizing the beam search
+To visualize the beam search exploration, you can use the option -dump_beam beam.json. It will save a JSON serialization of the beam search history.
+This representation can then be visualized dynamically using the generate_beam_viz.py script from the JunNMT/tools/VisTools(borrowed from Opennmt).
+```
+python ./JunNMT/tools/VisTools/generate_beam_viz.py -d ./beam.json -o ./beam_viz_dir -v ./demo.tgt_vocab.json
+```
