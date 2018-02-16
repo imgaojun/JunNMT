@@ -11,7 +11,7 @@ def translate_sentence(translator, sent, fields, use_cuda):
                                     use_cuda)
 
     ret = translator.translate_batch(src_input_var,src_input_lengths)
-    all_hyp_inds = ret['predictions'][0]
+    hypotheses = ret['predictions'][0]
     all_hyp_inds = [[x[0] for x in hyp] for hyp in hypotheses]
     
     all_hyp_words = [nmt.data_utils.indices2words(idxs,fields['tgt'].vocab.itos) for idxs in all_hyp_inds]
