@@ -39,8 +39,7 @@ class Translator(object):
             self.beam_accum = {
                 "predicted_ids": [],
                 "beam_parent_ids": [],
-                "scores": [],
-                "log_probs": []}
+                "scores": []}
 
     def translate_batch(self, src, src_lengths):
         """
@@ -166,7 +165,6 @@ class Translator(object):
             if self.beam_accum:
                 self.beam_accum['predicted_ids'].append(torch.stack(b.next_ys).tolist())
                 self.beam_accum['beam_parent_ids'].append(torch.stack(b.prev_ks).tolist())
-                self.beam_accum['log_probs'].append(torch.stack(b.all_scores).tolist())
                 self.beam_accum['scores'].append(torch.stack(b.all_scores).tolist())
 
             n_best = self.n_best
