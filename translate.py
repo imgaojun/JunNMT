@@ -45,7 +45,7 @@ def translate_file(translator, src_fin, tgt_fout, fields, use_cuda, dump_beam=No
         process_bar = nmt.misc_utils.ShowProcess(len(src_lines))
         for line in src_lines:
             src_seq = line.strip()
-            ret = translate_sentence(translator, src_seq, fields, use_cuda, dump_beam)
+            ret = translate_sentence(translator, src_seq, fields, use_cuda)
             sentence_out = get_sentence(ret['predictions'][0])
 
             tgt_file.write(sentence_out+'\n')
