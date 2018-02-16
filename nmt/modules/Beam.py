@@ -59,7 +59,8 @@ class Beam(object):
         "Get the backpointers for the current timestep."
         return self.prev_ks[-1]
 
-    def advance(self, word_probs, attn_out):
+    # def advance(self, word_probs, attn_out):
+    def advance(self, word_probs):
         """
         Given prob over words for every last beam `wordLk` and attention
         `attn_out`: Compute and update the beam search.
@@ -99,7 +100,7 @@ class Beam(object):
         prev_k = best_scores_id / num_words
         self.prev_ks.append(prev_k)
         self.next_ys.append((best_scores_id - prev_k * num_words))
-        self.attn.append(attn_out.index_select(0, prev_k))
+        # self.attn.append(attn_out.index_select(0, prev_k))
 
         if self.global_scorer is not None:
             self.global_scorer.update_global_state(self)
@@ -143,9 +144,9 @@ class Beam(object):
         hyp, attn = [], []
         for j in range(len(self.prev_ks[:timestep]) - 1, -1, -1):
             hyp.append(self.next_ys[j+1][k])
-            attn.append(self.attn[j][k])
+            # attn.append(self.attn[j][k])
             k = self.prev_ks[j][k]
-        return hyp[::-1], torch.stack(attn[::-1])
+        return hyp[::-1] #, torch.stack(attn[::-1])
 
 
 class GNMTGlobalScorer(object):

@@ -134,8 +134,7 @@ class Translator(object):
             # (c) Advance each beam.
             for j, b in enumerate(beam):
                 b.advance(
-                    out[:, j],
-                    unbottle(attn["std"]).data[:, j, :context_lengths[j]])
+                    out[:, j])
                 dec_states = self.beam_update(j, b.get_current_origin(), beam_size, dec_states)
 
             if not isinstance(dec_states, tuple): # GRU
@@ -161,17 +160,14 @@ class Translator(object):
 
     def _from_beam(self, beam):
         ret = {"predictions": [],
-               "scores": [],
-               "attention": []}
+               "scores": []}
         for b in beam:
             n_best = self.n_best
             scores, ks = b.sort_finished(minimum=n_best)
-            hyps, attn = [], []
+            hyps = []
             for i, (times, k) in enumerate(ks[:n_best]):
-                hyp, att = b.get_hyp(times, k)
+                hyp = b.get_hyp(times, k)
                 hyps.append(hyp)
-                attn.append(att)
             ret["predictions"].append(hyps)
             ret["scores"].append(scores)
-            ret["attention"].append(attn)
         return ret
