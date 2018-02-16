@@ -4,6 +4,7 @@ python3 ${NMT_DIR}/translate.py \
     -src_in /home/xiapeng/gaojun/trans/test/nist02.cn \
     -tgt_out ./test_out \
     -model ./out_dir/checkpoint_epoch0.pkl \
+    -dump_beam beam.json \
     -data demo
 
 REF0=PATH_TO_REFERENCE
