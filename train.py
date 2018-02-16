@@ -145,10 +145,13 @@ def check_save_model_path(opt):
 
 def test_bleu(model, fields, epoch):
     translator = nmt.Translator(model, 
-                            fields['tgt'].vocab,
-                            opt.beam_size, 
-                            opt.decode_max_length,
-                            opt.replace_unk)
+                                fields,
+                                opt.beam_size, 
+                                1,
+                                opt.decode_max_length,
+                                None,
+                                use_cuda)
+
     src_fin = opt.multi_bleu_src
     tgt_fout = os.path.join(opt.out_dir,'translate.epoch%d'%(epoch))
     translate_file(translator, src_fin, tgt_fout, fields, use_cuda)   
