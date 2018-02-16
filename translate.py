@@ -96,7 +96,7 @@ def main():
                                 cuda=use_cuda,
                                 beam_trace=True if args.dump_beam else False)
 
-    translate_file(translator, args.src_in, args.tgt_out, fields, use_cuda)
+    translate_file(translator, args.src_in, args.tgt_out, fields, use_cuda, args.dump_beam)
     
 
 if __name__ == '__main__':
