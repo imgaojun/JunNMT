@@ -127,7 +127,7 @@ class Trainer(object):
         f = open(os.path.join(out_dir,'checkpoint'),'w')
         f.write('latest_checkpoint:checkpoint_epoch%d.pkl'%(epoch))
         f.close()
-        self.model.save_checkpoint(epoch, self.opt
+        self.model.save_checkpoint(epoch, self.opt,
                     os.path.join(out_dir,"checkpoint_epoch%d.pkl"%(epoch)))
         
         
