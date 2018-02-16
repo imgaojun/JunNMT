@@ -135,6 +135,7 @@ class Trainer(object):
     
     def load_checkpoint(self, filenmae):
         self.model.load_checkpoint(filenmae)
+        return torch.load(filenmae)['epoch']
         
 
     def epoch_step(self, epoch, out_dir):
