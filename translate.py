@@ -66,7 +66,7 @@ def main():
     parser.add_argument("-tgt_out", type=str)
     parser.add_argument("-model", type=str)
     parser.add_argument("-data", type=str)
-    parser.add_argument("-dump_beam", default=None, type=str)
+    parser.add_argument("-dump_beam", default="", type=str)
     parser.add_argument('-gpuid', default=[], nargs='+', type=int)
     args = parser.parse_args()
     opt = torch.load(args.model)['opt']
