@@ -24,7 +24,7 @@ class Translator(object):
                  max_length=100,
                  global_scorer=None, cuda=False,
                  beam_trace=False, min_length=0):
-        self.model = model
+        self.model = model.eval()
         self.fields = fields
         self.n_best = n_best
         self.max_length = max_length

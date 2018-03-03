@@ -28,7 +28,7 @@ Copy some useful scripts and template configuration to the project.
 ```
 cp JunNMT/scripts/preprocess.sh ./
 cp JunNMT/scripts/train.sh ./
-cp JunNMT/scripts/traslate.sh ./
+cp JunNMT/scripts/translate.sh ./
 cp JunNMT/config.yml ./
 ```
 #### 3.Do preprocessing
