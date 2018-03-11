@@ -87,7 +87,6 @@ def weights_init(m):
     if isinstance(m, nn.Linear): 
         nn.init.xavier_uniform(m.weight.data)
     if isinstance(m, nn.LSTM) or isinstance(m, nn.GRU):
-        print("rnn weight init...")
         for layer in range(m.num_layers):
             nn.init.orthogonal(getattr(m,"weight_ih_l%d"%(layer)).data)
             nn.init.orthogonal(getattr(m,"weight_hh_l%d"%(layer)).data)
