@@ -86,6 +86,12 @@ def create_generator(input_size, output_size):
 def weights_init(m):
     if isinstance(m, nn.Linear): 
         nn.init.xavier_uniform(m.weight.data)
+    if isinstance(m, nn.LSTM) or isinstance(m, nn.GRU):
+        print("rnn weight init...")
+        for w in m.weight_ih_l:
+            nn.init.orthogonal(w.data)
+        for w in m.weight_hh_l:
+            nn.init.orthogonal(w.data)
 
 def create_base_model(opt, fields):
     src_vocab_size = len(fields['src'].vocab)
@@ -106,6 +112,6 @@ def create_base_model(opt, fields):
                      decoder, 
                      generator)
 
-    # model.apply(weights_init)
+    model.apply(weights_init)
     return model
 
