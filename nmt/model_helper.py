@@ -88,10 +88,10 @@ def weights_init(m):
         nn.init.xavier_uniform(m.weight.data)
     if isinstance(m, nn.LSTM) or isinstance(m, nn.GRU):
         print("rnn weight init...")
-        for w in m.weight_ih_l:
-            nn.init.orthogonal(w.data)
-        for w in m.weight_hh_l:
-            nn.init.orthogonal(w.data)
+        for layer in range(m.num_layers):
+            nn.init.orthogonal(getattr(m,"weight_ih_l%d"%(layer)).data)
+            nn.init.orthogonal(getattr(m,"weight_hh_l%d"%(layer)).data)
+
 
 def create_base_model(opt, fields):
     src_vocab_size = len(fields['src'].vocab)
