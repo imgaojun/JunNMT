@@ -48,11 +48,11 @@ python3 ${NMT_DIR}/preprocess.py \
 
 | parameter     | description |
 |---            |--- |
-| -train_src 'FILE' |  Source Training Set |
-| -train_tgt 'FILE' |  Target Training Set |
-| -valid_src 'FILE' |  Source Validation Set |
-| -valid_tgt 'FILE' |  Target Validation Set |
-| -save_data 'STR'  |  the Prefix of Output File Name |
+| -train_src FILE |  Source Training Set |
+| -train_tgt FILE |  Target Training Set |
+| -valid_src FILE |  Source Validation Set |
+| -valid_tgt FILE |  Target Validation Set |
+| -save_data STR  |  the Prefix of Output File Name |
 | -config FILE    |  Configuration File |
 
 Run the following command and This commad will prepare train data, valid data and vocab file for your project.
@@ -76,10 +76,10 @@ python3 ${NMT_DIR}/train.py \
 
 | parameter     | description |
 |---            |---          |
-| -gpuid 'INT'    |  Choose Which GPU A Program Uses |
-| -config 'FILE'  |  Configuration File |
-| -nmt_dir 'PATH' |  Path to JunNMT Directory |
-| -data 'STR'     |  the Prefix of Data File Name |
+| -gpuid INT    |  Choose Which GPU A Program Uses |
+| -config FILE  |  Configuration File |
+| -nmt_dir PATH |  Path to JunNMT Directory |
+| -data STR     |  the Prefix of Data File Name |
 
 Run the command to train a model.
 
@@ -103,12 +103,12 @@ To perform testing, just run `sh traslate.sh`.
 
 | parameter     | description |
 |---            |--- |
-| -gpuid 'INT'    |  Choose Which GPU A Program Uses |
-| -src_in 'FILE'  |  test file |
-| -tgt_out 'FILE' |  output file    |
-| -model 'FILE'   |  load existing model |
-| -data 'STR'     |  the Prefix of Data File Name |
-| -dump_beam 'FILE'|  Save  beam trace |
+| -gpuid INT    |  Choose Which GPU A Program Uses |
+| -src_in FILE  |  test file |
+| -tgt_out FILE |  output file    |
+| -model FILE   |  load existing model |
+| -data STR     |  the Prefix of Data File Name |
+| -dump_beam FILE|  Save  beam trace |
 ### 7.Visualizing the beam search
 To visualize the beam search exploration, you can use the option -dump_beam beam.json. It will save a JSON serialization of the beam search history.
 This representation can then be visualized dynamically using the generate_beam_viz.py script from the JunNMT/tools/VisTools(borrowed from Opennmt).
