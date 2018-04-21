@@ -50,10 +50,9 @@ valid_batch_size: 32
 
 
 
-
 # Test
 decode_max_length: 100
-test_batch_size: 32
+test_batch_size: 1 #not support yet
 beam_size: 3
 
 out_dir: ./out_dir # path to save model
