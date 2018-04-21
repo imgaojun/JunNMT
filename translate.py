@@ -4,7 +4,6 @@ import codecs
 import nmt
 import json
 from torch import cuda
-import progressbar
 def indices_lookup(indices,fields):
 
     words = [fields['tgt'].vocab.itos[i] for i in indices]
@@ -24,8 +23,7 @@ def translate_file(translator,
 
     print('start translating ...')
     with codecs.open(test_out, 'wb', encoding='utf8') as tgt_file:
-        bar = progressbar.ProgressBar()
-        for batch in bar(data_iter):
+        for batch in data_iter:
             ret = translator.translate_batch(batch)
             src_text = indices_lookup(batch.src[0][:,0].data.tolist(), fields)
             tgt_text = indices_lookup(ret['predictions'][0][0], fields)
