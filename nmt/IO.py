@@ -68,17 +68,26 @@ def merge_vocabs(vocabs, specials, vocab_size=None):
 class NMTDataset(torchtext.data.Dataset):
     
     
-    def __init__(self, src_path, tgt_path, fields, **kwargs):
+    def __init__(self, src_path, tgt_path, 
+                    src_max_len, tgt_max_len,
+                    fields,  **kwargs):
 
         make_example = torchtext.data.Example.fromlist
         with codecs.open(src_path, encoding="utf8",errors='replace') as src_f, \
                 codecs.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
             examples = []
             for src,tgt in zip(src_f,tgt_f):
-                src,tgt = src.strip(),tgt.strip()
+                src,tgt = src.strip().split(' '),tgt.strip().split(' ')
+                if src_max_len:
+                    src = src[:src_max_len]
+                if tgt_max_len:
+                    tgt = tgt[:tgt_max_len]
+                
+                src = ' '.join(src)
+                tgt = ' '.join(tgt)
+
                 examples.append(make_example([src,tgt],fields))
 
-            # examples = [make_example(list((src,tgt,tgt)), fields) for src,tgt in zip(src_f,tgt_f)]
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
     @staticmethod
@@ -97,6 +106,45 @@ class NMTDataset(torchtext.data.Dataset):
         "This is a hack. Something is broken with torch pickle."
         return super(NMTDataset, self).__reduce_ex__()
     
+
+
+class InferDataset(torchtext.data.Dataset):
+    
+    
+    def __init__(self, src_path, 
+                    src_max_len,
+                    fields,  **kwargs):
+
+        make_example = torchtext.data.Example.fromlist
+        with codecs.open(src_path, encoding="utf8",errors='ignore') as src_f:
+            examples = []
+            for src in zip src_f:
+                src = src.strip().split(' ')
+                if src_max_len:
+                    src = src[:src_max_len]
+                
+                src = ' '.join(src)
+
+                examples.append(make_example([src],fields))
+
+        super(NMTDataset, self).__init__(examples, fields, **kwargs)    
+    
+    @staticmethod
+    def sort_key(ex):
+        "Sort in reverse size order"
+        return -len(ex.src)
+
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+
+    def __reduce_ex__(self, proto):
+        "This is a hack. Something is broken with torch pickle."
+        return super(NMTDataset, self).__reduce_ex__()
+
 
 class OrderedIterator(torchtext.data.Iterator):
     def create_batches(self):

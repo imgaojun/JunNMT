@@ -32,6 +32,8 @@ print("Building Valid...")
 valid = nmt.IO.NMTDataset(
     src_path=args.valid_src,
     tgt_path=args.valid_tgt,
+    src_max_len = opt.src_max_len,
+    tgt_max_len=opt.tgt_max_len,
     fields=[('src', fields["src"]),
             ('tgt', fields["tgt"])])
 print("Saving train/valid/fields")
