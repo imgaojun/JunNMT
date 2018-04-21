@@ -111,17 +111,14 @@ class NMTDataset(torchtext.data.Dataset):
 class InferDataset(torchtext.data.Dataset):
     
     
-    def __init__(self, src_path, 
-                    src_max_len,
-                    fields,  **kwargs):
+    def __init__(self, src_path, fields,  **kwargs):
 
         make_example = torchtext.data.Example.fromlist
         with codecs.open(src_path, encoding="utf8",errors='ignore') as src_f:
             examples = []
             for src in src_f:
                 src = src.strip().split(' ')
-                if src_max_len:
-                    src = src[:src_max_len]
+
                 
                 src = ' '.join(src)
 
