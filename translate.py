@@ -19,7 +19,6 @@ def indices_lookup(indices,fields):
 def batch_indices_lookup(batch_indices,fields):
 
     batch_sents = []
-    print(batch_indices)
     for sent_indices in batch_indices:
         sent = indices_lookup(sent_indices,fields)
         batch_sents.append(sent)
@@ -40,7 +39,7 @@ def translate_file(translator,
 
         for batch in bar(data_iter):
             ret = translator.translate_batch(batch)
-            batch_sents = indices_lookup(ret['predictions'][0], fields)
+            batch_sents = batch_indices_lookup(ret['predictions'][0], fields)
             tgt_file.writelines(batch_sents)
 
         if dump_beam:
