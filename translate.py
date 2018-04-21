@@ -36,12 +36,11 @@ def translate_file(translator,
     with codecs.open(test_out, 'wb', encoding='utf8') as tgt_file:
         bar = progressbar.ProgressBar()
 
-        all_results = []
         for batch in bar(data_iter):
             ret = translator.translate_batch(batch)
             batch_sents = batch_indices_lookup(ret['predictions'][0], fields)
-            all_results += batch_sents
-        tgt_file.writelines(all_results)
+            for sent in batch_sents:
+                tgt_file.write(sent+'\n')
 
         if dump_beam:
             print('dump beam ....')
