@@ -122,9 +122,9 @@ class InferDataset(torchtext.data.Dataset):
                 
                 src = ' '.join(src)
 
-                examples.append(make_example([src],fields))
+                examples.append(make_example([src,],fields))
 
-        super(NMTDataset, self).__init__(examples, fields, **kwargs)    
+        super(InferDataset, self).__init__(examples, fields, **kwargs)    
     
     @staticmethod
     def sort_key(ex):
@@ -140,7 +140,7 @@ class InferDataset(torchtext.data.Dataset):
 
     def __reduce_ex__(self, proto):
         "This is a hack. Something is broken with torch pickle."
-        return super(NMTDataset, self).__reduce_ex__()
+        return super(InferDataset, self).__reduce_ex__()
 
 
 class OrderedIterator(torchtext.data.Iterator):
