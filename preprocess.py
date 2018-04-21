@@ -23,7 +23,9 @@ fields = nmt.IO.get_fields()
 print("Building Training...")
 train = nmt.IO.NMTDataset(
     src_path=args.train_src,
-    tgt_path=args.train_tgt,   
+    tgt_path=args.train_tgt, 
+    src_max_len=opt.src_max_len,
+    tgt_max_len=opt.tgt_max_len,  
     fields=[('src', fields["src"]),
             ('tgt', fields["tgt"])])    
 print("Building Vocab...")   
@@ -32,7 +34,7 @@ print("Building Valid...")
 valid = nmt.IO.NMTDataset(
     src_path=args.valid_src,
     tgt_path=args.valid_tgt,
-    src_max_len = opt.src_max_len,
+    src_max_len=opt.src_max_len,
     tgt_max_len=opt.tgt_max_len,
     fields=[('src', fields["src"]),
             ('tgt', fields["tgt"])])
