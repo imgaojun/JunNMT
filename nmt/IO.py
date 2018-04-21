@@ -118,7 +118,7 @@ class InferDataset(torchtext.data.Dataset):
         make_example = torchtext.data.Example.fromlist
         with codecs.open(src_path, encoding="utf8",errors='ignore') as src_f:
             examples = []
-            for src in zip src_f:
+            for src in src_f:
                 src = src.strip().split(' ')
                 if src_max_len:
                     src = src[:src_max_len]
