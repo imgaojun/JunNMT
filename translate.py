@@ -22,8 +22,6 @@ def batch_indices_lookup(batch_indices,fields):
     for sent_indices in batch_indices:
         sent = indices_lookup(sent_indices,fields)
         batch_sents.append(sent)
-    print(batch_sents)
-    raise "break"
     return batch_sents
 
 
@@ -38,11 +36,12 @@ def translate_file(translator,
     with codecs.open(test_out, 'wb', encoding='utf8') as tgt_file:
         bar = progressbar.ProgressBar()
 
-
+        all_results = []
         for batch in bar(data_iter):
             ret = translator.translate_batch(batch)
             batch_sents = batch_indices_lookup(ret['predictions'][0], fields)
-            tgt_file.writelines(batch_sents)
+            all_results += batch_sents
+        tgt_file.writelines(all_results)
 
         if dump_beam:
             print('dump beam ....')
