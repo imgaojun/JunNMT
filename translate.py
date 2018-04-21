@@ -4,6 +4,7 @@ import codecs
 import nmt
 import json
 from torch import cuda
+import nmt.utils.misc_utils as utils
 def indices_lookup(indices,fields):
 
     words = [fields['tgt'].vocab.itos[i] for i in indices]
@@ -41,12 +42,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-test_data", type=str)
     parser.add_argument("-test_out", type=str)
+    parser.add_argument("-config", type=str)
     parser.add_argument("-model", type=str)
     parser.add_argument("-data", type=str)
     parser.add_argument("-dump_beam", default="", type=str)
     parser.add_argument('-gpuid', default=[], nargs='+', type=int)
     args = parser.parse_args()
-    opt = torch.load(args.model)['opt']
+    opt = utils.load_hparams(args.config)
 
 
 
