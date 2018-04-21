@@ -5,6 +5,9 @@ import nmt
 import json
 from torch import cuda
 import nmt.utils.misc_utils as utils
+import progressbar
+
+
 def indices_lookup(indices,fields):
 
     words = [fields['tgt'].vocab.itos[i] for i in indices]
@@ -13,6 +16,13 @@ def indices_lookup(indices,fields):
     return sent
 
 
+def batch_indices_lookup(batch_indices,fields):
+
+    batch_sents = []
+    for sent_indices in batch_indices:
+        sent = indices_lookup(sent_indices,fields)
+        batch_sents.append(sent)
+    return batch_sents
 
 
 
@@ -24,11 +34,13 @@ def translate_file(translator,
 
     print('start translating ...')
     with codecs.open(test_out, 'wb', encoding='utf8') as tgt_file:
-        for batch in data_iter:
+        bar = progressbar.ProgressBar()
+
+
+        for batch in bar(data_iter):
             ret = translator.translate_batch(batch)
-            src_text = indices_lookup(batch.src[0][:,0].data.tolist(), fields)
-            tgt_text = indices_lookup(ret['predictions'][0][0], fields)
-            tgt_file.write(tgt_text+'\n')
+            batch_sents = indices_lookup(ret['predictions'][0], fields)
+            tgt_file.writelines(batch_sents)
 
         if dump_beam:
             print('dump beam ....')

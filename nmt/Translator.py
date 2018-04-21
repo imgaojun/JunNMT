@@ -58,7 +58,7 @@ class Translator(object):
         # And helper method for reducing verbosity.
 
         src = batch.src[0]
-        src_lengths = batch.src[1]
+        src_lengths = batch.src[1].tolist()
 
         beam_size = self.beam_size
         batch_size = len(src_lengths)
