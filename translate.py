@@ -63,7 +63,7 @@ def main():
         data_path=args.test_data,
         fields=[('src', fields["src"])])
 
-    test_data_iter = IO.OrderedIterator(
+    test_data_iter = nmt.IO.OrderedIterator(
                 dataset=test_dataset, device=args.gpuid[0],
                 batch_size=opt.test_batch_size, train=False, sort=False,
                 sort_within_batch=True, shuffle=False)
