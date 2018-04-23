@@ -80,7 +80,7 @@ def main():
     test_data_iter = nmt.IO.OrderedIterator(
                 dataset=test_dataset, device=args.gpuid[0],
                 batch_size=1, train=False, sort=False,
-                sort_within_batch=True, shuffle=False)
+                sort_within_batch=False, shuffle=False)
 
 
     model = nmt.model_helper.create_base_model(opt,fields)
