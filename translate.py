@@ -64,6 +64,11 @@ class TranslationHelper(object):
             processes[process_id].start()
 
         self._processes = processes
+    def _load_fields(self):
+        fields = nmt.IO.load_fields(
+            torch.load(self.test_opt.data + '.vocab.pkl'))
+
+        return fields
 
     def _load_model(self):
         model = nmt.model_helper.create_base_model(self.model_opt,self.fields)
@@ -80,7 +85,7 @@ class TranslationHelper(object):
         model = self._load_model()
 
         translator = nmt.Translator(model=model, 
-                                    fields=self.fields,
+                                    fields=self._load_fields(),
                                     beam_size=self.test_opt.beam_size, 
                                     n_best=1,
                                     max_length=self.test_opt.decode_max_length,
