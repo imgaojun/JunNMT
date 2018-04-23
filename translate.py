@@ -85,7 +85,7 @@ class TranslationHelper(object):
         model = self._load_model()
 
         translator = nmt.Translator(model=model, 
-                                    fields=self._load_fields(),
+                                    fields=self.fields['tgt'].vocab,
                                     beam_size=self.test_opt.beam_size, 
                                     n_best=1,
                                     max_length=self.test_opt.decode_max_length,

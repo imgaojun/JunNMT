@@ -19,7 +19,7 @@ class Translator(object):
        cuda (bool): use cuda
        beam_trace (bool): trace beam search for debugging
     """
-    def __init__(self, model, fields,
+    def __init__(self, model, vocab,
                  beam_size, n_best=1,
                  max_length=100,
                  global_scorer=None, cuda=False,
@@ -27,7 +27,7 @@ class Translator(object):
         self.model = model
         # Set model in eval mode.
         self.model.eval()
-        self.fields = fields
+        self.vocab = vocab
         self.n_best = n_best
         self.max_length = max_length
         self.global_scorer = global_scorer
@@ -62,7 +62,7 @@ class Translator(object):
 
         beam_size = self.beam_size
         batch_size = len(src_lengths)
-        vocab = self.fields["tgt"].vocab
+        vocab = self.vocab
         beam = [nmt.Beam(beam_size, n_best=self.n_best,
                                     cuda=self.cuda,
                                     global_scorer=self.global_scorer,
