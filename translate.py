@@ -59,7 +59,7 @@ class TranslationHelper(object):
         for process_id in range(self._num_processes):
             processes[process_id] = Process(
                 target=self._start_worker,
-                args=(process_id)
+                args=(process_id,)
                 )
             processes[process_id].start()
 
