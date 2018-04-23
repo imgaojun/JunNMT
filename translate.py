@@ -89,7 +89,7 @@ class TranslationHelper(object):
         # build and return models
         return translator
 
-    def _start_worker(self, process_id, device_id):
+    def _start_worker(self, process_id):
         """
         Function executed by each worker once started. Do not execute in
         the parent process.
