@@ -6,7 +6,7 @@ import json
 from torch import cuda
 import nmt.utils.misc_utils as utils
 import progressbar
-from Queue import Empty
+from queue import Empty
 from multiprocessing import Process, Queue
 from collections import defaultdict
 import sys
