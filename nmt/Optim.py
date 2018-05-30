@@ -1,5 +1,5 @@
 import torch.optim as optim
-from torch.nn.utils import clip_grad_norm
+from torch.nn.utils import clip_grad_norm_
 
 class Optim(object):
 
@@ -42,7 +42,7 @@ class Optim(object):
         self._step += 1
 
         if self.max_grad_norm:
-            clip_grad_norm(self.params, self.max_grad_norm)
+            clip_grad_norm_(self.params, self.max_grad_norm)
         self.lr = self.optimizer.param_groups[0]['lr']
         self.optimizer.step()
 

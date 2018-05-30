@@ -84,12 +84,13 @@ def create_generator(input_size, output_size):
     return generator
 
 def weights_init(m):
-    if isinstance(m, nn.Linear): 
-        nn.init.xavier_uniform(m.weight.data)
-    if isinstance(m, nn.LSTM) or isinstance(m, nn.GRU):
-        for layer in range(m.num_layers):
-            nn.init.orthogonal(getattr(m,"weight_ih_l%d"%(layer)).data)
-            nn.init.orthogonal(getattr(m,"weight_hh_l%d"%(layer)).data)
+    # if isinstance(m, nn.Linear): 
+    #     nn.init.xavier_uniform(m.weight.data)
+    # if isinstance(m, nn.LSTM) or isinstance(m, nn.GRU):
+    #     for layer in range(m.num_layers):
+    #         nn.init.orthogonal(getattr(m,"weight_ih_l%d"%(layer)).data)
+    #         nn.init.orthogonal(getattr(m,"weight_hh_l%d"%(layer)).data)
+    pass
 
 
 def create_base_model(opt, fields):
