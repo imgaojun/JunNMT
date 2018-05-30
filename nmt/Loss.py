@@ -36,21 +36,19 @@ class NMTLossCompute(nn.Module):
         stats = self.stats(loss_data, scores.data, target.data)
         return  loss, stats
 
-    def sharded_compute_loss(self, batch, output, shard_size):
+    def compute_train_loss(self, batch, output):
         """
         Compute the loss in shards for efficiency.
         """
         batch_stats = Statistics()
         shard_state = self.make_shard_state(batch, output)
-
-        for shard in shards(shard_state, shard_size):
-            loss, stats = self.compute_loss(batch, **shard)
-            loss.div(batch.batch_size).backward()
-            batch_stats.update(stats)
+        loss, stats = self.compute_loss(batch, **shard_state)
+        loss.div(batch.batch_size).backward()
+        batch_stats.update(stats)
 
         return batch_stats       
         
-    def monolithic_compute_loss(self, batch, output):
+    def compute_valid_loss(self, batch, output):
         """
         Compute the loss monolithically, not dividing into shards.
         """
@@ -79,56 +77,3 @@ class NMTLossCompute(nn.Module):
 
     def unbottle(self, v, batch_size):
         return v.view(-1, batch_size, v.size(1))        
-
-
-def filter_shard_state(state):
-    for k, v in state.items():
-        if v is not None:
-            if isinstance(v, Variable) and v.requires_grad:
-                v = Variable(v.data, requires_grad=True, volatile=False)
-            yield k, v
-
-
-def shards(state, shard_size, eval=False):
-    """
-    Args:
-        state: A dictionary which corresponds to the output of
-               *LossCompute.make_shard_state(). The values for
-               those keys are Tensor-like or None.
-        shard_size: The maximum size of the shards yielded by the model.
-        eval: If True, only yield the state, nothing else.
-              Otherwise, yield shards.
-    Yields:
-        Each yielded shard is a dict.
-    Side effect:
-        After the last shard, this function does back-propagation.
-    """
-    if eval:
-        yield state
-    else:
-        # non_none: the subdict of the state dictionary where the values
-        # are not None.
-        non_none = dict(filter_shard_state(state))
-        
-        # Now, the iteration:
-        # state is a dictionary of sequences of tensor-like but we
-        # want a sequence of dictionaries of tensors.
-        # First, unzip the dictionary into a sequence of keys and a
-        # sequence of tensor-like sequences.
-        keys, values = zip(*((k, torch.split(v, shard_size))
-                             for k, v in non_none.items()))
-
-        # Now, yield a dictionary for each shard. The keys are always
-        # the same. values is a sequence of length #keys where each
-        # element is a sequence of length #shards. We want to iterate
-        # over the shards, not over the keys: therefore, the values need
-        # to be re-zipped by shard and then each shard can be paired
-        # with the keys.
-        for shard_tensors in zip(*values):
-            yield dict(zip(keys, shard_tensors))
-
-        # Assumed backprop'd
-        variables = ((state[k], v.grad.data) for k, v in non_none.items()
-                     if isinstance(v, Variable) and v.grad is not None)
-        inputs, grads = zip(*variables)
-        torch.autograd.backward(inputs, grads)

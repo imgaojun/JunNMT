@@ -14,7 +14,11 @@ import random
 parser = argparse.ArgumentParser()
 parser.add_argument("-config", type=str)
 parser.add_argument("-nmt_dir", type=str)
-parser.add_argument("-data", type=str)
+parser.add_argument("-vocab", type=str)
+parser.add_argument('-train_src', type=str)
+parser.add_argument('-train_tgt', type=str)
+parser.add_argument('-valid_src', type=str)
+parser.add_argument('-valid_tgt', type=str)
 parser.add_argument('-gpuid', default=[], nargs='+', type=int)
 
 args = parser.parse_args()
@@ -84,7 +88,7 @@ def make_valid_data_iter(valid_data, opt):
 
 def load_fields(train, valid):
     fields = nmt.IO.load_fields(
-                torch.load(args.data + '.vocab.pkl'))
+                torch.load(args.vocab))
     fields = dict([(k, f) for (k, f) in fields.items()
                   if k in train.examples[0].__dict__])
     train.fields = fields
@@ -225,11 +229,22 @@ def main():
 
     # Load train and validate data.
     print("Loading train and validate data from '%s'" % args.data)
-    train = torch.load(args.data + '.train.pkl')
-    valid = torch.load(args.data + '.valid.pkl')
+
     
     # Load fields generated from preprocess phase.
     fields = load_fields(train, valid)
+
+
+    train = nmt.IO.NMTDataset(
+                    src_path=args.train_src,
+                    tgt_path=args.train_tgt,   
+                    fields=[('src', fields["src"]),
+                            ('tgt', fields["tgt"])])
+    valid = nmt.IO.NMTDataset(
+                    src_path=args.valid_src,
+                    tgt_path=args.valid_tgt,
+                    fields=[('src', fields["src"]),
+                            ('tgt', fields["tgt"])])
 
     # Build model.
     model, start_epoch_at = build_or_load_model(opt, fields)
