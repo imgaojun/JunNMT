@@ -228,7 +228,7 @@ def train_model(model, train_data, valid_data, fields, optim, lr_scheduler, star
 def main():
 
     # Load train and validate data.
-    print("Loading train and validate data from '%s'" % args.data)
+    print("Loading fields from '%s'" % args.vocab)
 
     
     # Load fields generated from preprocess phase.
