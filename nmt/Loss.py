@@ -70,7 +70,7 @@ class NMTLossCompute(nn.Module):
         num_correct = pred.eq(target) \
                           .masked_select(non_padding) \
                           .sum()
-        return Statistics(loss[0], non_padding.sum(), num_correct)
+        return Statistics(loss, non_padding.sum(), num_correct)
 
     def bottle(self, v):
         return v.view(-1, v.size(2))
