@@ -1,5 +1,4 @@
 import torch
-from torch.autograd import Variable
 import nmt
 import nmt.IO as IO
 
@@ -69,7 +68,7 @@ class Translator(object):
                 for __ in range(batch_size)]
 
         # Help functions for working with beams and batches
-        def var(a): return Variable(a, volatile=True)
+        def var(a): return a
 
         def rvar(a): return var(a.repeat(1, beam_size, 1))
 
@@ -87,13 +86,13 @@ class Translator(object):
         # (2) Repeat src objects `beam_size` times.
 
         context = rvar(context.data)
-        src_lengths = Variable(torch.LongTensor(src_lengths)).cuda()
+        src_lengths = torch.LongTensor(src_lengths).cuda()
         if not isinstance(dec_states, tuple): # GRU
-            dec_states = Variable(dec_states.data.repeat(1, beam_size, 1))
+            dec_states = dec_states.data.repeat(1, beam_size, 1)
         else: # LSTM
             dec_states = (
-                Variable(dec_states[0].data.repeat(1, beam_size, 1)),
-                Variable(dec_states[1].data.repeat(1, beam_size, 1)),
+                dec_states[0].data.repeat(1, beam_size, 1),
+                dec_states[1].data.repeat(1, beam_size, 1),
                 )
 
         # (3) run the decoder to generate sentences, using beam search.
