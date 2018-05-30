@@ -89,8 +89,7 @@ def make_valid_data_iter(valid_data, opt):
 def load_fields():
     fields = nmt.IO.load_fields(
                 torch.load(args.vocab))
-    fields = dict([(k, f) for (k, f) in fields.items()
-                  if k in train.examples[0].__dict__])
+    fields = dict([(k, f) for (k, f) in fields.items()])
 
 
     print(' * vocabulary size. source = %d; target = %d' %
