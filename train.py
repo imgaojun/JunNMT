@@ -86,7 +86,7 @@ def make_valid_data_iter(valid_data, opt):
                 device=args.gpuid[0] if args.gpuid else -1,                                
                 train=False, sort=False)
 
-def load_fields(train, valid):
+def load_fields():
     fields = nmt.IO.load_fields(
                 torch.load(args.vocab))
     fields = dict([(k, f) for (k, f) in fields.items()
