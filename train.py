@@ -91,8 +91,7 @@ def load_fields(train, valid):
                 torch.load(args.vocab))
     fields = dict([(k, f) for (k, f) in fields.items()
                   if k in train.examples[0].__dict__])
-    train.fields = fields
-    valid.fields = fields
+
 
     print(' * vocabulary size. source = %d; target = %d' %
           (len(fields['src'].vocab), len(fields['tgt'].vocab)))
@@ -232,7 +231,7 @@ def main():
 
     
     # Load fields generated from preprocess phase.
-    fields = load_fields(train, valid)
+    fields = load_fields()
 
 
     train = nmt.IO.NMTDataset(
