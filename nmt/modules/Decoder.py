@@ -93,6 +93,7 @@ class InputFeedDecoder(DecoderBase):
 
     def forward(self, input, context, state):
         outputs = []
+        attns = []
         output = self.init_input_feed(context).squeeze(0)
         emb  = input
         hidden = state
@@ -109,9 +110,11 @@ class InputFeedDecoder(DecoderBase):
 
             output = self.dropout(attn_output)
             outputs += [output]
+            attns += [attn]
         outputs = torch.stack(outputs)
+        attns = torch.stack(attns)
         # print(outputs)
-        return outputs, hidden
+        return outputs, hidden, attns
 
     def init_decoder_state(self, enc_hidden):
         if not isinstance(enc_hidden, tuple):  # GRU
