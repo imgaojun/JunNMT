@@ -32,11 +32,11 @@ class DecoderBase(nn.Module):
             
 
 
-class AttnDecoderRNN(DecoderBase):
+class AttnDecoder(DecoderBase):
     """ The GlobalAttention-based RNN decoder. """
     def __init__(self, rnn_type, attn_type, input_size, 
                 hidden_size, num_layers=1, dropout=0.1):
-        super(AttnDecoderRNN, self).__init__()        
+        super(AttnDecoder, self).__init__()        
         # Basic attributes.
         self.rnn_type = rnn_type
         self.attn_type = attn_type
