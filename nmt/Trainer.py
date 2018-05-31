@@ -117,7 +117,7 @@ class Trainer(object):
 
             outputs, attn = self.model(src_inputs,tgt_inputs,src_lengths)
 
-            stats = self.valid_loss。compute_valid_loss(batch, outputs)
+            stats = self.valid_loss.compute_valid_loss(batch, outputs)
             valid_stats.update(stats)        
         # Set model back to training mode.
         self.model.train()
