@@ -126,8 +126,7 @@ class InputFeedDecoder(DecoderBase):
         batch_size = context.size(1)
         hidden_size = self.hidden_size
         h_size = (batch_size, hidden_size)
-        return Variable(context.data.new(*h_size).zero_(),
-                                   requires_grad=False).unsqueeze(0)
+        return context.data.new(*h_size).zero_().unsqueeze(0)
 
     @property
     def _input_size(self):
