@@ -72,7 +72,7 @@ def make_train_data_iter(train_data, opt):
     """
     return nmt.IO.OrderedIterator(
                 dataset=train_data, batch_size=opt.train_batch_size,
-                device=device if args.gpuid else -1,                
+                device=device,                
                 repeat=False)
 
 
@@ -85,7 +85,7 @@ def make_valid_data_iter(valid_data, opt):
     """
     return nmt.IO.OrderedIterator(
                 dataset=valid_data, batch_size=opt.valid_batch_size,
-                device=device if args.gpuid else -1,                                
+                device=device,                                
                 train=False, sort=False)
 
 def load_fields():
