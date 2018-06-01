@@ -84,10 +84,6 @@ class NMTDataset(torchtext.data.Dataset):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-
-    def __reduce_ex__(self, proto):
-        "This is a hack. Something is broken with torch pickle."
-        return super(NMTDataset, self).__reduce_ex__()
     
 
 class OrderedIterator(torchtext.data.Iterator):
