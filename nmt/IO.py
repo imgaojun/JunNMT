@@ -78,12 +78,6 @@ class NMTDataset(torchtext.data.Dataset):
                 src,tgt = src.strip(),tgt.strip()
                 examples.append(make_example([src,tgt],fields))
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
-    
-    @staticmethod
-    def sort_key(ex):
-        "Sort in reverse size order"
-        return -len(ex.src)
-
 
     def __getstate__(self):
         return self.__dict__
