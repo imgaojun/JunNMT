@@ -77,6 +77,7 @@ class NMTDataset(torchtext.data.Dataset):
             for src,tgt in zip(src_f,tgt_f):
                 src,tgt = src.strip(),tgt.strip()
                 examples.append(make_example([src,tgt],fields))
+        sort_key = sort_key
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
     @staticmethod
