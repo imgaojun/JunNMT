@@ -67,7 +67,6 @@ def merge_vocabs(vocabs, specials, vocab_size=None):
 
 class NMTDataset(torchtext.data.Dataset):
     
-    sort_key = sort_key
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
         make_example = torchtext.data.Example.fromlist
