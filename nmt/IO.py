@@ -81,11 +81,11 @@ class NMTDataset(torchtext.data.Dataset):
     
     def sort_key(self, ex):
         """ Sort using length of source sentences. """
-        # Default to a balanced sort, prioritizing tgt len match.
-        # TODO: make this configurable.
-        if hasattr(ex, "tgt"):
-            return len(ex.src), len(ex.tgt)
-        return len(ex.src)
+        # # Default to a balanced sort, prioritizing tgt len match.
+        # # TODO: make this configurable.
+        # if hasattr(ex, "tgt"):
+        #     return -len(ex.src), -len(ex.tgt)
+        return -len(ex.src)
 
 
     def __getstate__(self):
