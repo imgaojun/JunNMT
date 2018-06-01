@@ -71,13 +71,19 @@ class NMTDataset(torchtext.data.Dataset):
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
         make_example = torchtext.data.Example.fromlist
-        with codecs.open(src_path, encoding="utf8",errors='ignore') as src_f, \
-                codecs.open(tgt_path, encoding="utf8",errors='ignore') as tgt_f: 
+        with codecs.open(src_path, encoding="utf8",errors='replace') as src_f, \
+                codecs.open(tgt_path, encoding="utf8",errors='replace') as tgt_f: 
             examples = []
             for src,tgt in zip(src_f,tgt_f):
                 src,tgt = src.strip(),tgt.strip()
                 examples.append(make_example([src,tgt],fields))
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
+    
+    @staticmethod
+    def sort_key(ex):
+        "Sort in reverse size order"
+        return -len(ex.src)
+
 
     def __getstate__(self):
         return self.__dict__
