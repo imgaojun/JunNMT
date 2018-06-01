@@ -29,7 +29,7 @@ summery_writer = SummaryWriter(opt.log_dir)
 use_cuda = False
 device = None
 if args.gpuid:
-    # cuda.set_device(args.gpuid[0])
+    cuda.set_device(args.gpuid[0])
     device = torch.device('cuda',args.gpuid[0])
     use_cuda = True
     
