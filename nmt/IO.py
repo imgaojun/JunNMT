@@ -80,10 +80,13 @@ class NMTDataset(torchtext.data.Dataset):
         
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
-    @staticmethod
-    def sort_key(ex):
-        "Sort in reverse size order"
-        return -len(ex.src)
+    def sort_key(self, ex):
+        """ Sort using length of source sentences. """
+        # Default to a balanced sort, prioritizing tgt len match.
+        # TODO: make this configurable.
+        if hasattr(ex, "tgt"):
+            return len(ex.src), len(ex.tgt)
+        return len(ex.src)
 
 
     def __getstate__(self):
