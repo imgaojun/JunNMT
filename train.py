@@ -27,8 +27,10 @@ opt = utils.load_hparams(args.config)
 summery_writer = SummaryWriter(opt.log_dir)
 
 use_cuda = False
+device = None
 if args.gpuid:
-    cuda.set_device(args.gpuid[0])
+    # cuda.set_device(args.gpuid[0])
+    device = torch.device('cuda',args.gpuid[0])
     use_cuda = True
     
 if opt.random_seed > 0:
@@ -70,7 +72,7 @@ def make_train_data_iter(train_data, opt):
     """
     return nmt.IO.OrderedIterator(
                 dataset=train_data, batch_size=opt.train_batch_size,
-                device=args.gpuid[0] if args.gpuid else -1,                
+                device=device if args.gpuid else -1,                
                 repeat=False)
 
 
@@ -83,7 +85,7 @@ def make_valid_data_iter(valid_data, opt):
     """
     return nmt.IO.OrderedIterator(
                 dataset=valid_data, batch_size=opt.valid_batch_size,
-                device=args.gpuid[0] if args.gpuid else -1,                                
+                device=device if args.gpuid else -1,                                
                 train=False, sort=False)
 
 def load_fields():
