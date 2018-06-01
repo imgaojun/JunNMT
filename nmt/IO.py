@@ -66,7 +66,11 @@ def merge_vocabs(vocabs, specials, vocab_size=None):
                                  max_size=vocab_size)
 
 class NMTDataset(torchtext.data.Dataset):
-    
+
+    @staticmethod
+    def sort_key(ex):
+        return data.interleave_keys(len(ex.src), len(ex.tgt))
+
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
         make_example = torchtext.data.Example.fromlist
@@ -79,9 +83,7 @@ class NMTDataset(torchtext.data.Dataset):
         
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
     
-    @staticmethod
-    def sort_key(ex):
-        return data.interleave_keys(len(ex.src), len(ex.tgt))
+
 
 
     def __getstate__(self):
