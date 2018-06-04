@@ -1,3 +1,4 @@
+torch==0.4
 torchtext
 tensorboardX
-cupy
+progressbar2
