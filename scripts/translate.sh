@@ -1,11 +1,12 @@
 NMT_DIR=PATH_TO_JunNMT
 python3 ${NMT_DIR}/translate.py \
     -gpuid 0 \
-    -src_in /home/xiapeng/gaojun/trans/test/nist02.cn \
-    -tgt_out ./test_out \
+    -test_data /home/xiapeng/gaojun/trans/test/nist02.cn \
+    -test_out ./test_out \
     -model ./out_dir/checkpoint_epoch0.pkl \
     -dump_beam beam.json \
-    -data demo
+    -vocab ./demo.vocab.pkl \ 
+    -config ./config.yml
 
 REF0=PATH_TO_REFERENCE
 REF1=PATH_TO_REFERENCE
