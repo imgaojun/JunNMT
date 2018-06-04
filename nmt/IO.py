@@ -101,6 +101,36 @@ class NMTDataset(torchtext.data.Dataset):
         self.__dict__.update(d)
     
 
+class InferDataset(torchtext.data.Dataset):
+    
+    
+    def __init__(self, data_path, fields,  **kwargs):
+
+        make_example = torchtext.data.Example.fromlist
+        with codecs.open(data_path, encoding="utf8",errors='ignore') as src_f:
+            examples = []
+            for src in src_f:
+                src = src.strip().split(' ')
+                src = ' '.join(src)
+                examples.append(make_example([src,],fields))
+
+        super(InferDataset, self).__init__(examples, fields, **kwargs)    
+    
+    def sort_key(self, ex):
+        """ Sort using length of source sentences. """
+        # Default to a balanced sort, prioritizing tgt len match.
+        # TODO: make this configurable.
+        if hasattr(ex, "tgt"):
+            return -len(ex.src), -len(ex.tgt)
+        return -len(ex.src)
+
+
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+
 # class OrderedIterator(torchtext.data.Iterator):
 #     def create_batches(self):
 #         if self.train:
