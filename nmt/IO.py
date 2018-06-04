@@ -76,8 +76,8 @@ class NMTDataset(torchtext.data.Dataset):
         # Default to a balanced sort, prioritizing tgt len match.
         # TODO: make this configurable.
         if hasattr(ex, "tgt"):
-            return len(ex.src), len(ex.tgt)
-        return len(ex.src)
+            return -len(ex.src), -len(ex.tgt)
+        return -len(ex.src)
 
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
