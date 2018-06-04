@@ -67,9 +67,17 @@ def merge_vocabs(vocabs, specials, vocab_size=None):
 
 class NMTDataset(torchtext.data.Dataset):
 
-    @staticmethod
-    def sort_key(ex):
-        return data.interleave_keys(len(ex.src), len(ex.tgt))
+    # @staticmethod
+    # def sort_key(ex):
+    #     return data.interleave_keys(len(ex.src), len(ex.tgt))
+
+    def sort_key(self, ex):
+        """ Sort using length of source sentences. """
+        # Default to a balanced sort, prioritizing tgt len match.
+        # TODO: make this configurable.
+        if hasattr(ex, "tgt"):
+            return len(ex.src), len(ex.tgt)
+        return len(ex.src)
 
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
@@ -93,13 +101,31 @@ class NMTDataset(torchtext.data.Dataset):
         self.__dict__.update(d)
     
 
+# class OrderedIterator(torchtext.data.Iterator):
+#     def create_batches(self):
+#         if self.train:
+#             self.batches = torchtext.data.pool(
+#                 self.data(), self.batch_size,
+#                 self.sort_key, self.batch_size_fn,
+#                 random_shuffler=self.random_shuffler)
+#         else:
+#             self.batches = []
+#             for b in torchtext.data.batch(self.data(), self.batch_size,
+#                                           self.batch_size_fn):
+#                 self.batches.append(sorted(b, key=self.sort_key))
+
+
 class OrderedIterator(torchtext.data.Iterator):
     def create_batches(self):
         if self.train:
-            self.batches = torchtext.data.pool(
-                self.data(), self.batch_size,
-                self.sort_key, self.batch_size_fn,
-                random_shuffler=self.random_shuffler)
+            def pool(data, random_shuffler):
+                for p in torchtext.data.batch(data, self.batch_size * 100):
+                    p_batch = torchtext.data.batch(
+                        sorted(p, key=self.sort_key),
+                        self.batch_size, self.batch_size_fn)
+                    for b in random_shuffler(list(p_batch)):
+                        yield b
+            self.batches = pool(self.data(), self.random_shuffler)
         else:
             self.batches = []
             for b in torchtext.data.batch(self.data(), self.batch_size,
