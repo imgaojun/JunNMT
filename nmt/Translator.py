@@ -42,7 +42,7 @@ class Translator(object):
                 "beam_parent_ids": [],
                 "scores": []}
 
-    def translate_batch(self, src, src_lengths):
+    def translate_batch(self, batch):
         """
         Translate a batch of sentences.
         Mostly a wrapper around :obj:`Beam`.
@@ -55,6 +55,10 @@ class Translator(object):
 
         # (0) Prep each of the components of the search.
         # And helper method for reducing verbosity.
+
+        src = batch.src[0]
+        src_lengths = batch.src[1].tolist()
+
         beam_size = self.beam_size
         batch_size = len(src_lengths)
         vocab = self.fields["tgt"].vocab
