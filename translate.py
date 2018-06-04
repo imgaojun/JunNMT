@@ -5,7 +5,7 @@ import nmt
 import json
 from torch import cuda
 import progressbar
-
+import nmt.utils.misc_utils as utils
 
 def indices_lookup(indices,fields):
 
