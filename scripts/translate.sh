@@ -6,7 +6,9 @@ python3 ${NMT_DIR}/translate.py \
     -model ./out_dir/checkpoint_epoch0.pkl \
     -dump_beam beam.json \
     -vocab ./demo.vocab.pkl \ 
-    -config ./config.yml
+    -config ./config.yml \
+    -beams_size 3 \
+    -decode_max_length 100
 
 REF0=PATH_TO_REFERENCE
 REF1=PATH_TO_REFERENCE
