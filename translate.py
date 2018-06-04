@@ -57,8 +57,8 @@ def main():
     parser.add_argument("-vocab", type=str)
     parser.add_argument("-dump_beam", default="", type=str)
     parser.add_argument('-gpuid', default=[], nargs='+', type=int)
-    parser.add_argument("-beam_size", type=str)
-    parser.add_argument("-decode_max_length", type=str)
+    parser.add_argument("-beam_size", type=int)
+    parser.add_argument("-decode_max_length", type=int)
 
 
     args = parser.parse_args()
