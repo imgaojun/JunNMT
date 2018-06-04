@@ -92,9 +92,9 @@ def main():
 
     translator = nmt.Translator(model=model, 
                                 fields=fields,
-                                beam_size=opt.beam_size, 
+                                beam_size=args.beam_size, 
                                 n_best=1,
-                                max_length=opt.decode_max_length,
+                                max_length=args.decode_max_length,
                                 global_scorer=None,
                                 cuda=use_cuda,
                                 beam_trace=True if args.dump_beam else False)
