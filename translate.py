@@ -113,9 +113,7 @@ def main():
         device = torch.device('cuda',args.gpuid[0])
         use_cuda = True
     fields = nmt.IO.load_fields(
-                torch.load(args.vocab)
-
-
+                torch.load(args.vocab))
     test_dataset = nmt.IO.InferDataset(
         data_path=args.test_data,
         fields=[('src', fields["src"])])
