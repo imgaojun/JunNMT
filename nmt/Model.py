@@ -84,6 +84,6 @@ class Generator(nn.Module):
             hc.append(hck)
         hc = torch.stack(hc)
         k_logits = self.out_linear(hc)
-        print(k_logits)
+        print(k_logits.dim())
         # log_sum_logits = 
         return 0
