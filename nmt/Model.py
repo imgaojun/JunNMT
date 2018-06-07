@@ -88,6 +88,6 @@ class Generator(nn.Module):
 
         mix_logits = mix_weight * k_logits
         mix_logits = mix_logits.sum(1)
-        print(mix_logits)
+        print(mix_logits.size())
         log_mix_logits = self.log_softmax(mix_logits)
         return 0
