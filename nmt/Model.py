@@ -73,17 +73,21 @@ class Generator(nn.Module):
         self.mix_linear = nn.Linear(input_szie, num_k)
         self.out_linear = nn.Linear(input_szie, output_size)
         self.softmax = nn.Softmax(dim=-1)
-
+        self.log_softmax = nn.LogSoftmax(dim=-1)
     def forward(self, input):
         mix_weight = self.mix_linear(input)
         mix_weight = self.softmax(mix_weight)
-        print(mix_weight.size())
         hc = []
         for l in self.linears:
             hck = l(input)
             hc.append(hck)
         hc = torch.stack(hc)
         k_logits = self.out_linear(hc)
-        print(k_logits.size())
-        # log_sum_logits = 
+        mix_weight = mix_weight.unsqueeze(-1)
+        k_logits = k_logits.transpose(0,1)
+
+        mix_logits = mix_weight * k_logits
+        mix_logits = mix_logits.sum(1)
+        print(mix_logits)
+        log_mix_logits = self.log_softmax(mix_logits)
         return 0
