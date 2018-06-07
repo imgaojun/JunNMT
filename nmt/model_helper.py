@@ -106,6 +106,6 @@ def create_base_model(opt, fields):
                      decoder, 
                      generator)
 
-    model.apply(weights_init)
+    # model.apply(weights_init)
     return model
 
