@@ -87,6 +87,7 @@ class Generator(nn.Module):
         k_logits = k_logits.transpose(0,1)
         soft_k_logits = self.softmax(k_logits)
         mix_logits = mix_weight * soft_k_logits
+        print(mix_logits.size())
         mix_logits = mix_logits.sum(1)
         print(input.size())
         print(mix_logits.size())
