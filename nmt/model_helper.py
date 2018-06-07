@@ -1,10 +1,11 @@
 from nmt.modules.Encoder import EncoderRNN
 from nmt.modules.Decoder import AttnDecoder,InputFeedDecoder,ScheduledDecoder
 from nmt.modules.Embedding import Embedding
-from nmt.Model import NMTModel
+from nmt.Model import NMTModel,Generator
 import torch
 import torch.nn as nn
 import nmt.IO as IO
+
 
 
 
@@ -78,19 +79,12 @@ def create_decoder(opt):
     return decoder
 
 def create_generator(input_size, output_size):
-    generator = nn.Sequential(
-        nn.Linear(input_size, output_size),
-        nn.LogSoftmax(dim=-1))
+    generator = Generator(5, input_size, output_size)
+    # generator = nn.Sequential(
+    #     nn.Linear(input_size, output_size),
+    #     nn.LogSoftmax(dim=-1))
     return generator
 
-def weights_init(m):
-    # if isinstance(m, nn.Linear): 
-    #     nn.init.xavier_uniform(m.weight.data)
-    # if isinstance(m, nn.LSTM) or isinstance(m, nn.GRU):
-    #     for layer in range(m.num_layers):
-    #         nn.init.orthogonal(getattr(m,"weight_ih_l%d"%(layer)).data)
-    #         nn.init.orthogonal(getattr(m,"weight_hh_l%d"%(layer)).data)
-    pass
 
 
 def create_base_model(opt, fields):

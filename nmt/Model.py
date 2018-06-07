@@ -65,3 +65,25 @@ class NMTModel(nn.Module):
         epoch = ckpt['epoch']
         return epoch
 
+class Generator(nn.Module):
+    def __init__(self, num_k, input_szie, output_size):
+        super(Generator, self).__init__()
+        self.linears = nn.ModuleList([nn.Linear(input_szie, input_szie) 
+                                        for i in range(num_k)])
+        self.mix_linear = nn.Linear(input_szie, num_k)
+        self.out_linear = nn.Linear(input_szie, output_size)
+        self.softmax = nn.Softmax(dim=-1)
+
+    def forward(self, input):
+
+        mix_weight = self.mix_linear(input)
+        mix_weight = self.softmax(mix_weight)
+        hc = []
+        for l in self.linears:
+            hck = l(input)
+            hc.append(hck)
+        hc = torch.stack(hc)
+        k_logits = self.out_linear(hc)
+        print(k_logits)
+        # log_sum_logits = 
+        return 0
