@@ -75,7 +75,7 @@ class Generator(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, input):
-
+        print(input.size())
         mix_weight = self.mix_linear(input)
         mix_weight = self.softmax(mix_weight)
         hc = []
