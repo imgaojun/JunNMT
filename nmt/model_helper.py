@@ -1,7 +1,7 @@
 from nmt.modules.Encoder import EncoderRNN
 from nmt.modules.Decoder import AttnDecoder,InputFeedDecoder,ScheduledDecoder
 from nmt.modules.Embedding import Embedding
-from nmt.Model import NMTModel,Generator
+from nmt.Model import NMTModel,MoSGenerator
 import torch
 import torch.nn as nn
 import nmt.IO as IO
@@ -79,7 +79,7 @@ def create_decoder(opt):
     return decoder
 
 def create_generator(input_size, output_size):
-    generator = Generator(5, input_size, output_size)
+    generator = MoSGenerator(5, input_size, output_size)
     # generator = nn.Sequential(
     #     nn.Linear(input_size, output_size),
     #     nn.LogSoftmax(dim=-1))
