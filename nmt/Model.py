@@ -68,6 +68,7 @@ class NMTModel(nn.Module):
 class MoSGenerator(nn.Module):
     def __init__(self, n_experts, input_szie, output_size):
         super(MoSGenerator, self).__init__()
+        self.input_szie = input_szie
         self.n_experts = n_experts
         self.prior = nn.Linear(input_szie, n_experts, bias=False)
         self.latent = nn.Sequential(nn.Linear(input_szie, n_experts*output_size), nn.Tanh())
@@ -78,7 +79,7 @@ class MoSGenerator(nn.Module):
     def forward(self, input):
         ntoken = input.size(0)
         latent = self.latent(input)
-        logits = self.out_linear(latent)
+        logits = self.out_linear(latent.view(-1, self.input_szie))
         prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         print(prior_logit.size())
         prior = self.softmax(prior_logit)
