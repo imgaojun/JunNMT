@@ -65,32 +65,27 @@ class NMTModel(nn.Module):
         epoch = ckpt['epoch']
         return epoch
 
-class Generator(nn.Module):
-    def __init__(self, num_k, input_szie, output_size):
+class MoSGenerator(nn.Module):
+    def __init__(self, n_experts, input_szie, output_size):
         super(Generator, self).__init__()
-        self.linears = nn.ModuleList([nn.Linear(input_szie, input_szie) 
-                                        for i in range(num_k)])
-        self.mix_linear = nn.Linear(input_szie, num_k)
+        self.n_experts = n_experts
+        self.prior = nn.Linear(input_szie, n_experts, bias=False)
+        self.latent = nn.Sequential(nn.Linear(input_szie, n_experts*output_size), nn.Tanh())
         self.out_linear = nn.Linear(input_szie, output_size)
-        self.softmax = nn.Softmax(dim=-1)
-        self.log_softmax = nn.LogSoftmax(dim=-1)
+        self.softmax = nn.Softmax(-1)
+
+
     def forward(self, input):
-        mix_weight = self.mix_linear(input)
-        mix_weight = self.softmax(mix_weight)
-        hc = []
-        for l in self.linears:
-            hck = l(input)
-            hc.append(hck)
-        hc = torch.stack(hc)
-        k_logits = self.out_linear(hc)
-        mix_weight = mix_weight.unsqueeze(-1)
-        k_logits = k_logits.transpose(0,1)
-        soft_k_logits = self.softmax(k_logits)
-        mix_logits = mix_weight * soft_k_logits
-        mix_logits = mix_logits.sum(1)
-        print(mix_logits)
-        log_mix_logits = self.log_softmax(mix_logits)
-        print(log_mix_logits)
-        # print(log_mix_logits)
+        ntoken = input.size(0)
+        logits = self.out_linear(input)
+        prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
+        prior = self.softmax(prior_logit)
+        print(prior.size())
+        prob = self.softmax(logits).view(-1, self.n_experts, self.ntoken)
+
+        print(prob.size())
+        prob = (prob * prior.unsqueeze(2).expand_as(prob)).sum(1)
+        log_prob = torch.log(prob.add_(1e-8))
+
         raise BaseException("break")
-        return log_mix_logits
+        return log_prob
