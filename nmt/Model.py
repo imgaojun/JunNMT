@@ -81,7 +81,7 @@ class MoSGenerator(nn.Module):
         prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         prior = self.softmax(prior_logit)
         print(prior.size())
-        prob = self.softmax(logits).view(-1, self.n_experts, self.ntoken)
+        prob = self.softmax(logits).view(-1, self.n_experts, ntoken)
 
         print(prob.size())
         prob = (prob * prior.unsqueeze(2).expand_as(prob)).sum(1)
