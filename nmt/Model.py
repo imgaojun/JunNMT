@@ -67,7 +67,7 @@ class NMTModel(nn.Module):
 
 class MoSGenerator(nn.Module):
     def __init__(self, n_experts, input_szie, output_size):
-        super(Generator, self).__init__()
+        super(MoSGenerator, self).__init__()
         self.n_experts = n_experts
         self.prior = nn.Linear(input_szie, n_experts, bias=False)
         self.latent = nn.Sequential(nn.Linear(input_szie, n_experts*output_size), nn.Tanh())
