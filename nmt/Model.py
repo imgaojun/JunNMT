@@ -81,7 +81,7 @@ class MoSGenerator(nn.Module):
         ntoken = input.size(0)
         latent = self.latent(input)
         
-        logits = self.out_linear(latent.view(-1, self.input_szie))
+        logits = self.out_linear(latent.view(-1, self.output_size))
         print(logits.size())
         prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         prior = self.softmax(prior_logit)
