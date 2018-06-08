@@ -81,16 +81,12 @@ class MoSGenerator(nn.Module):
         latent = self.latent(input)
         
         logits = self.out_linear(latent.view(-1, self.input_szie))
-        print(logits.size())
         # 960 ,5
         prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         prior = self.softmax(prior_logit)
-        print(prior.size())
         prob = self.softmax(logits).view(-1, self.n_experts, self.output_size)
 
-        print(prob.size())
         prob = (prob * prior.unsqueeze(2).expand_as(prob)).sum(1)
         log_prob = torch.log(prob.add_(1e-8))
 
-        raise BaseException("break")
         return log_prob
