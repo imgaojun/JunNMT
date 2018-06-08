@@ -77,12 +77,13 @@ class MoSGenerator(nn.Module):
 
     def forward(self, input):
         ntoken = input.size(0)
-        logits = self.out_linear(input)
-        prior_logit = self.prior(input)#.contiguous().view(-1, self.n_experts)
+        latent = self.latent(input)
+        logits = self.out_linear(latent)
+        prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         print(prior_logit.size())
         prior = self.softmax(prior_logit)
         print(prior.size())
-        prob = self.softmax(logits).view(-1, self.n_experts, ntoken)
+        prob = self.softmax(logits.view(-1, ntoken)).view(-1, self.n_experts, ntoken)
 
         print(prob.size())
         prob = (prob * prior.unsqueeze(2).expand_as(prob)).sum(1)
