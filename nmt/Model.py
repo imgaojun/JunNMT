@@ -90,7 +90,7 @@ class Generator(nn.Module):
         mix_logits = mix_logits.sum(1)
         print(mix_logits)
         log_mix_logits = self.log_softmax(mix_logits)
-        print(log_mix_logits
+        print(log_mix_logits)
         # print(log_mix_logits)
         raise BaseException("break")
         return log_mix_logits
