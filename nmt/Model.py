@@ -72,7 +72,7 @@ class MoSGenerator(nn.Module):
         self.output_size = output_size
         self.n_experts = n_experts
         self.prior = nn.Linear(input_szie, n_experts, bias=False)
-        self.latent = nn.Sequential(nn.Linear(input_szie, n_experts*output_size), nn.Tanh())
+        self.latent = nn.Sequential(nn.Linear(input_szie, n_experts*input_szie), nn.Tanh())
         self.out_linear = nn.Linear(input_szie, output_size)
         self.softmax = nn.Softmax(-1)
 
@@ -81,7 +81,7 @@ class MoSGenerator(nn.Module):
         ntoken = input.size(0)
         latent = self.latent(input)
         print(latent.size())
-        logits = self.out_linear(latent.view(-1, self.output_size))
+        logits = self.out_linear(latent.view(-1, self.input_szie))
         prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         print(prior_logit.size())
         prior = self.softmax(prior_logit)
