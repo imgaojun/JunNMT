@@ -79,6 +79,7 @@ class MoSGenerator(nn.Module):
     def forward(self, input):
         ntoken = input.size(0)
         latent = self.latent(input)
+        print(latent.size())
         logits = self.out_linear(latent.view(-1, self.input_szie))
         prior_logit = self.prior(input).contiguous().view(-1, self.n_experts)
         print(prior_logit.size())
