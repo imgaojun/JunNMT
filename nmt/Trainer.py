@@ -76,7 +76,6 @@ class Trainer(object):
         self.model.zero_grad()
         src_inputs = batch.src[0]
         src_lengths = batch.src[1].tolist()
-        print(src_lengths)
         tgt_inputs = batch.tgt[:-1]
         outputs, attn = self.model(src_inputs,tgt_inputs,src_lengths)
         stats = self.train_loss.compute_train_loss(batch, outputs)
