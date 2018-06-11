@@ -133,6 +133,6 @@ class MultiHeadedAttention(nn.Module):
         x = x.transpose(1, 2).contiguous() \
              .view(nbatches, -1, self.h * self.d_k)
         
-        attn_out = torch.cat([self.linears[-1](x),query],dim=-1)
+        attn_out = torch.cat((self.linears[-1](x),query),dim=-1)
         attn_out = self.linear_out(attn_out)
         return attn_out
