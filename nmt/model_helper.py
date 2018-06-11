@@ -1,5 +1,5 @@
 from nmt.modules.Encoder import EncoderRNN
-from nmt.modules.Decoder import AttnDecoder,InputFeedDecoder,ScheduledDecoder
+from nmt.modules.Decoder import AttnDecoder,InputFeedDecoder,MHAttnDecoder
 from nmt.modules.Embedding import Embedding
 from nmt.Model import NMTModel,MoSGenerator
 import torch
@@ -65,21 +65,18 @@ def create_decoder(opt):
                                 num_layers,
                                 dropout)    
 
-    elif decoder_type == 'ScheduledDecoder':
-        scheduler_type = opt.ratio_scheduler_type
-        decoder = ScheduledDecoder(rnn_type,
-                                atten_model,
-                                scheduler_type,
+    elif decoder_type == 'MHAttnDecoder':
+        decoder = MHAttnDecoder(rnn_type,
                                 input_size,
                                 hidden_size,
                                 num_layers,
-                                dropout)                                       
+                                dropout)                                     
    
 
     return decoder
 
 def create_generator(input_size, output_size):
-    generator = MoSGenerator(3, input_size, output_size)
+    generator = MoSGenerator(5, input_size, output_size)
     # generator = nn.Sequential(
     #     nn.Linear(input_size, output_size),
     #     nn.LogSoftmax(dim=-1))
