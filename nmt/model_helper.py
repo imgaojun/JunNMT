@@ -79,7 +79,7 @@ def create_decoder(opt):
     return decoder
 
 def create_generator(input_size, output_size):
-    generator = MoSGenerator(5, input_size, output_size)
+    generator = MoSGenerator(3, input_size, output_size)
     # generator = nn.Sequential(
     #     nn.Linear(input_size, output_size),
     #     nn.LogSoftmax(dim=-1))
