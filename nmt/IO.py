@@ -82,11 +82,14 @@ class NMTDataset(torchtext.data.Dataset):
     def __init__(self, src_path, tgt_path, fields, **kwargs):
 
         make_example = torchtext.data.Example.fromlist
-        with open(src_path, encoding="utf8",errors='ignore') as src_f, \
-                open(tgt_path, encoding="utf8",errors='ignore') as tgt_f: 
+        with open(src_path, 'r', encoding="utf8",errors='ignore') as src_f, \
+                open(tgt_path, 'r', encoding="utf8",errors='ignore') as tgt_f: 
             examples = []
             for src,tgt in zip(src_f,tgt_f):
                 src,tgt = src.strip(),tgt.strip()
+                if len(src) == 0 or len(tgt) == 0:
+                    print("%s,%s"%(src,tgt))
+                    continue
                 examples.append(make_example([src,tgt],fields))
         
         super(NMTDataset, self).__init__(examples, fields, **kwargs)    
@@ -107,7 +110,7 @@ class InferDataset(torchtext.data.Dataset):
     def __init__(self, data_path, fields,  **kwargs):
 
         make_example = torchtext.data.Example.fromlist
-        with open(data_path, encoding="utf8",errors='ignore') as src_f:
+        with open(data_path, 'r', encoding="utf8",errors='ignore') as src_f:
             examples = []
             for src in src_f:
                 src = src.strip().split(' ')
