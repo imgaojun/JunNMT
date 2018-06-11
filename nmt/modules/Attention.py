@@ -111,6 +111,7 @@ class MultiHeadedAttention(nn.Module):
         self.h = h
         self.linears = clones(nn.Linear(d_model, d_model), 4)
         self.attn = None
+        self.linear_out = nn.Linear(d_model*2, d_model)
         self.dropout = nn.Dropout(p=dropout)
         
     def forward(self, query, key, value, mask=None):
@@ -131,4 +132,7 @@ class MultiHeadedAttention(nn.Module):
         # 3) "Concat" using a view and apply a final linear. 
         x = x.transpose(1, 2).contiguous() \
              .view(nbatches, -1, self.h * self.d_k)
-        return self.linears[-1](x)
+        
+        attn_out = torch.cat([self.linears[-1](x),query],dim=-1)
+        attn_out = self.linear_out(attn_out)
+        return attn_out
